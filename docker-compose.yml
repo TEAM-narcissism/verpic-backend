@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+
+  db:
+    platform: linux/x86_64
+    image: mysql:5.7
+    command: [ "--lower_case_table_names=1","--ignore-db-dir=lost+found" ]
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: verpic_db
+      MYSQL_USER: verpic
+      MYSQL_PASSWORD: verpic
+    restart: always
+    volumes:
+      - "./database/verpic_db/:/application"
+    ports:
+      - "3306:3306"
+    container_name: verpic_mysql
+    networks:
+      - backend-network
+
+  spring-boot:
+    image: verpic-backend:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
+    container_name: verpic-backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRINGBOOT_DB_USER: verpic
+      SPRINGBOOT_DB_PASSWORD: verpic
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/verpic_db?useSSL=false
+    networks:
+      - backend-network
+      - frontend-network
+
+networks:
+  backend-network:
+  frontend-network:
