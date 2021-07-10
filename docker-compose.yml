@@ -21,7 +21,7 @@ services:
       - backend-network
 
   spring-boot:
-    image: verpic-backend:0.0.1-SNAPSHOT
+    image: gcr.io/verpic-backend/image-built-with-jib
     ports:
       - "8080:8080"
     container_name: verpic-backend
