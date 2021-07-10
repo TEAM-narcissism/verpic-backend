@@ -1,1 +1,1 @@
-{"image":"gcr.io/verpic-backend/image-built-with-jib","imageId":"sha256:ec4fa9576b5bc864f66d0a510aee70a31d37dc30552513bd83ebba4758b52766","imageDigest":"sha256:7ccf366617bfd7f79e0ac413cd467420bdeee07e1e807863928b2bf9f35ddd61","tags":["latest"]}
+{"image":"gcr.io/verpic-backend/image-built-with-jib","imageId":"sha256:255879e767321746fa985de22602b70f1bbf90d30f2183ee8e5a4688f9421c75","imageDigest":"sha256:7f0b048a965d6e20cb56d16b4c1059534436778b29083954153fb25118ac22ee","tags":["latest"]}
