@@ -13,30 +13,25 @@ import teamverpic.verpicbackend.repository.UserRepository;
 import teamverpic.verpicbackend.service.UserService;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @Controller
 public class UserController {
-
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
     // 회원가입
     @PostMapping("/join")
     public Long join(@RequestBody Map<String, String> user) throws ParseException {
-        return userService.join(user);
+        return userService.join(user, passwordEncoder);
     }
 
     // 로그인
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> user) {
-        return userService.login(user);
+        return userService.login(user, passwordEncoder, jwtTokenProvider);
     }
 }
