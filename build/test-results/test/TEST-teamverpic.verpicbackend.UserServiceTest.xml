@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="teamverpic.verpicbackend.UserServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-07-10T16:47:32" hostname="gim-yeong-giui-MacBookPro.local" time="0.357">
-  <properties/>
-  <testcase name="중복가입()" classname="teamverpic.verpicbackend.UserServiceTest" time="0.256"/>
-  <testcase name="회원가입()" classname="teamverpic.verpicbackend.UserServiceTest" time="0.096"/>
-  <testcase name="생일형식오류()" classname="teamverpic.verpicbackend.UserServiceTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
