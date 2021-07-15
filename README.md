@@ -60,7 +60,21 @@ docker exec -i -t [컨테이너id 또는 이름] bash
 
 ```
 mysql -u [아이디] -p [패스워드]
+
 ```
+
+[jibDockerBuild시 오류 사항]
+1.
+```
+VerpicBackendApplicationTests > contextLoads() FAILED
+
+
+> Task :test FAILED
+
+FAILURE: Build failed with an exception.
+```
+
+=> test/java/teamverpic.verpicbackend/VerpicBackendApplicationTests에 @SpringBootTest annotation을 주석처리하고 다시 빌드해보세요.
 
 [참고사항]
 - 도커 실행 시 프로젝트 이미지와 데이터베이스 이미지 모두 실행되는데, 매번 프로젝트 이미지를 실행해서 도커 컨테이너에서 실행하기에는 번거로워요.
