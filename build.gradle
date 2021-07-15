@@ -5,6 +5,7 @@ plugins {
 	id 'com.palantir.docker' version '0.22.1'
 	id 'com.google.cloud.tools.jib' version '2.8.0'
 }
+
 jib.to.image = 'gcr.io/verpic-backend/image-built-with-jib'
 group = 'teamverpic'
 version = '0.0.1-SNAPSHOT'
@@ -49,6 +50,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 test {

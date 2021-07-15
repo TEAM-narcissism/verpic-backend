@@ -2,15 +2,11 @@ package teamverpic.verpicbackend.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import teamverpic.verpicbackend.dto.MessageDto;
-import teamverpic.verpicbackend.service.AlarmService;
+import teamverpic.verpicbackend.service.NotificationService;
 
 
 // 실험용 컨트롤러 입니다.
@@ -18,7 +14,7 @@ import teamverpic.verpicbackend.service.AlarmService;
 @RequiredArgsConstructor
 public class NotificationController {
     private final SimpMessageSendingOperations messagingTemplate;
-    private final AlarmService alarmService;
+    private final NotificationService alarmService;
 
     @RequestMapping(value = "/notification", method = RequestMethod.GET)
     public String notifications() {

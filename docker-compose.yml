@@ -36,6 +36,23 @@ services:
       - backend-network
       - frontend-network
 
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_DB_USERNAME: verpic
+      MONGO_DB_PASSWORD: verpic
+    volumes:
+      - "./database/mongodb/:/application"
+    #command: mongod --smallfiles --logpath=/dev/null # --quiet
+    container_name: "mongo"
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - backend-network2
+    hostname: "mongo"
+
 networks:
   backend-network:
+  backend-network2:
   frontend-network:

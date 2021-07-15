@@ -16,12 +16,12 @@ public class RelationshipService {
 
     private final UserRepository userRepository;
 
-    public void relationAdd(Optional<User> user1, Optional<User> user2){
+    public void relationAdd(User user1, User user2){
         if(!isRelation(user1, user2)) {
-            user1.get().setUserRelation(user2.get());
-            user2.get().setUserRelation(user1.get());
-            userRepository.save(user1.get());
-            userRepository.save(user2.get());
+            user1.setUserRelation(user2);
+            user2.setUserRelation(user1);
+            userRepository.save(user1);
+            userRepository.save(user2);
             System.out.println("친구 등록이 완료되었습니다.");
         } else {
             System.out.println("이미 등록된 친구입니다.");
@@ -30,8 +30,8 @@ public class RelationshipService {
 
     }
 
-    public boolean isRelation(Optional<User> user1, Optional<User> user2) {
-        if(user1.get().getUserRelation().contains(user2.get()))
+    public boolean isRelation(User user1, User user2) {
+        if(user1.getUserRelation().contains(user2))
             return true;
         else
             return false;

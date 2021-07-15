@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import teamverpic.verpicbackend.domain.User;
 
-public class MessageDto {
-    public MessageDto(String message, User receiver) {
+public class NotificationDto {
+    public NotificationDto(String message, User receiver) {
         this.message = message;
         this.receiver = receiver;
     }
@@ -19,7 +19,7 @@ public class MessageDto {
     @Setter
     private User receiver;
 
-    public MessageDto() {
+    public NotificationDto() {
     }
 
     public Long getReceiverId() {
