@@ -37,4 +37,6 @@ public class NotificationService {
         Notification notification = alarmCreate(sender, receiver, alarmCategory);
         messagingTemplate.convertAndSend("/sub/"+ notification.getReceiverId(),notification.getMessage());
     }
+
+
 }

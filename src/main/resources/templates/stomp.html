@@ -75,10 +75,10 @@
     function connect() {
         let socket = new SockJS('http://localhost:8080/ws-stomp');
         stompClient = Stomp.over(socket);
-        stompClient.connect({"token" : "", "senderId": "1"}, function (frame) {
+        stompClient.connect({"token" : "", "senderId": "2"}, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/sub/1', function (greeting) {
+            stompClient.subscribe('/sub/2', function (greeting) {
                  showGreeting(greeting.body);
             });
 
