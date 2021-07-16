@@ -61,6 +61,10 @@ public class User implements UserDetails {
         userRelation.add(requestedUser);
     }
 
+    public void deleteUserRelation(User deleteUser) {
+        userRelation.remove(deleteUser);
+    }
+
 
     @Override
     public String getUsername() {

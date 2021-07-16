@@ -11,7 +11,7 @@ import teamverpic.verpicbackend.handler.StompHandler;
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-public class WebSocketConfig implements  WebSocketMessageBrokerConfigurer{
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
     private final StompHandler stompHandler;
 

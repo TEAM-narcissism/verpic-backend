@@ -2,18 +2,9 @@ package teamverpic.verpicbackend.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import teamverpic.verpicbackend.domain.Notification;
-import teamverpic.verpicbackend.domain.User;
-import teamverpic.verpicbackend.handler.StompHandler;
-import teamverpic.verpicbackend.repository.NotificationRepository;
-import teamverpic.verpicbackend.repository.UserRepository;
-import teamverpic.verpicbackend.service.NotificationService;
 import teamverpic.verpicbackend.service.RelationshipService;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value="/relationship")
@@ -33,9 +24,19 @@ public class RelationshipController {
         relationshipService.relationshipAdd(authentication, notificationId);
     }
 
+    // 친구 삭제
+    @DeleteMapping("/{friendId}")
+    public void relationshipDelete(Authentication authentication, @PathVariable Long friendId){
+        relationshipService.relationshipRemove(authentication, friendId);
+    }
     // 친구 거절
 
+    @DeleteMapping("/reject/{notificationId}")
+    public void relationshipReject(Authentication authentication, @PathVariable String notificationId) {
+        relationshipService.relationshipReject(authentication, notificationId);
+    }
 
-    // 친구 삭제
+
+
 
 }

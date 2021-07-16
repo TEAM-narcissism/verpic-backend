@@ -9,9 +9,7 @@ import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.handler.StompHandler;
 import teamverpic.verpicbackend.repository.NotificationRepository;
 import teamverpic.verpicbackend.repository.UserRepository;
-
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -24,35 +22,35 @@ public class RelationshipService {
     private final StompHandler stompHandler;
 
     public void relationshipRequest(Authentication authentication, Long receiverId) {
-        Optional<User> currentLoginUser = userRepository.findByEmail(authentication.getName());
-        System.out.println("currentLoginUser.get().getEmail() = " + currentLoginUser.get().getEmail());
+        User currentLoginUser = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+        System.out.println("currentLoginUser.getEmail() = " + currentLoginUser.getEmail());
 
         User receiver = userRepository.findById(receiverId).orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요.") );
-        if(isRelationship(currentLoginUser.get(), receiver)) {
+        if(isRelationship(currentLoginUser, receiver)) {
             System.out.println("이미 등록된 친구에요.");
         }
         else {
             if (stompHandler.getDoingSocketUserList().contains(receiverId.toString())) {
                 System.out.println("메시지 수신 유저가 온라인이에요.");
-                notificationService.alarmByMessage(currentLoginUser.get().getId(), receiverId, 1);
+                notificationService.alarmByMessage(currentLoginUser.getId(), receiverId, 1);
             } else {
                 // 처리안했음 아직
                 System.out.println("메시지 수신 유저가 오프라인이에요.");
             }
         }
-
     }
 
-
     public void relationshipAdd(Authentication authentication, String notificationId){
-        Optional<User> currentLoginUser = userRepository.findByEmail(authentication.getName());
+        User currentLoginUser = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
 
         Notification notification = notificationRepository.findBy_id(notificationId).
                 orElseThrow(()-> new NullPointerException("해당 알림이 존재하지 않아요."));
 
         System.out.println("noti.getMessage() = " + notification.getMessage());
 
-        if(currentLoginUser.get().getId() != notification.getReceiverId()){
+        if(currentLoginUser.getId() != notification.getReceiverId()){
             System.out.println("접근할 수 없는 알림이에요. (알림 수신자와 현재 로그인 유저가 달라요.)");
             return;
         }
@@ -60,10 +58,10 @@ public class RelationshipService {
         User sender = userRepository.findById(notification.getSenderId()).
                 orElseThrow(()-> new NullPointerException("유저가 존재하지 않네요."));
 
-        if(!isRelationship(currentLoginUser.get(), sender)) {
-            currentLoginUser.get().setUserRelation(sender);
-            sender.setUserRelation(currentLoginUser.get());
-            userRepository.save(currentLoginUser.get());
+        if(!isRelationship(currentLoginUser, sender)) {
+            currentLoginUser.setUserRelation(sender);
+            sender.setUserRelation(currentLoginUser);
+            userRepository.save(currentLoginUser);
             userRepository.save(sender);
             notificationRepository.deleteBy_id(notificationId);
             System.out.println("친구 등록이 완료되었습니다.");
@@ -73,8 +71,43 @@ public class RelationshipService {
 
     }
 
+    public void relationshipRemove(Authentication authentication, Long friendId) {
+        User currentLoginUser = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+
+        User beDeletedUser = userRepository.findById(friendId)
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+
+
+        //자기 자신과의 친구 막아야함! -> test때문에 아직 처리 x
+        if(isRelationship(currentLoginUser, beDeletedUser)){
+            currentLoginUser.deleteUserRelation(beDeletedUser);
+            beDeletedUser.deleteUserRelation(currentLoginUser);
+            userRepository.save(currentLoginUser);
+            userRepository.save(beDeletedUser);
+        } else {
+            System.out.println("이미 친구 관계가 아니에요.");
+        }
+
+    }
+    public void relationshipReject(Authentication authentication, String notificationId) {
+        User currentLoginUser = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+
+        Notification notification = notificationRepository.findBy_id(notificationId).
+                orElseThrow(()-> new NullPointerException("해당 알림이 존재하지 않아요."));
+
+        if(currentLoginUser.getId() != notification.getReceiverId()){
+            System.out.println("접근할 수 없는 알림이에요. (알림 수신자와 현재 로그인 유저가 달라요.)");
+            return;
+        }
+
+        notificationRepository.deleteBy_id(notificationId);
+    }
+
+
     public boolean isRelationship(User user1, User user2) {
-        if(user1.getUserRelation().contains(user2))
+        if(user1.getUserRelation().contains(user2) && user2.getUserRelation().contains(user1))
             return true;
         else
             return false;
