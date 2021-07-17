@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.repository.UserRepository;
 import teamverpic.verpicbackend.service.UserService;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,5 +33,16 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> user) {
         return userService.login(user, passwordEncoder, jwtTokenProvider);
+    }
+
+    // 검색
+    @PostMapping("/search")
+    public List<User> search(String searchString){
+        return userService.searchUser(searchString);
+    }
+
+    @RequestMapping("/signup")
+    public String signuppage(){
+        return "Signup please~";
     }
 }
