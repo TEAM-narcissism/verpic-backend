@@ -9,10 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -41,11 +38,31 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name= "relationship",
+            joinColumns = @JoinColumn(name="user1"),
+            inverseJoinColumns = @JoinColumn(name="user2")
+    )
+    @Builder.Default
+    private Set<User> userRelation = new HashSet<User>();
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    public void setUserRelation(User requestedUser){
+        userRelation.add(requestedUser);
+    }
+
+    public void deleteUserRelation(User deleteUser) {
+        userRelation.remove(deleteUser);
     }
 
 
@@ -74,4 +91,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }

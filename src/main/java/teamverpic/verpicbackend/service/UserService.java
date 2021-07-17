@@ -1,10 +1,12 @@
 package teamverpic.verpicbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
+import teamverpic.verpicbackend.dto.UserCRUDDto;
 import teamverpic.verpicbackend.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -22,7 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException {
+    public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
         Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
         validateDuplicateUser(user.get("email"));
@@ -36,14 +38,14 @@ public class UserService {
                 .build()).getId();
     }
 
-    private void validateDuplicateUser(String email) {
+    private void validateDuplicateUser(String email) throws IllegalStateException {
         userRepository.findByEmail(email)
                 .ifPresent((m -> {
                     throw new IllegalStateException("이미 가입된 이메일입니다.");
                 }));
     }
 
-    public String login(Map<String, String> user, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public String login(Map<String, String> user, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
         User member = userRepository.findByEmail(user.get("email"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
