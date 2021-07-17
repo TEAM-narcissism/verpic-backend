@@ -1,21 +1,18 @@
 package teamverpic.verpicbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
-import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserCRUDDto;
-import teamverpic.verpicbackend.repository.UserRepository;
+import teamverpic.verpicbackend.dto.UserResponseDto;
+import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.service.UserService;
 
 import java.nio.charset.Charset;
@@ -77,11 +74,15 @@ public class UserController {
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
-    /*
-    // 유저 프로필
-    @PutMapping("/profile")
-    public String profile(@RequestBody Map<String, String> user) {
-        return userService.profile(user);
+    // 유저 프로필 조회
+    @GetMapping("/{id}")
+    public UserResponseDto profile (@PathVariable Long id) {
+        return userService.findById(id);
     }
-    */
+
+    // 유저 프로필 수정
+    @PutMapping("/{id}")
+    public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
+        return userService.profile_update(id, requestDto);
+    }
 }

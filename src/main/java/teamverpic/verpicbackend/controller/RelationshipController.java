@@ -29,8 +29,8 @@ public class RelationshipController {
     public void relationshipDelete(Authentication authentication, @PathVariable Long friendId){
         relationshipService.relationshipRemove(authentication, friendId);
     }
-    // 친구 거절
 
+    // 친구 거절
     @DeleteMapping("/reject/{notificationId}")
     public void relationshipReject(Authentication authentication, @PathVariable String notificationId) {
         relationshipService.relationshipReject(authentication, notificationId);

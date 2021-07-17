@@ -38,7 +38,22 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    // 프로필 설정 시 추가 (detail_profile)
+    private String nation;
+    private String gender;
+    private String firstLanguage;
+    private String availableLanguage;
+    private String learnLanguage;
+    private String hobby;
+    private String interest;
 
+    public void update(String firstLanguage, String availableLanguage, String learnLanguage, String hobby, String interest) {
+        this.firstLanguage = firstLanguage;
+        this.availableLanguage = availableLanguage;
+        this.learnLanguage = learnLanguage;
+        this.hobby = hobby;
+        this.interest = interest;
+    }
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
