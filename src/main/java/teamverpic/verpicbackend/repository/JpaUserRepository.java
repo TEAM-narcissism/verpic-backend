@@ -26,4 +26,5 @@ public interface JpaUserRepository extends JpaRepository<User, Long>, UserReposi
 
     @Override
     List<User> findAllByEmailContaining(String partOfEmail);
+
 }
