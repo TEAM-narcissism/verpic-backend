@@ -20,5 +20,14 @@ public interface JpaUserRepository extends JpaRepository<User, Long>, UserReposi
     @Override
     List<User> findAllByLastName(String lastName);
 
+    // 유저 검색을 위한 JpaRepository 함수
+    @Override
+    List<User> findAllByFirstNameContaining(String partOfFirstName);
+
+    @Override
+    List<User> findAllByLastNameContaining(String partOfLastName);
+
+    @Override
+    List<User> findAllByEmailContaining(String partOfEmail);
 
 }

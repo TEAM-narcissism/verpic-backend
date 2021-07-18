@@ -3,6 +3,7 @@ package teamverpic.verpicbackend.repository;
 import teamverpic.verpicbackend.domain.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MemoryUserRepository implements UserRepository{
 
@@ -21,12 +22,14 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public List<User> findAllByFirstName(String firstName) {
-        return null;
+        return store.values().stream()
+                .filter(user -> user.getFirstName().equals(firstName)).collect(Collectors.toList());
     }
 
     @Override
     public List<User> findAllByLastName(String lastName) {
-        return null;
+        return store.values().stream()
+                .filter(user -> user.getFirstName().equals(lastName)).collect(Collectors.toList());
     }
 
     @Override
@@ -43,5 +46,28 @@ public class MemoryUserRepository implements UserRepository{
 
     public void clearStore() {
         store.clear();
+    }
+
+    // 유저 검색
+    @Override
+    public List<User> findAllByFirstNameContaining(String partOfFirstName){
+
+        return store.values().stream()
+                .filter(user -> user.getFirstName().contains(partOfFirstName))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> findAllByLastNameContaining(String partOfLastName){
+        return store.values().stream()
+                .filter(user -> user.getLastName().contains(partOfLastName))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> findAllByEmailContaining(String partOfEmail){
+        return store.values().stream()
+                .filter(user -> user.getEmail().contains(partOfEmail))
+                .collect(Collectors.toList());
     }
 }

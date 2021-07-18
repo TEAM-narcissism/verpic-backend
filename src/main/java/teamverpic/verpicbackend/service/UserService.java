@@ -12,10 +12,8 @@ import teamverpic.verpicbackend.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -58,5 +56,35 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    /**
+     * 유저 검색
+     * 검색 창에 입력한 string으로 firstName, lastName, email을 순서대로 조회하여 결과를 출력함
+     * @param searchString
+     * @return List<User>
+     */
+    public List<User> searchUser(String searchString){
+        List<User> result=new ArrayList<>();
+        HashSet<User> totalset=new HashSet<>();
 
+        result.addAll(userRepository.findAllByFirstNameContaining(searchString));
+        result=userDuplicateDelete(result, totalset);
+
+        result.addAll(userRepository.findAllByLastNameContaining(searchString));
+        result=userDuplicateDelete(result, totalset);
+
+        result.addAll(userRepository.findAllByEmailContaining(searchString));
+        result=userDuplicateDelete(result, totalset);
+
+        return result;
+    }
+
+    // 유저 리스트 중 중복된 유저를 제거함
+    private List<User> userDuplicateDelete(List<User> total, HashSet<User> totalset) {
+        totalset.addAll(total);
+        total.clear();
+        total.addAll(totalset);
+        totalset.clear();
+
+        return total;
+    }
 }

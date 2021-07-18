@@ -8,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserCRUDDto;
@@ -21,6 +18,7 @@ import teamverpic.verpicbackend.service.UserService;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -84,4 +82,10 @@ public class UserController {
         return userService.profile(user);
     }
     */
+
+    // 검색
+    @GetMapping("/search")
+    public List<User> search(@RequestParam(value="searchString") String searchString){
+        return userService.searchUser(searchString);
+    }
 }
