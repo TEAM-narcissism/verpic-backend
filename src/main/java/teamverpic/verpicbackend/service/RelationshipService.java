@@ -12,7 +12,6 @@ import teamverpic.verpicbackend.repository.UserRepository;
 import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class RelationshipService {
 
@@ -75,8 +74,12 @@ public class RelationshipService {
         User currentLoginUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
 
+        System.out.println("currentLoginUser.getId() = " + currentLoginUser.getId());
+
         User beDeletedUser = userRepository.findById(friendId)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+
+        System.out.println("beDeletedUser.getId() = " + beDeletedUser.getId());
 
 
         //자기 자신과의 친구 막아야함! -> test때문에 아직 처리 x

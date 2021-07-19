@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
+import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserCRUDDto;
 import teamverpic.verpicbackend.dto.UserResponseDto;
 import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
@@ -18,6 +19,7 @@ import teamverpic.verpicbackend.service.UserService;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -37,7 +39,8 @@ public class UserController {
 
         try{
             userService.join(user, passwordEncoder);
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             if(e instanceof IllegalStateException) {
                 body.setMessage("중복 이메일 가입 불가");
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
@@ -85,4 +88,11 @@ public class UserController {
     public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
         return userService.profile_update(id, requestDto);
     }
+
+    // 검색
+    @GetMapping("/search")
+    public List<User> search(@RequestParam(value="searchString") String searchString){
+        return userService.searchUser(searchString);
+    }
+
 }
