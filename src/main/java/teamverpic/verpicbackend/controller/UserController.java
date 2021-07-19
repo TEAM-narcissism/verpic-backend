@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserCRUDDto;
-import teamverpic.verpicbackend.repository.UserRepository;
+import teamverpic.verpicbackend.dto.UserResponseDto;
+import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.service.UserService;
 
 import java.nio.charset.Charset;
@@ -40,7 +43,8 @@ public class UserController {
 
         try{
             userService.join(user, passwordEncoder);
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             if(e instanceof IllegalStateException) {
                 body.setMessage("중복 이메일 가입 불가");
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
@@ -77,13 +81,17 @@ public class UserController {
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
-    /*
-    // 유저 프로필
-    @PutMapping("/profile")
-    public String profile(@RequestBody Map<String, String> user) {
-        return userService.profile(user);
+    // 유저 프로필 조회
+    @GetMapping("/{id}")
+    public UserResponseDto profile (@PathVariable Long id) {
+        return userService.findById(id);
     }
-    */
+
+    // 유저 프로필 수정
+    @PutMapping("/{id}")
+    public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
+        return userService.profile_update(id, requestDto);
+    }
 
     // 검색
     @GetMapping("/search")
@@ -91,4 +99,5 @@ public class UserController {
                              final Pageable pageable){
         return userService.searchUser(pageable, searchString);
     }
+
 }

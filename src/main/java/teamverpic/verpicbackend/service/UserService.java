@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserCRUDDto;
+import teamverpic.verpicbackend.dto.UserResponseDto;
+import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -68,7 +70,6 @@ public class UserService {
     public Page<User> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
         HashSet<User> totalset=new HashSet<>();
-
         result.addAll(userRepository.findAllByFirstNameContaining(searchString));
         result=userDuplicateDelete(result, totalset);
 
@@ -83,6 +84,25 @@ public class UserService {
 //        return result;
         return new PageImpl<User>(result, pageable, count);
     }
+
+    //유저 프로필 조회 시
+    public UserResponseDto findById(Long id) {
+        User member = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
+
+        return new UserResponseDto(member);
+    }
+
+    @Transactional
+    public Long profile_update(Long id, UserUpdateRequestDto requestDto) {
+        User member = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
+
+        member.update(requestDto.getFirstLanguage(), requestDto.getAvailableLanguage(), requestDto.getLearnLanguage(), requestDto.getHobby(), requestDto.getInterest());
+
+        return id;
+    }
+
 
     // 유저 리스트 중 중복된 유저를 제거함
     private List<User> userDuplicateDelete(List<User> total, HashSet<User> totalset) {
