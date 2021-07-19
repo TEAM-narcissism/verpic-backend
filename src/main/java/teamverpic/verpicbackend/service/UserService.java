@@ -1,6 +1,9 @@
 package teamverpic.verpicbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,7 +67,7 @@ public class UserService {
      * @param searchString
      * @return List<User>
      */
-    public List<User> searchUser(String searchString){
+    public Page<User> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
         HashSet<User> totalset=new HashSet<>();
         result.addAll(userRepository.findAllByFirstNameContaining(searchString));
@@ -76,7 +79,10 @@ public class UserService {
         result.addAll(userRepository.findAllByEmailContaining(searchString));
         result=userDuplicateDelete(result, totalset);
 
-        return result;
+        int count=result.size();
+
+//        return result;
+        return new PageImpl<User>(result, pageable, count);
     }
 
     //유저 프로필 조회 시

@@ -1,5 +1,7 @@
 package teamverpic.verpicbackend.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import teamverpic.verpicbackend.domain.User;
 
 import java.util.*;
@@ -37,11 +39,6 @@ public class MemoryUserRepository implements UserRepository{
         return store.values().stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findAny();
-    }
-
-    @Override
-    public List<User> findAll() {
-        return null;
     }
 
     public void clearStore() {
