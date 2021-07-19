@@ -1,5 +1,7 @@
 package teamverpic.verpicbackend.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import teamverpic.verpicbackend.domain.User;
 
 import java.util.List;
@@ -11,7 +13,6 @@ public interface UserRepository {
     List<User> findAllByFirstName(String firstName);
     List<User> findAllByLastName(String lastName);
     Optional<User> findByEmail(String email);
-    List<User> findAll();
 
     // 유저 검색
     List<User> findAllByFirstNameContaining(String partOfFirstName);

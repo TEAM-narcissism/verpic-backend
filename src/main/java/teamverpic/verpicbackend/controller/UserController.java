@@ -2,6 +2,8 @@ package teamverpic.verpicbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,7 +87,8 @@ public class UserController {
 
     // 검색
     @GetMapping("/search")
-    public List<User> search(@RequestParam(value="searchString") String searchString){
-        return userService.searchUser(searchString);
+    public Page<User> search(@RequestParam(value="searchString") String searchString,
+                             final Pageable pageable){
+        return userService.searchUser(pageable, searchString);
     }
 }
