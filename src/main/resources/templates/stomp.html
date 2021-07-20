@@ -8,7 +8,6 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 
@@ -75,7 +74,7 @@
     function connect() {
         let socket = new SockJS('http://localhost:8080/ws-stomp');
         stompClient = Stomp.over(socket);
-        stompClient.connect({"token" : "", "senderId": "2"}, function (frame) {
+        stompClient.connect({}, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame);
             stompClient.subscribe('/sub/2', function (greeting) {
@@ -88,7 +87,7 @@
 
     function disconnect() {
         if (stompClient !== null) {
-            stompClient.disconnect({"senderId" : "1"});
+            stompClient.disconnect();
         }
 
         setConnected(false);
