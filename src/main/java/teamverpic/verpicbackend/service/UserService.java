@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
-import teamverpic.verpicbackend.dto.UserCRUDDto;
 import teamverpic.verpicbackend.dto.UserResponseDto;
 import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.repository.UserRepository;
@@ -18,7 +16,6 @@ import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional

@@ -13,7 +13,7 @@ import teamverpic.verpicbackend.handler.StompHandler;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
-    private final StompHandler stompHandler;
+   // private final StompHandler stompHandler;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -28,10 +28,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         registry.setApplicationDestinationPrefixes("/pub");
     }
 
+    /*
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(stompHandler);
     }
+    */
 
 
 
