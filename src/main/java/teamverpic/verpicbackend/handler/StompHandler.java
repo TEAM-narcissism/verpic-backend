@@ -10,17 +10,20 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.websocket.WebSocketConfig;
+import teamverpic.verpicbackend.domain.User;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class StompHandler implements ChannelInterceptor  {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -29,35 +32,47 @@ public class StompHandler implements ChannelInterceptor  {
 
     @Getter
     List<String> doingSocketUserList = new ArrayList<String>();
-    // 유저 리스트를 따로 두지말고, <세션, 유저> 형태의 hashmap 형태 필요
-    // disconnect시 유저 아이디를 헤더로 전송할 수 없음
-    // 즉, 지금은 유저가 소켓 연결 해제 시 리스트에 반영되지 않는 상태임
+
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+
+        Principal currentUser = accessor.getUser();
+
         if(accessor.getCommand() == StompCommand.CONNECT) {
-            // 토큰 검
-            if(!jwtTokenProvider.validateToken(accessor.getFirstNativeHeader("token")));
-                //throw new AccessDeniedException("토큰 이상, 임시 메시지 입니다.");
-
+            /*
+            if(!jwtTokenProvider.validateToken(token)){
+                System.out.println("토큰 이상");
+            }
+            else {
+                System.out.println("토큰 정상");
+            }
+            //throw new AccessDeniedException("토큰 이상, 임시 메시지 입니다.");
+            */
             sessionList.add(accessor.getSessionId());
+            doingSocketUserList.add(currentUser.getName());
 
-            String userId = accessor.getFirstNativeHeader("senderId");
-            System.out.println("requestUserId = " + userId);
-
-            doingSocketUserList.add(userId);
+            System.out.println("currentUser = " + currentUser.getName());
             System.out.println("accessor.getSessionId() = " + accessor.getSessionId());
+            System.out.println();
+
+            System.out.println("######################## CONNECT -- 현재 접속 유저 ########################");
+            doingSocketUserList.forEach(user -> System.out.println("user = " + user));
+            System.out.println("#########################################################################");
+            System.out.println();
         }
 
+
         else if(accessor.getCommand() == StompCommand.DISCONNECT) {
-            String userId = accessor.getFirstNativeHeader("senderId");
-            System.out.println("requestUserId = " + userId);
 
-            doingSocketUserList.remove(userId);
+            doingSocketUserList.remove(currentUser.getName());
             sessionList.remove(accessor.getSessionId());
-            System.out.println("accessor.getSessionId() = " + accessor.getSessionId());
 
+            System.out.println("######################## DISCONNECT -- 현재 접속 유저 ########################");
+            doingSocketUserList.forEach(user -> System.out.println("user = " + user));
+            System.out.println("############################################################################");
+            System.out.println();
         }
 
         return message;

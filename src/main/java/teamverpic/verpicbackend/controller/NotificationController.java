@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import teamverpic.verpicbackend.service.NotificationService;
 
 
@@ -20,6 +22,7 @@ public class NotificationController {
     public String notifications() {
         return "stomp";
     }
+
 
     @MessageMapping("/hello")
     //@SendTo()

@@ -2,43 +2,55 @@ package teamverpic.verpicbackend.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.domain.Notification;
 import teamverpic.verpicbackend.domain.User;
-import teamverpic.verpicbackend.handler.StompHandler;
+import teamverpic.verpicbackend.dto.HttpResponseDto;
+import teamverpic.verpicbackend.handler.StompCommandListener;
 import teamverpic.verpicbackend.repository.NotificationRepository;
 import teamverpic.verpicbackend.repository.UserRepository;
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class RelationshipService {
 
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
-    private final StompHandler stompHandler;
+    private final StompCommandListener stompCommandListener;
 
-    public void relationshipRequest(Authentication authentication, Long receiverId) {
-        User currentLoginUser = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
-        System.out.println("currentLoginUser.getEmail() = " + currentLoginUser.getEmail());
+    public HttpResponseDto relationshipRequest(User currentLoginUser, User receiver) {
+        HttpResponseDto responseDto = new HttpResponseDto();
 
-        User receiver = userRepository.findById(receiverId).orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요.") );
         if(isRelationship(currentLoginUser, receiver)) {
             System.out.println("이미 등록된 친구에요.");
+            responseDto.setMessage("이미 등록된 친구에요.");
+            responseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
         }
+        else if(currentLoginUser.getId() == receiver.getId()){
+            System.out.println("본인과는 친구가 될 수 없어요.");
+            responseDto.setMessage("본인과는 친구가 될 수 없어요.");
+            responseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+        }
+
         else {
-            if (stompHandler.getDoingSocketUserList().contains(receiverId.toString())) {
+            if (stompCommandListener.getSocketParticipateUserList().contains(receiver.getEmail())) {
                 System.out.println("메시지 수신 유저가 온라인이에요.");
-                notificationService.alarmByMessage(currentLoginUser.getId(), receiverId, 1);
+                responseDto.setMessage("메시지 수신 유저가 온라인이에요.");
+                responseDto.setHttpStatus(HttpStatus.OK);
+                notificationService.alarmByMessage(currentLoginUser.getId(), receiver.getId(), 1);
             } else {
                 // 처리안했음 아직
                 System.out.println("메시지 수신 유저가 오프라인이에요.");
+
+                responseDto.setMessage("메시지 수신 유저가 오프라인이에요.");
+                responseDto.setHttpStatus(HttpStatus.OK);
             }
         }
+
+        return responseDto;
     }
 
     public void relationshipAdd(Authentication authentication, String notificationId){
@@ -75,8 +87,12 @@ public class RelationshipService {
         User currentLoginUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
 
+        System.out.println("currentLoginUser.getId() = " + currentLoginUser.getId());
+
         User beDeletedUser = userRepository.findById(friendId)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
+
+        System.out.println("beDeletedUser.getId() = " + beDeletedUser.getId());
 
 
         //자기 자신과의 친구 막아야함! -> test때문에 아직 처리 x
