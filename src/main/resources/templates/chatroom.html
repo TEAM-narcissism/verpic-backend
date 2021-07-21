@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+  <th:block th:fragment="content">
+
+    <div class="container">
+      <div class="col-6">
+        <h1>[[${receiver}]]님과의 채팅</h1>
+      </div>
+      <div>
+        <div id="msgArea" class="col"></div>
+        <div class="col-6">
+          <div class="input-group mb-3">
+            <input type="text" id="msg" class="form-control">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6"></div>
+    </div>
+
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+  </th:block>
+</html>
+
+
+<script th:inline="javascript">
+  $(document).ready(function(){
+    var receiver = [[${receiver}]];
+    var roomId = [[${roomId}]];
+    var sockJs = new SockJS("http://localhost:8080/ws-stomp");
+    //1. SockJS를 내부에 들고있는 stomp를 내어줌.
+    var stomp = Stomp.over(sockJs);
+
+    //2. connection이 맺어지면 실행
+    stomp.connect({}, function (){
+      console.log("STOMP Connection")
+
+      //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+      stomp.subscribe("/sub/chat/" + roomId, function (chat) {
+        var content = JSON.parse(chat.body);
+        console.log("here!" + content.message);
+        var str = '';
+          str = "<div class='col-6'>";
+          str += "<div class='alert alert-secondary'>";
+          str += "<b>" + content.senderName + " : " + content.message + "</b>";
+          str += "</div></div>";
+          $("#msgArea").append(str);
+
+      });
+
+      //3. send(path, header, message)로 메세지를 보낼 수 있음
+      stomp.send('/pub/chat/enter', {}, JSON.stringify({receiverName: receiver, roomId: roomId}))
+    });
+
+    $("#button-send").on("click", function(e){
+      var msg = document.getElementById("msg");
+
+      console.log(":" + msg.value);
+      stomp.send('/pub/chat/message', {}, JSON.stringify({receiverName: receiver, message: msg.value, roomId: roomId}));
+      msg.value = '';
+    });
+  });
+</script>
