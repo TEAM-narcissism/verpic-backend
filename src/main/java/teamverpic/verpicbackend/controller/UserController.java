@@ -1,6 +1,10 @@
 package teamverpic.verpicbackend.controller;
 
+import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
+
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +18,15 @@ import org.springframework.web.bind.annotation.*;
 
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
+
+import teamverpic.verpicbackend.dto.UserCRUDDto;
+import teamverpic.verpicbackend.dto.UserSearchDto;
+import teamverpic.verpicbackend.repository.UserRepository;
+
 import teamverpic.verpicbackend.dto.HttpResponseDto;
 import teamverpic.verpicbackend.dto.UserResponseDto;
 import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
+
 import teamverpic.verpicbackend.service.UserService;
 
 import java.nio.charset.Charset;
@@ -99,9 +109,19 @@ public class UserController {
 
     // 검색
     @GetMapping("/search")
-    public Page<User> search(@RequestParam(value="searchString") String searchString,
-                             final Pageable pageable){
-        return userService.searchUser(pageable, searchString);
+    public ResponseEntity<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
+                           final Pageable pageable){
+        UserSearchDto body = new UserSearchDto();
+        HttpHeaders headers= new HttpHeaders(); // get 방식이므로 header의 content-type을 정해줄 필요가 없음
+
+        Page<User> searchResult=userService.searchUser(pageable, searchString);
+
+        body.setMessage("유저 검색 완료");
+        Map data = new HashMap<String, Object>();
+        data.put("search result", searchResult);
+        body.setUsers(data);
+
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
 }

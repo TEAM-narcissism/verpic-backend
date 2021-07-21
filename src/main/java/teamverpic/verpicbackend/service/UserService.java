@@ -1,5 +1,6 @@
 package teamverpic.verpicbackend.service;
 
+import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,7 +63,7 @@ public class UserService {
      * 유저 검색
      * 검색 창에 입력한 string으로 firstName, lastName, email을 순서대로 조회하여 결과를 출력함
      * @param searchString
-     * @return List<User>
+     * @return Page<User>
      */
     public Page<User> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
@@ -78,7 +79,6 @@ public class UserService {
 
         int count=result.size();
 
-//        return result;
         return new PageImpl<User>(result, pageable, count);
     }
 
