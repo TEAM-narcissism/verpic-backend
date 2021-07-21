@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 
-import teamverpic.verpicbackend.dto.UserCRUDDto;
 import teamverpic.verpicbackend.dto.UserSearchDto;
 import teamverpic.verpicbackend.repository.UserRepository;
 
