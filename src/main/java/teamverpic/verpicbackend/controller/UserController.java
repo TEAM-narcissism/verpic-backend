@@ -1,11 +1,7 @@
 package teamverpic.verpicbackend.controller;
 
-import com.sun.istack.NotNull;
+
 import lombok.RequiredArgsConstructor;
-
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.User;
 
-import teamverpic.verpicbackend.dto.UserCRUDDto;
 import teamverpic.verpicbackend.dto.UserSearchDto;
-import teamverpic.verpicbackend.repository.UserRepository;
+
 
 import teamverpic.verpicbackend.dto.HttpResponseDto;
 import teamverpic.verpicbackend.dto.UserResponseDto;

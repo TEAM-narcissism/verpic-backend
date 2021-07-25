@@ -1,11 +1,13 @@
 package teamverpic.verpicbackend.config.websocket;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import teamverpic.verpicbackend.handler.StompHandler;
 @EnableScheduling
 @Configuration
@@ -35,6 +37,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     }
     */
 
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(8192);
+        container.setMaxBinaryMessageBufferSize(8192);
+        return container;
+    }
 
 
 }
