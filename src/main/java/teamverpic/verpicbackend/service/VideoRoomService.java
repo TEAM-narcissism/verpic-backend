@@ -38,16 +38,16 @@ public class VideoRoomService {
         return room.getId();
     }
 
-    public Map<String, WebSocketSession> getClients(VideoRoom room) {
+    public Map<String, String> getClients(VideoRoom room) {
         return Optional.ofNullable(room)
                 .map(r -> Collections.unmodifiableMap(r.getClients()))
                 .orElse(Collections.emptyMap());
     }
-    public WebSocketSession addClient(VideoRoom  room,  String name, WebSocketSession session) {
-        return room.getClients().put(name, session);
+    public String addClient(VideoRoom room, String name, String sessionId) {
+        return room.getClients().put(name, sessionId);
     }
 
-    public WebSocketSession removeClientByName(VideoRoom room, String name) {
+    public String removeClientByName(VideoRoom room, String name) {
         return room.getClients().remove(name);
     }
 

@@ -20,7 +20,7 @@ public class VideoRoom {
     private Long id;
 
     @Getter
-    private Map<String, WebSocketSession> clients = new HashMap<>();
+    private Map<String, String> clients = new HashMap<>();
 
     @Override
     public boolean equals(Object o) {

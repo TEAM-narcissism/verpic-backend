@@ -1,10 +1,7 @@
 package teamverpic.verpicbackend.domain;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -16,6 +13,19 @@ public class WebSocketMessage {
     private String data;
     private Object candidate;
     private Object sdp;
+
+    @Builder
+    public WebSocketMessage(final String from,
+                            final String type,
+                            final String data,
+                            final Object candidate,
+                            final Object sdp) {
+        this.from = from;
+        this.type = type;
+        this.data = data;
+        this.candidate = candidate;
+        this.sdp = sdp;
+    }
 
     public String getFrom() {
         return from;
