@@ -9,20 +9,31 @@
 </head>
 
 <body>
-<h1 data-th-text="${message}">this gets replaced</h1>
-<input type="button" onclick="iamport()" value="결제" />
+<select name="pgcompany" id="pgcompany">
+    <option name="kakaopay" value="kakaopay" id="kakaopay">kakaopay</option>
+    <option name="html5_inicis" value="html5_inicis" id="html5_inicis">inicis</option>
+</select>
+<select name="paymentMethod" id="paymentMethod">
+    <option name="trans" value="trans" id="trans">trans</option>
+    <option name="tosspay" value="tosspay" id="tosspay">tosspay</option>
+</select>
+<input type="button"
+       onclick="iamport(document.getElementById('pgcompany').value, document.getElementById('paymentMethod').value)"
+       value="결제" />
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
-        function iamport() {
+        function iamport(pgcompany, paymentMethod) {
             var IMP = window.IMP; // 생략가능
+            //const pg=pgcompany;
+            //const pay=paymentMethod;
 
-            IMP.init('imp82186755'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+            IMP.init('imp82186755'); // 부여받은 "가맹점 식별코드"를 사용
 
             IMP.request_pay({
-                pg: 'kakaopay', // version 1.1.0부터 지원.
-                pay_method: 'trans',
+                pg: `${pgcompany}`, // version 1.1.0부터 지원.
+                pay_method: `${paymentMethod}`,
                 merchant_uid: 'merchant_' + new Date().getTime(),
                 name: '주문명:결제테스트',
                 amount: 10,
@@ -31,8 +42,9 @@
                 buyer_tel: '010-1234-5678',
                 buyer_addr: '서울특별시 강남구 삼성동',
                 buyer_postcode: '123-456',
-                //m_redirect_url: 카카오페이, 페이코, 다날의 경우는 필요없음. PC와 마찬가지로 callback함수로 결과가 떨어짐
-                m_redirect_url: '' //https://www.yourdomain.com/payments/complete
+                //m_redirect_url: 카카오페이, 페이코, 다날의 경우는 필요없음.
+                //PC와 마찬가지로 callback함수로 결과가 떨어짐
+                m_redirect_url: 'http://localhost:8080/orderCompleteMobile'
             }, function (rsp) {
                 if (rsp.success) {
                     var msg = '결제가 완료되었습니다.';
@@ -40,6 +52,14 @@
                     msg += '상점 거래ID : ' + rsp.merchant_uid;
                     msg += '결제 금액 : ' + rsp.paid_amount;
                     msg += '카드 승인번호 : ' + rsp.apply_num;
+                    $.ajax({
+                        url: "https://www.myservice.com/billings/", // 서비스 웹서버
+                        method: "post",
+                        headers: { "Content-Type": "application/json" },
+                        data: {
+                            customer_uid: "gildong_0001_1234" // 카드(빌링키)와 1:1로 대응하는 값
+                        }
+                    });
                 } else {
                     var msg = '결제에 실패하였습니다.';
                     msg += '에러내용 : ' + rsp.error_msg;
