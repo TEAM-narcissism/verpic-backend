@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import teamverpic.verpicbackend.domain.ChatRoom;
-import teamverpic.verpicbackend.dto.ChatRoomDto;
 import teamverpic.verpicbackend.service.ChatRoomService;
 
 @Controller
@@ -26,9 +25,14 @@ public class ChatRoomController {
             return "index";
         }
 
+        ChatRoom room;
         String userName = authentication.getName();
-        ChatRoom room = chatRoomService.chatRoomJoin(userName, receiverName);
-
+        try {
+            room = chatRoomService.chatRoomJoin(userName, receiverName);
+        } catch (NullPointerException e) {
+            System.out.println(userName + "과(와) " + receiverName + "가(이) 서로 친구이지 않습니다");
+            return "index";
+        }
         model.addAttribute("sender", userName);
         model.addAttribute("receiver", receiverName);
         model.addAttribute("roomId", room.getRoomId());

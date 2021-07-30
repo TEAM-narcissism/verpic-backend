@@ -6,7 +6,9 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.*;
+import teamverpic.verpicbackend.handler.ChatRoomSubscriptionInterceptor;
 import teamverpic.verpicbackend.handler.StompHandler;
+
 @EnableScheduling
 @Configuration
 @EnableWebSocketMessageBroker
@@ -14,6 +16,7 @@ import teamverpic.verpicbackend.handler.StompHandler;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
     private final StompHandler stompHandler;
+    private final ChatRoomSubscriptionInterceptor chatRoomSubscriptionInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -31,6 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(stompHandler);
+        registration.interceptors(chatRoomSubscriptionInterceptor);
     }
 
 

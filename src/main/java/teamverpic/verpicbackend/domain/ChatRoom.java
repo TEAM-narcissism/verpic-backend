@@ -4,13 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import teamverpic.verpicbackend.dto.ChatMessageDto;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +24,7 @@ public class ChatRoom {
     @Getter
     private Long participantsId2;
 
+    public boolean isParticipant(Long userId) {
+        return this.participantsId1 == userId || this.participantsId2 == userId;
+    }
 }

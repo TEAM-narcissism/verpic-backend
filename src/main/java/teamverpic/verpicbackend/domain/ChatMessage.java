@@ -4,8 +4,6 @@ import lombok.Builder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import teamverpic.verpicbackend.dto.ChatMessageDto;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
