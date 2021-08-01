@@ -37,6 +37,7 @@ hdButton.onclick = () => {
 
 // Initializes media stream.
 function getMedia(constraints) {
+
     if (localStream) {
         localStream.getTracks().forEach(track => {
             track.stop();

@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import org.springframework.stereotype.Component;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.messaging.*;
 import teamverpic.verpicbackend.domain.VideoRoom;
@@ -24,7 +25,7 @@ import teamverpic.verpicbackend.service.VideoRoomService;
 import java.io.IOException;
 import java.util.*;
 
-@Component
+@Controller
 public class StompCommandListener {
     private SimpMessagingTemplate messagingTemplate;
     private final VideoRoomService videoRoomService;
@@ -59,12 +60,15 @@ public class StompCommandListener {
 
     @EventListener
     public void handleConnectEvent(SessionConnectEvent event) {
-        socketParticipateUserList.add(event.getUser().getName());
+        try {
+            socketParticipateUserList.add(event.getUser().getName());
+        }catch(Exception e) {
+           
+        }
+
         socketSessionList.add(event.getMessage().getHeaders().get("simpSessionId").toString());
-
-        WebSocketMessage webSocketMessage = new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null);
-        sendMessage(webSocketMessage);
-
+        //WebSocketMessage webSocketMessage = new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null);
+        //sendMessage(webSocketMessage);
 
         MessageHeaders headers = event.getMessage().getHeaders();
 
@@ -81,8 +85,24 @@ public class StompCommandListener {
     }
 
     @EventListener
+    public void handleSubscribeEvent(SessionSubscribeEvent event) {
+        MessageHeaders headers = event.getMessage().getHeaders();
+
+        headers.forEach((key, data) ->
+                System.out.println("(key, data): " + key + "," + data)
+        );
+
+
+    }
+
+    @EventListener
     public void handleDisconnectEvent(SessionDisconnectEvent event){
-        socketParticipateUserList.remove(event.getUser().getName());
+        try {
+            socketParticipateUserList.remove(event.getUser().getName());
+        }catch(Exception e) {
+
+        }
+
         String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
         socketSessionList.remove(sessionId);
         sessionIdToRoomMap.remove(sessionId);
@@ -99,10 +119,10 @@ public class StompCommandListener {
     @MessageMapping("/experiment")
     public void handleTextMessage(WebSocketMessageDto textMessage, SimpMessageHeaderAccessor headerAccessor) {
         WebSocketMessage message = textMessage.toEntity();
+        System.out.println("여기용");
 
     try {
         String sessionId = headerAccessor.getSessionId();
-
 
         logger.debug("[ws] Message of {} type from {} received", message.getType(), message.getFrom());
         String userName = message.getFrom(); // origin of the message
@@ -121,6 +141,7 @@ public class StompCommandListener {
             case MSG_TYPE_OFFER:
             case MSG_TYPE_ANSWER:
             case MSG_TYPE_ICE:
+                System.out.println(message.getType());
                 Object candidate = message.getCandidate();
                 Object sdp = message.getSdp();
                 logger.debug("[ws] Signal: {}",
@@ -136,7 +157,7 @@ public class StompCommandListener {
                         // send messages to all clients except current user
                         if (!client.getKey().equals(userName)) {
                             // select the same type to resend signal
-                            sendMessage(new WebSocketMessage(
+                            sendMessage(client.getKey(), new WebSocketMessage(
                                             userName,
                                             message.getType(),
                                             data,
@@ -150,12 +171,14 @@ public class StompCommandListener {
             // identify user and their opponent
             case MSG_TYPE_JOIN:
                 // message.data contains connected room id
+                System.out.println("[ws]" + userName+ " has joined Room: #" +  message.getData());
                 logger.debug("[ws] {} has joined Room: #{}", userName, message.getData());
                 room = videoRoomService.findRoomByStringId(data)
                         .orElseThrow(() -> new IOException("Invalid room number received!"));
                 // add client to the Room clients list
                 videoRoomService.addClient(room, userName, sessionId);
                 sessionIdToRoomMap.put(sessionId, room);
+                sendMessage(userName, new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null));
                 break;
 
             case MSG_TYPE_LEAVE:
@@ -183,14 +206,8 @@ public class StompCommandListener {
 
     }
 
-    private void sendMessage(WebSocketMessage message) {
-        try {
-            String json = objectMapper.writeValueAsString(message);
-            messagingTemplate.convertAndSend("/sub/1", new TextMessage(json));
-        } catch (IOException e) {
-            logger.debug("An error occured: {}", e.getMessage());
-        }
-    }
-    
+    private void sendMessage(String uuid, WebSocketMessage message) {
+        messagingTemplate.convertAndSend("/sub/" + uuid, message);
 
+    }
 }

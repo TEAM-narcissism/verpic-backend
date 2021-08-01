@@ -2,6 +2,7 @@
 // create and run Web Socket connection
 //const socket = new WebSocket("ws://" + window.location.host + "/signal");
 const socket = new SockJS('http://' +  window.location.host + '/ws-stomp');
+const stompWebRTC = Stomp.over(socket);
 // UI elements
 const videoButtonOff = document.querySelector('#video_off');
 const videoButtonOn = document.querySelector('#video_on');
@@ -39,56 +40,57 @@ $(function(){
 
 function start() {
     // add an event listener for a message being received
-    socket.onmessage = function(msg) {
-        let message = JSON.parse(msg.data);
-        switch (message.type) {
-            case "text":
-                log('Text message from ' + message.from + ' received: ' + message.data);
-                break;
 
-            case "offer":
-                log('Signal OFFER received');
-                handleOfferMessage(message);
-                break;
-
-            case "answer":
-                log('Signal ANSWER received');
-                handleAnswerMessage(message);
-                break;
-
-            case "ice":
-                log('Signal ICE Candidate received');
-                handleNewICECandidateMessage(message);
-                break;
-
-            case "join":
-                log('Client is starting to ' + (message.data === "true)" ? 'negotiate' : 'wait for a peer'));
-                handlePeerConnection(message);
-                break;
-
-            default:
-                handleErrorMessage('Wrong type message received from server');
-        }
-    };
-
-    // add an event listener to get to know when a connection is open
-    socket.onopen = function() {
+    stompWebRTC.connect({}, function (frame) {
         log('WebSocket connection opened to Room: #' + localRoom);
-        // send a message to the server to join selected room with Web Socket
+
+        stompWebRTC.subscribe('/sub/' + localUserName, function (msg) {
+            let message = JSON.parse(msg.body);
+            switch (message.type) {
+                case "text":
+                    log('Text message from ' + message.from + ' received: ' + message.data);
+                    break;
+
+                case "offer":
+                    log('Signal OFFER received');
+                    handleOfferMessage(message);
+                    break;
+
+                case "answer":
+                    log('Signal ANSWER received');
+                    handleAnswerMessage(message);
+                    break;
+
+                case "ice":
+                    log('Signal ICE Candidate received');
+                    handleNewICECandidateMessage(message);
+                    break;
+
+                case "join":
+                    log('Client is starting to ' + (message.data === "true)" ? 'negotiate' : 'wait for a peer'));
+                    handlePeerConnection(message);
+                    break;
+
+                default:
+                    handleErrorMessage('Wrong type message received from server');
+            }
+        });
+
         sendToServer({
             from: localUserName,
             type: 'join',
             data: localRoom
         });
-    };
+
+    });
 
     // a listener for the socket being closed event
-    socket.onclose = function(message) {
+    stompWebRTC.onclose = function(message) {
         log('Socket has been closed');
     };
 
     // an event listener to handle socket errors
-    socket.onerror = function(message) {
+    stompWebRTC.onerror = function(message) {
         handleErrorMessage("Error: " + message);
     };
 }
@@ -179,7 +181,9 @@ function handleErrorMessage(message) {
 // use JSON format to send WebSocket message
 function sendToServer(msg) {
     let msgJSON = JSON.stringify(msg);
-    socket.send(msgJSON);
+
+    stompWebRTC.send("/pub/experiment",{}, msgJSON);
+
 }
 
 // initialize media stream
