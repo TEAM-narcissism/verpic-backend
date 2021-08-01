@@ -36,12 +36,12 @@ public class ChatService {
         message.setSenderName(userName);
         message.setTimeStamp(new Date());
         message.setMessage("채팅방 입장 성공");
-        template.convertAndSend("/sub/chat/" + message.getRoomId(), message);
+        template.convertAndSend(dest + message.getRoomId(), message);
     }
 
     public void chatSend(ChatMessageDto message, String userName) {
         message = chatMessageCreate(message, userName);
-        template.convertAndSend("/sub/chat/" + message.getRoomId(), message);
+        template.convertAndSend(dest + message.getRoomId(), message);
     }
 
     public ChatMessageDto chatMessageCreate(ChatMessageDto message, String userName) {

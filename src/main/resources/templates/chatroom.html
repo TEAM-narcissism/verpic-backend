@@ -14,6 +14,7 @@
             <input type="text" id="msg" class="form-control">
             <div class="input-group-append">
               <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+              <button id="button-load-messages">메세지 불러오기</button>
             </div>
           </div>
         </div>
@@ -41,6 +42,10 @@
     stomp.connect({}, function (){
       console.log("STOMP Connection")
 
+      stomp.subscribe("/user/sub/chat/" + roomId, function (e) {
+        // 메세지 로드할 때 받아오는 곳
+      });
+
       //4. subscribe(path, callback)으로 메세지를 받을 수 있음
       stomp.subscribe("/sub/chat/" + roomId, function (chat) {
         var content = JSON.parse(chat.body);
@@ -54,6 +59,8 @@
 
       });
 
+
+
       //3. send(path, header, message)로 메세지를 보낼 수 있음
       stomp.send('/pub/chat/enter', {}, JSON.stringify({receiverName: receiver, roomId: roomId}))
     });
@@ -64,6 +71,9 @@
       console.log(":" + msg.value);
       stomp.send('/pub/chat/message', {}, JSON.stringify({receiverName: receiver, message: msg.value, roomId: roomId}));
       msg.value = '';
+    });
+
+    $("#button-load-messages").on("click", function(e) {
     });
   });
 </script>
