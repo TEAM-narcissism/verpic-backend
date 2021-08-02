@@ -44,7 +44,7 @@ services:
     volumes:
       - "./database/mongodb/:/application"
     #command: mongod --smallfiles --logpath=/dev/null # --quiet
-    container_name: "mongo"
+    container_name: "mongo2"
     restart: always
     ports:
       - "27017:27017"

@@ -67,7 +67,7 @@ function start() {
                     break;
 
                 case "join":
-                    log('Client is starting to ' + (message.data === "true)" ? 'negotiate' : 'wait for a peer'));
+                    log('Client is starting to ' + (message.data === "true" ? 'negotiate' : 'wait for a peer'));
                     handlePeerConnection(message);
                     break;
 

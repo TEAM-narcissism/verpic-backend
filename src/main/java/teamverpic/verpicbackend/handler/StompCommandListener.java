@@ -170,6 +170,8 @@ public class StompCommandListener {
 
             // identify user and their opponent
             case MSG_TYPE_JOIN:
+                sendMessage(userName, new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null));
+
                 // message.data contains connected room id
                 System.out.println("[ws]" + userName+ " has joined Room: #" +  message.getData());
                 logger.debug("[ws] {} has joined Room: #{}", userName, message.getData());
@@ -178,7 +180,7 @@ public class StompCommandListener {
                 // add client to the Room clients list
                 videoRoomService.addClient(room, userName, sessionId);
                 sessionIdToRoomMap.put(sessionId, room);
-                sendMessage(userName, new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null));
+
                 break;
 
             case MSG_TYPE_LEAVE:
@@ -192,6 +194,27 @@ public class StompCommandListener {
                         .map(Map.Entry::getKey)
                         .findAny();
                 client.ifPresent(c -> videoRoomService.removeClientByName(room, c));
+
+                if (room != null) {
+                    Map<String, String> clients = videoRoomService.getClients(room);
+                    for(Map.Entry<String, String> cli : clients.entrySet())  {
+
+                        // send messages to all clients except current user
+                        if (!cli.getKey().equals(userName) && clients.size() <= 1) {
+                            // select the same type to resend signal
+                            sendMessage(cli.getKey(), new WebSocketMessage(
+                                    "Server",
+                                    MSG_TYPE_JOIN,
+                                    "false",
+                                    null,
+                                    null));
+                        }
+                    }
+                }
+
+
+
+
                 break;
 
             // something should be wrong with the received message, since it's type is unrecognizable
