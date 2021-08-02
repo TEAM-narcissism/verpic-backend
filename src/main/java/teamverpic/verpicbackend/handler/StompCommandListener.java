@@ -65,10 +65,7 @@ public class StompCommandListener {
         }catch(Exception e) {
            
         }
-
         socketSessionList.add(event.getMessage().getHeaders().get("simpSessionId").toString());
-        //WebSocketMessage webSocketMessage = new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null);
-        //sendMessage(webSocketMessage);
 
         MessageHeaders headers = event.getMessage().getHeaders();
 
@@ -84,16 +81,6 @@ public class StompCommandListener {
         System.out.println();
     }
 
-    @EventListener
-    public void handleSubscribeEvent(SessionSubscribeEvent event) {
-        MessageHeaders headers = event.getMessage().getHeaders();
-
-        headers.forEach((key, data) ->
-                System.out.println("(key, data): " + key + "," + data)
-        );
-
-
-    }
 
     @EventListener
     public void handleDisconnectEvent(SessionDisconnectEvent event){
@@ -102,16 +89,42 @@ public class StompCommandListener {
         }catch(Exception e) {
 
         }
-
         String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
         socketSessionList.remove(sessionId);
         sessionIdToRoomMap.remove(sessionId);
 
-        logger.debug("[ws] Session has been closed with session id {}", sessionId);
+        VideoRoom room = sessionIdToRoomMap.get(sessionId);
+        Map<String, String> clients = videoRoomService.getClients(room);
+        clients.forEach(cl ->
+                        System.out.println("cl = " + cl);
+                );
+
+
+
+        Optional<String> client = videoRoomService.getClients(room).entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), sessionId))
+                .map(Map.Entry::getKey)
+                .findAny();
+        client.ifPresent(c -> videoRoomService.removeClientByName(room, c));
+
+
+
+        logger.info("Disconnect : 현재 이 방의 클라이언트 수: {}", clients.size());
+        if (clients.size() <= 1) {
+            for(Map.Entry<String, String> cli : clients.entrySet())  {
+                sendMessage(cli.getKey(), new WebSocketMessage(
+                        "Server",
+                        MSG_TYPE_JOIN,
+                        "false",
+                        null,
+                        null));
+            }
+        }
 
         System.out.println();
         System.out.println("######################## DISCONNECT -- 현재 접속 유저 ########################");
         socketParticipateUserList.forEach(user -> System.out.println("user = " + user));
+        socketSessionList.forEach(session -> System.out.println("session = " + session));
         System.out.println("############################################################################");
         System.out.println();
     }
@@ -119,7 +132,6 @@ public class StompCommandListener {
     @MessageMapping("/experiment")
     public void handleTextMessage(WebSocketMessageDto textMessage, SimpMessageHeaderAccessor headerAccessor) {
         WebSocketMessage message = textMessage.toEntity();
-        System.out.println("여기용");
 
     try {
         String sessionId = headerAccessor.getSessionId();
@@ -137,17 +149,15 @@ public class StompCommandListener {
                 // process text message if needed
                 break;
 
-            // process signal received from client
             case MSG_TYPE_OFFER:
             case MSG_TYPE_ANSWER:
             case MSG_TYPE_ICE:
-                System.out.println(message.getType());
                 Object candidate = message.getCandidate();
                 Object sdp = message.getSdp();
-                logger.debug("[ws] Signal: {}",
-                        candidate != null
-                                ? candidate.toString().substring(0, 64)
-                                : sdp.toString().substring(0, 64));
+                //logger.info("[ws] Signal: {}",
+                //        candidate != null
+                //                ? candidate.toString().substring(0, 64)
+                  //              : sdp.toString().substring(0, 64));
 
                 VideoRoom rm = sessionIdToRoomMap.get(sessionId);
                 if (rm != null) {
@@ -156,7 +166,6 @@ public class StompCommandListener {
 
                         // send messages to all clients except current user
                         if (!client.getKey().equals(userName)) {
-                            // select the same type to resend signal
                             sendMessage(client.getKey(), new WebSocketMessage(
                                             userName,
                                             message.getType(),
@@ -170,22 +179,43 @@ public class StompCommandListener {
 
             // identify user and their opponent
             case MSG_TYPE_JOIN:
-                sendMessage(userName, new WebSocketMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!sessionIdToRoomMap.isEmpty()), null, null));
-
                 // message.data contains connected room id
                 System.out.println("[ws]" + userName+ " has joined Room: #" +  message.getData());
-                logger.debug("[ws] {} has joined Room: #{}", userName, message.getData());
+                logger.info("[ws] {} has joined Room: #{}", userName, message.getData());
                 room = videoRoomService.findRoomByStringId(data)
                         .orElseThrow(() -> new IOException("Invalid room number received!"));
                 // add client to the Room clients list
                 videoRoomService.addClient(room, userName, sessionId);
                 sessionIdToRoomMap.put(sessionId, room);
 
+
+                Map<String, String> clients = videoRoomService.getClients(room);
+                logger.info("현재 이 방의 클라이언트 수: {}", clients.size());
+                    // uuid, sessionid로 이뤄짐
+
+                    if (clients.size() <= 1) {
+                        // select the same type to resend signal
+                        sendMessage(userName, new WebSocketMessage(
+                                "Server",
+                                MSG_TYPE_JOIN,
+                                "false",
+                                null,
+                                null));
+                    } else {
+                        sendMessage(userName, new WebSocketMessage(
+                                "Server",
+                                MSG_TYPE_JOIN,
+                                "true",
+                                null,
+                                null));
+                    }
+
+
                 break;
 
             case MSG_TYPE_LEAVE:
                 // message data contains connected room id
-                logger.debug("[ws] {} is going to leave Room: #{}", userName, message.getData());
+                logger.info("[ws] {} is going to leave Room: #{}", userName, message.getData());
                 // room id taken by session id
                 room = sessionIdToRoomMap.get(sessionId);
                 // remove the client which leaves from the Room clients list
@@ -194,26 +224,7 @@ public class StompCommandListener {
                         .map(Map.Entry::getKey)
                         .findAny();
                 client.ifPresent(c -> videoRoomService.removeClientByName(room, c));
-
-                if (room != null) {
-                    Map<String, String> clients = videoRoomService.getClients(room);
-                    for(Map.Entry<String, String> cli : clients.entrySet())  {
-
-                        // send messages to all clients except current user
-                        if (!cli.getKey().equals(userName) && clients.size() <= 1) {
-                            // select the same type to resend signal
-                            sendMessage(cli.getKey(), new WebSocketMessage(
-                                    "Server",
-                                    MSG_TYPE_JOIN,
-                                    "false",
-                                    null,
-                                    null));
-                        }
-                    }
-                }
-
-
-
+                logger.info("현재 이 방의 클라이언트 수: {}", videoRoomService.getClients(room).size());
 
                 break;
 
