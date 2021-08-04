@@ -7,16 +7,11 @@ import org.springframework.http.HttpHeaders;
 import teamverpic.verpicbackend.dto.HttpResponseDto;
 
 
-@Getter
-@Setter
+
 public class CustomNullPointerException extends NullPointerException {
 
-    public CustomNullPointerException(HttpResponseDto responseDto, HttpHeaders httpHeaders){
-        this.responseDto = responseDto;
-        this.httpHeaders = httpHeaders;
+    public CustomNullPointerException(String msg){
+        super(msg);
     }
-
-    private HttpResponseDto responseDto;
-    private HttpHeaders httpHeaders;
 
 }

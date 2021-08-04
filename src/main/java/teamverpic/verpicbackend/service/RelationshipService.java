@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import teamverpic.verpicbackend.customexception.CustomNullPointerException;
 import teamverpic.verpicbackend.domain.Notification;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.HttpResponseDto;
+import teamverpic.verpicbackend.dto.UserResponseDto;
 import teamverpic.verpicbackend.handler.StompCommandListener;
 import teamverpic.verpicbackend.repository.NotificationRepository;
 import teamverpic.verpicbackend.repository.UserRepository;
@@ -20,37 +22,37 @@ public class RelationshipService {
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
     private final StompCommandListener stompCommandListener;
+    private final UserService userService;
 
-    public HttpResponseDto relationshipRequest(User currentLoginUser, User receiver) {
-        HttpResponseDto responseDto = new HttpResponseDto();
+    public void relationshipRequest(String userEmail, Long receiverId) {
+
+        User currentLoginUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저에요."));
+
+        User receiver =  userRepository.findById(receiverId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저에요."));
 
         if(isRelationship(currentLoginUser, receiver)) {
             System.out.println("이미 등록된 친구에요.");
-            responseDto.setMessage("이미 등록된 친구에요.");
-            responseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("이미 등록된 친구에요.");
+
         }
         else if(currentLoginUser.getId() == receiver.getId()){
             System.out.println("본인과는 친구가 될 수 없어요.");
-            responseDto.setMessage("본인과는 친구가 될 수 없어요.");
-            responseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("본인과는 친구가 될 수 없어요.");
         }
-
         else {
             if (stompCommandListener.getSocketParticipateUserList().contains(receiver.getEmail())) {
                 System.out.println("메시지 수신 유저가 온라인이에요.");
-                responseDto.setMessage("메시지 수신 유저가 온라인이에요.");
-                responseDto.setHttpStatus(HttpStatus.OK);
                 notificationService.alarmByMessage(currentLoginUser.getId(), receiver.getId(), 1);
             } else {
                 // 처리안했음 아직
                 System.out.println("메시지 수신 유저가 오프라인이에요.");
 
-                responseDto.setMessage("메시지 수신 유저가 오프라인이에요.");
-                responseDto.setHttpStatus(HttpStatus.OK);
             }
         }
 
-        return responseDto;
+
     }
 
     public void relationshipAdd(Authentication authentication, String notificationId){
