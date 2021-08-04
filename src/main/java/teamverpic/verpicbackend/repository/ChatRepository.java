@@ -7,5 +7,7 @@ import teamverpic.verpicbackend.dto.ChatMessageDto;
 import java.util.List;
 
 public interface ChatRepository extends MongoRepository<ChatMessage, String> {
-    public List<ChatMessageDto>  findAllByRoomId(Long senderID, Long receiverID);
+    public List<ChatMessageDto> findAllByRoomId(Long senderID, Long receiverID);
+
+    public List<ChatMessage> findAllByRoomIdAndReceiverNameAndReadFalse(Long roomId, String receiverName);
 }

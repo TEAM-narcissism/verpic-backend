@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<head>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
   <th:block th:fragment="content">
@@ -22,9 +28,6 @@
       <div class="col-6"></div>
     </div>
 
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
   </th:block>
 </html>
@@ -42,8 +45,16 @@
     stomp.connect({}, function (){
       console.log("STOMP Connection")
 
-      stomp.subscribe("/user/sub/chat/" + roomId, function (e) {
-        // 메세지 로드할 때 받아오는 곳
+      stomp.subscribe("/user/sub/chat/" + roomId, function (chat) {
+        console.log("개인 메시지 수신")
+        var content = JSON.parse(chat.body);
+        console.log("here!" + content.message);
+        var str = '';
+        str = "<div class='col-6'>";
+        str += "<div class='alert alert-secondary'>";
+        str += "<b>" + content.senderName + " : " + content.message + "</b>";
+        str += "</div></div>";
+        $("#msgArea").append(str);
       });
 
       //4. subscribe(path, callback)으로 메세지를 받을 수 있음

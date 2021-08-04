@@ -5,8 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import teamverpic.verpicbackend.domain.ChatRoom;
 import teamverpic.verpicbackend.service.ChatRoomService;
 
@@ -16,8 +16,8 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @RequestMapping(value = "/chatroom", method = RequestMethod.GET)
-    public String chatRoomJoin(String receiverName, Model model) {
+    @GetMapping(value = "/chatroom/{receiverName}")
+    public String chatRoomJoin(@PathVariable String receiverName, Model model) {
         // 요청한 유저 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() == "anonymousUser") {

@@ -2,19 +2,18 @@ package teamverpic.verpicbackend.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
 import teamverpic.verpicbackend.domain.ChatRoom;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.repository.ChatRoomRepository;
 import teamverpic.verpicbackend.repository.UserRepository;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Slf4j
@@ -24,8 +23,10 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
 
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
-    private final Map<Long, Set<String>> roomId2SessionIDs = new HashMap<>();
-    private final Map<String, Long> sessionId2RoomId = new HashMap<>();
+    @Resource
+    private final Map<Long, Set<String>> roomId2SessionIDs;
+    @Resource
+    private final Map<String, Long> sessionId2RoomId;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -46,23 +47,11 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
                 }
 
                 Long roomId = getRoomIdFromDestination(accessor.getDestination());
-                sessionId2RoomId.put(sessionId, roomId);
-                if(roomId2SessionIDs.containsKey(roomId)) {
-                    roomId2SessionIDs.get(roomId).add(sessionId);
-                }
-                else {
-                    roomId2SessionIDs.put(roomId, new HashSet<>(Arrays.asList(sessionId)));
-                }
+                addSessionUser(roomId, sessionId);
                 System.out.println("CONNECTED");
-                sessionId2RoomId.forEach((key, val) -> log.info("key = {}, val = {}", key, val));
                 break;
             case DISCONNECT:
-                if(sessionId2RoomId.containsKey(sessionId)) {
-                    roomId2SessionIDs.remove(sessionId2RoomId.get(sessionId));
-                    sessionId2RoomId.remove(sessionId);
-                    System.out.println("DISCONNECTED");
-                    sessionId2RoomId.forEach((key, val) -> log.info("key = {}, val = {}", key, val));
-                }
+                removeSessionUser(sessionId);
                 break;
             default:
                 break;
@@ -92,6 +81,26 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
         catch (Exception e) {
             log.info("잡았따!");
             return null;
+        }
+    }
+
+    public void addSessionUser(Long roomId, String sessionId) {
+        sessionId2RoomId.put(sessionId, roomId);
+        if(roomId2SessionIDs.containsKey(roomId)) {
+            roomId2SessionIDs.get(roomId).add(sessionId);
+        }
+        else {
+            roomId2SessionIDs.put(roomId, new HashSet<>(Arrays.asList(sessionId)));
+        }
+        sessionId2RoomId.forEach((key, val) -> log.info("key = {}, val = {}", key, val));
+    }
+
+    public void removeSessionUser(String sessionId) {
+        if(sessionId2RoomId.containsKey(sessionId)) {
+            roomId2SessionIDs.remove(sessionId2RoomId.get(sessionId));
+            sessionId2RoomId.remove(sessionId);
+            System.out.println("DISCONNECTED");
+            sessionId2RoomId.forEach((key, val) -> log.info("key = {}, val = {}", key, val));
         }
     }
 }

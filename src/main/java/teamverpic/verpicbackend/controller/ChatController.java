@@ -26,28 +26,23 @@ public class ChatController {
     private final SimpMessagingTemplate template;
 
     @MessageMapping(value = "/chat/enter")
-    public void enter(Authentication authentication, ChatMessageDto message, Principal principal) {
+    public void enter(Authentication authentication, ChatMessageDto message) {
         if (authentication.getName() == "anonymousUser") {
             System.out.println("로그인 후 이용해주세요");
             return;
         }
-        log.info("principal name = {}", principal.getName());
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setSessionId(principal.getName());
-        headerAccessor.setLeaveMutable(false);
 
-        //template.convertAndSendToUser(principal.getName(), "/sub/chat/1", message); 사용법
         chatService.chatEnter(message, authentication.getName());
     }
 
     @MessageMapping(value = "/chat/message")
-    public void send(Authentication authentication, ChatMessageDto message) {
+    public void send(Authentication authentication, ChatMessageDto message, StompHeaderAccessor accessor) {
         if (authentication.getName() == "anonymousUser") {
             System.out.println("로그인 후 이용해주세요");
             return;
         }
 
-        chatService.chatSend(message, authentication.getName());
+        chatService.chatSend(message, authentication.getName(), accessor.getSessionId());
     }
 
     private MessageHeaders createHeaders(String sessionId) {
