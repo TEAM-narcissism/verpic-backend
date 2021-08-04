@@ -40,26 +40,36 @@
     var sockJs = new SockJS("http://localhost:8080/ws-stomp");
     //1. SockJS를 내부에 들고있는 stomp를 내어줌.
     var stomp = Stomp.over(sockJs);
+    // var topTimeStamp = new Date();
 
     //2. connection이 맺어지면 실행
     stomp.connect({}, function (){
       console.log("STOMP Connection")
 
       stomp.subscribe("/user/sub/chat/" + roomId, function (chat) {
-        console.log("개인 메시지 수신")
+
         var content = JSON.parse(chat.body);
+        topTimeStamp = content.timeStamp < topTimeStamp ? content.timeStamp : topTimeStamp;
+        console.log("개인 메시지 수신", content.timeStamp, topTimeStamp)
         console.log("here!" + content.message);
         var str = '';
         str = "<div class='col-6'>";
         str += "<div class='alert alert-secondary'>";
         str += "<b>" + content.senderName + " : " + content.message + "</b>";
         str += "</div></div>";
-        $("#msgArea").append(str);
+        $("#msgArea").prepend(str);
       });
 
       //4. subscribe(path, callback)으로 메세지를 받을 수 있음
       stomp.subscribe("/sub/chat/" + roomId, function (chat) {
         var content = JSON.parse(chat.body);
+        if(typeof topTimeStamp === 'undefined') {
+          topTimeStamp = content.timeStamp;
+        }
+        else {
+          topTimeStamp = content.timeStamp < topTimeStamp ? content.timeStamp : topTimeStamp;
+        }
+        console.log(content.timeStamp, topTimeStamp)
         console.log("here!" + content.message);
         var str = '';
           str = "<div class='col-6'>";
@@ -85,6 +95,8 @@
     });
 
     $("#button-load-messages").on("click", function(e) {
+      console.log("send load");
+      stomp.send("/pub/chat/load", {}, JSON.stringify({timeStamp: topTimeStamp, roomId: roomId}));
     });
   });
 </script>

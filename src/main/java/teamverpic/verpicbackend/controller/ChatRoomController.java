@@ -24,7 +24,9 @@ public class ChatRoomController {
             System.out.println("로그인 후 이용해주세요");
             return "index";
         }
-
+        else if (authentication.getName() == receiverName) {
+            System.out.println("자신과의 채팅방은 없습니다.");
+        }
         ChatRoom room;
         String userName = authentication.getName();
         try {
