@@ -26,8 +26,6 @@ public class ChatService {
     private final String dest = "/sub/chat/";
     @Resource
     private final Map<Long, Set<String>> roomId2SessionIDs;
-    @Resource
-
 
     public void chatEnter(ChatMessageDto message, String userName) {
         message.setSenderName("Verpic");
