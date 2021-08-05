@@ -40,6 +40,7 @@ public class StompHandler implements ChannelInterceptor  {
 
         Principal currentUser = accessor.getUser();
 
+
         if(accessor.getCommand() == StompCommand.CONNECT) {
             /*
             if(!jwtTokenProvider.validateToken(token)){

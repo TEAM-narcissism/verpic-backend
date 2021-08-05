@@ -27,5 +27,4 @@ build/
 
 
 out/**
-
-application-oauth.properties
+*.jks

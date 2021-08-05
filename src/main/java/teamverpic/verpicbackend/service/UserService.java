@@ -81,7 +81,12 @@ public class UserService {
 
         return new PageImpl<User>(result, pageable, count);
     }
+    public UserResponseDto findByEmail(String email) {
+        User member = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. email=" + email));
 
+        return new UserResponseDto(member);
+    }
     //유저 프로필 조회 시
     public UserResponseDto findById(Long id) {
         User member = userRepository.findById(id)
@@ -89,6 +94,7 @@ public class UserService {
 
         return new UserResponseDto(member);
     }
+
 
     @Transactional
     public Long profile_update(Long id, UserUpdateRequestDto requestDto) {
