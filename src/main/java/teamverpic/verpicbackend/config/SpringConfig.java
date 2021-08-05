@@ -10,6 +10,7 @@ import teamverpic.verpicbackend.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class SpringConfig {
@@ -29,13 +30,13 @@ public class SpringConfig {
 
     @Bean
     public Map<Long, Set<String>> getRoomId2SessionIDs() {
-        Map<Long, Set<String>> roomId2SessionIDs = new HashMap<>();
+        Map<Long, Set<String>> roomId2SessionIDs = new ConcurrentHashMap<>();
         return roomId2SessionIDs;
     }
 
     @Bean
     public Map<String, Long> getSessionId2RoomId() {
-        Map<String, Long> sessionId2RoomId = new HashMap<>();
+        Map<String, Long> sessionId2RoomId = new ConcurrentHashMap<>();
         return sessionId2RoomId;
     }
 }

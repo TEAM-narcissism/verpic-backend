@@ -30,6 +30,9 @@ public class ChatMessage {
     private String receiverName;
     private String message;
     private Date timeStamp;
-    @Setter
     private Boolean read;
+
+    public static void read(ChatMessage message) {
+        message.read = true;
+    }
 }
