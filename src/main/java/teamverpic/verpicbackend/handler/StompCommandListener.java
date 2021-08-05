@@ -75,7 +75,7 @@ public class StompCommandListener {
 
         System.out.println();
         System.out.println("######################## CONNECT -- 현재 접속 유저 ########################");
-        socketParticipateUserList.forEach(user -> System.out.println("user = " + user));
+        //socketParticipateUserList.forEach(user -> System.out.println("user = " + user));
         socketSessionList.forEach(session -> System.out.println("session = " + session));
         System.out.println("#########################################################################");
         System.out.println();
@@ -120,7 +120,7 @@ public class StompCommandListener {
 
         System.out.println();
         System.out.println("######################## DISCONNECT -- 현재 접속 유저 ########################");
-        socketParticipateUserList.forEach(user -> System.out.println("user = " + user));
+        //socketParticipateUserList.forEach(user -> System.out.println("user = " + user));
         socketSessionList.forEach(session -> System.out.println("session = " + session));
         System.out.println("############################################################################");
         System.out.println();
@@ -219,8 +219,9 @@ public class StompCommandListener {
     }
 
     }
-
     private void sendMessage(String uuid, WebSocketMessage message) {
+
+        logger.info("sendmessage to {}", uuid);
         messagingTemplate.convertAndSend("/sub/" + uuid, message);
 
     }
