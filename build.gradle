@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 
 	//websocket config
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -40,9 +42,10 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.3'
 	implementation 'org.webjars:bootstrap:3.3.7'
 	implementation 'org.webjars:jquery:3.1.0'
+    implementation 'junit:junit:4.12'
 
 
-	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 

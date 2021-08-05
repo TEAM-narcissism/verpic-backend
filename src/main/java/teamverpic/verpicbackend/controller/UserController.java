@@ -1,6 +1,5 @@
 package teamverpic.verpicbackend.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
