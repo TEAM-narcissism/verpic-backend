@@ -26,7 +26,6 @@ public class ChatService {
     private final String dest = "/sub/chat/";
     @Resource
     private final Map<Long, Set<String>> roomId2SessionIDs;
-    @Resource
 
 
     public void chatEnter(ChatMessageDto message, String userName) {
@@ -36,7 +35,7 @@ public class ChatService {
         List<ChatMessage> unreadMessages = chatRepository
                 .findAllByRoomIdAndReceiverNameAndReadFalse(message.getRoomId(), userName);
         unreadMessages.forEach(m -> {
-            m.setRead(true);
+            ChatMessage.read(m);
             chatRepository.save(m);
             template.convertAndSendToUser(userName, dest + message.getRoomId(), ChatMessageDto.from(m));
         });

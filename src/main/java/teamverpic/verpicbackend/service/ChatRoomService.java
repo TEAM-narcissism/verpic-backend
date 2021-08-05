@@ -22,10 +22,10 @@ public class ChatRoomService {
     public ChatRoom chatRoomJoin(String userName, String receiverName) {
         User user = userRepository.findByEmail(userName).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다(로그인된 사용자)"));
         User receiver = userRepository.findByEmail(receiverName).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다(receiver)"));
-        // 두 유저가 서로 친구관계인지 확인
-//        if (!relationshipService.isRelationship(user, receiver)) {
-//            throw new NullPointerException("두 유저가 친구이지 않습니다");
-//        }
+//      두 유저가 서로 친구관계인지 확인
+        if (!relationshipService.isRelationship(user, receiver)) {
+            throw new NullPointerException("두 유저가 친구이지 않습니다");
+        }
 
         Long userId1 = Math.min(user.getId(), receiver.getId());
         Long userId2 = Math.max(user.getId(), receiver.getId());
