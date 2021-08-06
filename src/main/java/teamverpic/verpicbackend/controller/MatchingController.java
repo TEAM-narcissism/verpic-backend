@@ -16,7 +16,8 @@ import teamverpic.verpicbackend.service.MatchingService;
 public class MatchingController {
     private final MatchingService matchingService;
 
-    @GetMapping({"", "/", "/index", "/home", "/main"})
+//    @GetMapping({"", "/", "/index", "/home", "/main"})
+    @GetMapping({"/index", "/home", "/main"})
     public ModelAndView displayMainPage(Long id, String uuid) {
         return matchingService.displayMainPage(id, uuid);
     }

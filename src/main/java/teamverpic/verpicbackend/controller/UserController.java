@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
+import teamverpic.verpicbackend.config.security.dto.SessionUser;
 import teamverpic.verpicbackend.domain.User;
 
 import teamverpic.verpicbackend.dto.UserSearchDto;
@@ -23,6 +23,7 @@ import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
 
 import teamverpic.verpicbackend.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -30,11 +31,43 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@Controller
 public class UserController {
+
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
+    private final HttpSession httpSession;
+
+    //Main Page
+//    @GetMapping("/test")
+//    public String mainPage() {
+//        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+//        if (user == null) {
+//            return "main"; // 원래 메인 페이지
+//        }
+//        return "redirect:/oauth2-login/get-jwt";
+//    }
+
+    // OAuth2 Login
+    @GetMapping("/oauth2-login/get-jwt")
+    public ResponseEntity<HttpResponseDto> OAuth2_login() {
+        HttpHeaders headers= new HttpHeaders();
+        HttpResponseDto body = new HttpResponseDto();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        String token = "";
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        token = userService.OAuth2_login(user, jwtTokenProvider);
+
+        System.out.println("user.getEmail() = " + user.getEmail());
+        
+        body.setMessage("Log in with Google");
+        Map data = new HashMap<String, Object>();
+        data.put("Token", token);
+        body.setData(data);
+        body.setHttpStatus(HttpStatus.OK);
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+    }
 
     // 회원가입
     @PostMapping("/join")
@@ -103,10 +136,9 @@ public class UserController {
 
     // 검색
     @GetMapping("/search")
-    public ResponseEntity<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
-                           final Pageable pageable){
-        UserSearchDto body = new UserSearchDto();
+    public ResponseEntity<UserSearchDto> search(@RequestParam(value="searchString") String searchString, final Pageable pageable){
         HttpHeaders headers= new HttpHeaders(); // get 방식이므로 header의 content-type을 정해줄 필요가 없음
+        UserSearchDto body = new UserSearchDto();
 
         Page<User> searchResult=userService.searchUser(pageable, searchString);
 
@@ -117,5 +149,4 @@ public class UserController {
 
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
-
 }

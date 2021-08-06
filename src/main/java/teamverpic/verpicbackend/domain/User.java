@@ -32,9 +32,25 @@ public class User implements UserDetails {
     @Column(length = 300, nullable = false)
     private String password;
 
+    @Column
+    private String picture;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    // OAuth2 Login
+    public User OAuth_update(String name, String picture) {
+        this.firstName = name;
+        this.picture = picture;
+
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.roles.get(0);
+    }
+
 
     // 프로필 설정 시 추가 (detail_profile)
     private String nation;

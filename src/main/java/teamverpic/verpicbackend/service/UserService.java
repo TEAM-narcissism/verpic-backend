@@ -1,6 +1,5 @@
 package teamverpic.verpicbackend.service;
 
-import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
+import teamverpic.verpicbackend.config.security.dto.SessionUser;
 import teamverpic.verpicbackend.domain.User;
 import teamverpic.verpicbackend.dto.UserResponseDto;
 import teamverpic.verpicbackend.dto.UserUpdateRequestDto;
@@ -55,6 +55,12 @@ public class UserService {
         return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
     }
 
+    public String OAuth2_login(SessionUser user, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
+        User member = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+    }
+
     public Optional<User> findUser(String email) {
         return userRepository.findByEmail(email);
     }
@@ -81,12 +87,14 @@ public class UserService {
 
         return new PageImpl<User>(result, pageable, count);
     }
+
     public UserResponseDto findByEmail(String email) {
         User member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. email=" + email));
 
         return new UserResponseDto(member);
     }
+
     //유저 프로필 조회 시
     public UserResponseDto findById(Long id) {
         User member = userRepository.findById(id)
@@ -94,7 +102,6 @@ public class UserService {
 
         return new UserResponseDto(member);
     }
-
 
     @Transactional
     public Long profile_update(Long id, UserUpdateRequestDto requestDto) {
@@ -105,7 +112,6 @@ public class UserService {
 
         return id;
     }
-
 
     // 유저 리스트 중 중복된 유저를 제거함
     private List<User> userDuplicateDelete(List<User> total, HashSet<User> totalset) {
