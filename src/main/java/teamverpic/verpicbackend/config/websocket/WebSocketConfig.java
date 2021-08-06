@@ -6,11 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
-import teamverpic.verpicbackend.handler.ChatRoomSubscriptionInterceptor;
-import teamverpic.verpicbackend.handler.StompHandler;
+import teamverpic.verpicbackend.domain.chat.handler.ChatRoomSubscriptionInterceptor;
 
 
 @EnableScheduling
