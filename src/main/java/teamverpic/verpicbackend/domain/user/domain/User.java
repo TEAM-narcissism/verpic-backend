@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 
 import javax.persistence.*;
 import java.util.*;
@@ -62,6 +63,10 @@ public class User implements UserDetails {
     @Builder.Default
     private Set<User> userRelation = new HashSet<User>();
 
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<MatchUser> matches = Collections.synchronizedList(new ArrayList<>());
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,7 +83,13 @@ public class User implements UserDetails {
         userRelation.remove(deleteUser);
     }
 
+    public void addUserMatch(MatchUser matchUser) {
+        matches.add(matchUser);
+    }
 
+    public void deleteUserMatch(MatchUser matchUser) {
+        matches.remove(matchUser);
+    }
 
     @Override
     public String getUsername() {
