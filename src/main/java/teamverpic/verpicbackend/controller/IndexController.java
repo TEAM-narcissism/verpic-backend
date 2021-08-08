@@ -18,9 +18,9 @@ public class IndexController {
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         if (user == null) {
             System.out.println("user is null ");
+            return "main"; // 메인 페이지
         }
         System.out.println("user email is = " + user.getEmail());
-        return "main"; // 메인 페이지
-//        return "redirect:/oauth2-login/get-jwt";
+        return "redirect:/oauth2-login/get-jwt";
     }
 }

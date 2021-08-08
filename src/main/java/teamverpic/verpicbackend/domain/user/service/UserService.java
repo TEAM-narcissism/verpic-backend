@@ -108,7 +108,7 @@ public class UserService {
         User member = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
 
-        member.update(requestDto.getFirstLanguage(), requestDto.getAvailableLanguage(), requestDto.getLearnLanguage(), requestDto.getHobby(), requestDto.getInterest());
+        member.update(requestDto.getFirstLanguage(), requestDto.getLearnLanguage());
 
         return id;
     }

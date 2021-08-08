@@ -2,7 +2,7 @@ package teamverpic.verpicbackend.config.security.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import teamverpic.verpicbackend.domain.User;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
