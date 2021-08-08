@@ -1,7 +1,7 @@
 package teamverpic.verpicbackend.config.security.dto;
 
 import lombok.Getter;
-import teamverpic.verpicbackend.domain.User;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import java.io.Serializable;
 

@@ -119,13 +119,13 @@ public class UserController {
     }
 
     // 유저 프로필 조회
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public UserResponseDto profile (@PathVariable Long id) {
         return userService.findById(id);
     }
 
     // 유저 프로필 수정
-    @PutMapping("/{id}")
+    @PutMapping("/users/{id}")
     public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
         return userService.profile_update(id, requestDto);
     }

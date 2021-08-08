@@ -11,8 +11,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.dto.OAuthAttributes;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
-import teamverpic.verpicbackend.domain.User;
-import teamverpic.verpicbackend.repository.UserRepository;
+import teamverpic.verpicbackend.domain.user.dao.UserRepository;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;

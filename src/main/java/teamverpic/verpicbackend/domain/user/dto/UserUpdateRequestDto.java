@@ -8,17 +8,14 @@ public class UserUpdateRequestDto {
 
     // 프로필 설정 시 추가 (detail_profile)
     private String firstLanguage;
-    private String availableLanguage;
     private String learnLanguage;
-    private String hobby;
-    private String interest;
+//    private String availableLanguage;
+//    private String hobby;
+//    private String interest;
 
     @Builder
-    public UserUpdateRequestDto(String firstLanguage, String availableLanguage, String learnLanguage, String hobby, String interest) {
+    public UserUpdateRequestDto(String firstLanguage, String learnLanguage) {
         this.firstLanguage = firstLanguage;
-        this.availableLanguage = availableLanguage;
         this.learnLanguage = learnLanguage;
-        this.hobby = hobby;
-        this.interest = interest;
     }
 }
