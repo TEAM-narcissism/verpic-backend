@@ -14,7 +14,6 @@ import teamverpic.verpicbackend.domain.user.service.NotificationService;
 @RequiredArgsConstructor
 public class NotificationController {
     private final SimpMessageSendingOperations messagingTemplate;
-    private final NotificationService alarmService;
 
     @RequestMapping(value = "/notification", method = RequestMethod.GET)
     public String notifications() {

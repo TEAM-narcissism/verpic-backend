@@ -24,33 +24,33 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    @PostMapping("/topic")
-    public ResponseEntity<TopicDto> addTopic(@RequestBody Map<String, String> topic) {
-
-        TopicDto topicDto=new TopicDto();
-        HttpHeaders headers= new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        try{
-            topicService.createTopic(topic);
-        }
-        catch(Exception e){
-            if(e instanceof IllegalStateException){
-                topicDto.setMessage("중복 토픽 등록 불가");
-                topicDto.setHttpStatus(HttpStatus.BAD_REQUEST);
-                return new ResponseEntity<>(topicDto, headers, HttpStatus.BAD_REQUEST);
-            }
-            else if(e instanceof ParseException){
-                topicDto.setMessage("날짜 요일 형식 오류");
-                topicDto.setHttpStatus(HttpStatus.BAD_REQUEST);
-                return new ResponseEntity<>(topicDto, headers, HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        topicDto.setMessage("토픽 등록 성공");
-        topicDto.setHttpStatus(HttpStatus.CREATED);
-        return new ResponseEntity<>(topicDto, headers, HttpStatus.CREATED);
-    }
+//    @PostMapping("/topic")
+//    public ResponseEntity<TopicDto> addTopic(@RequestBody Map<String, String> topic) {
+//
+//        TopicDto topicDto=new TopicDto();
+//        HttpHeaders headers= new HttpHeaders();
+//        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+//
+//        try{
+//            topicService.createTopic(topic);
+//        }
+//        catch(Exception e){
+//            if(e instanceof IllegalStateException){
+//                topicDto.setMessage("중복 토픽 등록 불가");
+//                topicDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+//                return new ResponseEntity<>(topicDto, headers, HttpStatus.BAD_REQUEST);
+//            }
+//            else if(e instanceof ParseException){
+//                topicDto.setMessage("날짜 요일 형식 오류");
+//                topicDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+//                return new ResponseEntity<>(topicDto, headers, HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//
+//        topicDto.setMessage("토픽 등록 성공");
+//        topicDto.setHttpStatus(HttpStatus.CREATED);
+//        return new ResponseEntity<>(topicDto, headers, HttpStatus.CREATED);
+//    }
 
 //    @GetMapping("/topic/{day}")
 //    public ResponseEntity<TopicSearchDto> showTopics(@PathVariable Day day, final Pageable pageable){
@@ -68,9 +68,9 @@ public class TopicController {
 //    }
 
     @GetMapping("/topic/{day}")
-    public List<Topic> showTopics(@PathVariable Day day){
+    public List<TopicDto> showTopics(@PathVariable Day day){
 
-        List<Topic> topics = topicService.getTopics(day);
+        List<TopicDto> topics = topicService.getTopicsByDay(day);
 
         return topics;
     }

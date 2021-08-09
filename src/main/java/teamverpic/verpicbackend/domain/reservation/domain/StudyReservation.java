@@ -1,6 +1,8 @@
 package teamverpic.verpicbackend.domain.reservation.domain;
 
 import lombok.*;
+import teamverpic.verpicbackend.domain.topic.domain.Topic;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import javax.persistence.*;
 
@@ -14,15 +16,23 @@ public class StudyReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservationId;
+    private Long id;
 
-    private Long userId;
     private Language familiarLanguage;
+
     private Language unfamiliarLanguage;
+
     private Level userLevel;
 
-    private Long topicId;
-
     private int startTime;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
     private boolean isSoldOut;
 }

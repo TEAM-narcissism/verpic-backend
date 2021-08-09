@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+         .container {
+         max-width: 560px;
+         }
+     </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Topic Specification</h2>
+    </div>
+    <div>
+        <label for="topicId">topic ID</label>
+        <input type="text" id="topicId" name="topicId" class="form-control"
+               value="1" th:value="${topic.topicId}" readonly>
+    </div>
+    <div>
+        <label for="theme">Theme</label>
+        <input type="text" id="theme" name="theme" class="form-control"
+               value="themeA" th:value="${topic.theme}" readonly>
+    </div>
+    <div>
+        <label for="date">Date</label>
+        <input type="text" id="date" name="date" class="form-control"
+               value="2021-08-19" th:value="${topic.studyDate}" readonly>
+    </div>
+    <div>
+        <label for="day">Day</label>
+        <input type="text" id="day" name="day" class="form-control"
+               value="MON" th:value="${topic.studyDay}" readonly>
+    </div>
+    <div>
+        <label for="previewId">Preview Id</label>
+        <input type="text" id="previewId" name="previewId" class="form-control"
+               value="1" th:value="${topic.previewId}" readonly>
+    </div>
+    <div>
+        <label for="numOfParticipant">Number of participant</label>
+        <input type="text" id="numOfParticipant" name="numOfParticipant" class="form-control"
+               value="0" th:value="${topic.numOfParticipant}" readonly>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='editTopicForm.html'"
+                    th:onclick="|location.href='@{/administration/topics/{topicId}/edit(topicId=${topic.topicId})}'|" type="button">
+                topic 수정
+            </button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='topics.html'"
+                    th:onclick="|location.href='@{/administration/topics}'|"
+                    type="button">
+                목록으로
+            </button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

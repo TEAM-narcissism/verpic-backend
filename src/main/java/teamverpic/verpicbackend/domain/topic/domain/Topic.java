@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.topic.domain;
 
 import lombok.*;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 
 import javax.persistence.*;
@@ -16,19 +17,20 @@ public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long topicId;
+    private Long id;
 
     private Date studyDate;
 
     @Enumerated(EnumType.STRING)
     private Day studyDay;
 
-    private Long previewId;
     private String theme;
+
     private int numOfParticipant;
 
 //    @Embedded
 //    private Image image;
+
     @Column(nullable = false)
     private String origImgName;
 
@@ -37,4 +39,8 @@ public class Topic {
 
     @Column(nullable = false)
     private String imgPath;
+
+    @OneToOne
+    @JoinColumn(name = "preview_id")
+    private Preview preview;
 }
