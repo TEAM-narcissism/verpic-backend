@@ -134,19 +134,9 @@ public class UserController {
     @GetMapping("/search")
     public Page<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
                                       final Pageable pageable){
-
-<<<<<<< HEAD
+        
         Page<UserSearchDto> searchResult=userService.searchUser(pageable, searchString);
         return searchResult;
-=======
-        Page<User> searchResult=userService.searchUser(pageable, searchString);
 
-        body.setMessage("유저 검색 완료");
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put("search result", searchResult);
-        body.setUsers(data);
-
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
->>>>>>> user_profile
     }
 }
