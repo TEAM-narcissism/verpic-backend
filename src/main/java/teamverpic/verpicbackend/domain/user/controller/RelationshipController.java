@@ -1,6 +1,5 @@
 package teamverpic.verpicbackend.domain.user.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +10,8 @@ import teamverpic.verpicbackend.domain.user.service.RelationshipService;
 @RequestMapping(value="/relationship")
 @RequiredArgsConstructor
 public class RelationshipController {
+
     private final RelationshipService relationshipService;
-    private final UserRepository userRepository;
-
-
 
     // 친구 요청
     @PostMapping("/{receiverId}")
@@ -41,8 +38,4 @@ public class RelationshipController {
     public void relationshipReject(Authentication authentication, @PathVariable String notificationId) {
         relationshipService.relationshipReject(authentication, notificationId);
     }
-
-
-
-
 }

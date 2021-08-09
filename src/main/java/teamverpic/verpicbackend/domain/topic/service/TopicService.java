@@ -33,8 +33,6 @@ public class TopicService {
         Topic savedTopic = topicRepository.save(Topic.builder()
                 .studyDay(Day.valueOf(topic.get("studyDay")))
                 .studyDate(studyDate)
-                .numOfParticipant(Integer.parseInt(topic.get("numOfParticipant")))
-                .previewId(Long.valueOf(topic.get("previewId")))
                 .theme(topic.get("theme"))
 //                .image(image)
                 .origImgName("origImgName")
@@ -42,7 +40,7 @@ public class TopicService {
                 .imgPath("imgPath")
                 .build());
 
-        return savedTopic.getTopicId();
+        return savedTopic.getId();
     }
 
 //    public Page<Topic> getTopics(Pageable pageable, Day day){
