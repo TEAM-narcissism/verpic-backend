@@ -53,20 +53,17 @@ public class User implements UserDetails {
 
 
     // 프로필 설정 시 추가 (detail_profile)
-    private String nation;
-    private String gender;
     private String firstLanguage;
-    private String availableLanguage;
     private String learnLanguage;
-    private String hobby;
-    private String interest;
+//    private String nation;
+//    private String gender;
+//    private String availableLanguage;
+//    private String hobby;
+//    private String interest;
 
-    public void update(String firstLanguage, String availableLanguage, String learnLanguage, String hobby, String interest) {
+    public void update(String firstLanguage, String learnLanguage) {
         this.firstLanguage = firstLanguage;
-        this.availableLanguage = availableLanguage;
         this.learnLanguage = learnLanguage;
-        this.hobby = hobby;
-        this.interest = interest;
     }
 
     @ManyToMany(cascade = CascadeType.ALL)

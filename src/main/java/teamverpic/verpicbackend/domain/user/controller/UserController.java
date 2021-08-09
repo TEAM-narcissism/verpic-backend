@@ -56,9 +56,9 @@ public class UserController {
         token = userService.OAuth2_login(user, jwtTokenProvider);
 
         System.out.println("user.getEmail() = " + user.getEmail());
-        
+
         body.setMessage("Log in with Google");
-        Map data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<String, Object>();
         data.put("Token", token);
         body.setData(data);
         body.setHttpStatus(HttpStatus.OK);
@@ -111,7 +111,7 @@ public class UserController {
         }
 
         body.setMessage("로그인 완료");
-        Map data = new HashMap<String, Object>(); // 로그인 DTO 별도 지정 필요? 현재:(Token : ~)
+        Map<String, Object> data = new HashMap<String, Object>(); // 로그인 DTO 별도 지정 필요? 현재:(Token : ~)
         data.put("Token", token);
         body.setData(data);
         body.setHttpStatus(HttpStatus.OK);
@@ -119,13 +119,13 @@ public class UserController {
     }
 
     // 유저 프로필 조회
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public UserResponseDto profile (@PathVariable Long id) {
         return userService.findById(id);
     }
 
     // 유저 프로필 수정
-    @PutMapping("/{id}")
+    @PutMapping("/users/{id}")
     public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
         return userService.profile_update(id, requestDto);
     }
@@ -135,7 +135,18 @@ public class UserController {
     public Page<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
                                       final Pageable pageable){
 
+<<<<<<< HEAD
         Page<UserSearchDto> searchResult=userService.searchUser(pageable, searchString);
         return searchResult;
+=======
+        Page<User> searchResult=userService.searchUser(pageable, searchString);
+
+        body.setMessage("유저 검색 완료");
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("search result", searchResult);
+        body.setUsers(data);
+
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+>>>>>>> user_profile
     }
 }

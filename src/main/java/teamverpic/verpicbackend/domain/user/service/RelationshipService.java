@@ -1,6 +1,5 @@
 package teamverpic.verpicbackend.domain.user.service;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ public class RelationshipService {
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
     private final StompCommandListener stompCommandListener;
-    private final UserService userService;
 
     public void relationshipRequest(String userEmail, Long receiverId) {
 
@@ -47,8 +45,6 @@ public class RelationshipService {
 
             }
         }
-
-
     }
 
     public void relationshipAdd(Authentication authentication, String notificationId){
@@ -104,6 +100,7 @@ public class RelationshipService {
         }
 
     }
+
     public void relationshipReject(Authentication authentication, String notificationId) {
         User currentLoginUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 유저에요."));
@@ -119,12 +116,10 @@ public class RelationshipService {
         notificationRepository.deleteBy_id(notificationId);
     }
 
-
     public boolean isRelationship(User user1, User user2) {
         if(user1.getUserRelation().contains(user2) && user2.getUserRelation().contains(user1))
             return true;
         else
             return false;
     }
-
 }

@@ -20,7 +20,6 @@ public class IndexController {
             System.out.println("user is null ");
         }
         System.out.println("user email is = " + user.getEmail());
-        return "main"; // 메인 페이지
-//        return "redirect:/oauth2-login/get-jwt";
+        return "redirect:/oauth2-login/get-jwt";
     }
 }

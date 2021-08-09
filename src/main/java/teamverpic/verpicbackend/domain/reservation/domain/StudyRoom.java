@@ -16,7 +16,7 @@ public class StudyRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    private Long id;
 
     @ElementCollection
     @CollectionTable(name = "study_participants",joinColumns = @JoinColumn(name="participant_id"))

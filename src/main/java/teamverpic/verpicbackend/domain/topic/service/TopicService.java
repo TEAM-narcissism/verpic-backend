@@ -21,6 +21,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
+<<<<<<< HEAD
     public TopicDto createTopic(Map<String, String> topic) throws ParseException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
@@ -51,6 +52,27 @@ public class TopicService {
         Topic save = topicRepository.save(newtopic);
 
         return new TopicDto(save);
+=======
+    public Long createTopic(Map<String, String> topic) throws ParseException {
+        Date studyDate=new SimpleDateFormat("MM/dd").parse(topic.get("studyDate"));
+
+//        Image image=Image.builder()
+//                .imgName(topic.get("imgName"))
+//                .imgPath(topic.get("imgPath"))
+//                .origImgName(topic.get("origImgName"))
+//                .build();
+        Topic savedTopic = topicRepository.save(Topic.builder()
+                .studyDay(Day.valueOf(topic.get("studyDay")))
+                .studyDate(studyDate)
+                .theme(topic.get("theme"))
+//                .image(image)
+                .origImgName("origImgName")
+                .imgName("imgName")
+                .imgPath("imgPath")
+                .build());
+
+        return savedTopic.getId();
+>>>>>>> user_profile
     }
 
 //    public Page<Topic> getTopics(Pageable pageable, Day day){
