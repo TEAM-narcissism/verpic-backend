@@ -33,25 +33,38 @@ public class User implements UserDetails {
     @Column(length = 300, nullable = false)
     private String password;
 
+    @Column
+    private String picture;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    // 프로필 설정 시 추가 (detail_profile)
-    private String nation;
-    private String gender;
-    private String firstLanguage;
-    private String availableLanguage;
-    private String learnLanguage;
-    private String hobby;
-    private String interest;
+    // OAuth2 Login
+    public User OAuth_update(String name, String picture) {
+        this.firstName = name;
+        this.picture = picture;
 
-    public void update(String firstLanguage, String availableLanguage, String learnLanguage, String hobby, String interest) {
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.roles.get(0);
+    }
+
+
+    // 프로필 설정 시 추가 (detail_profile)
+    private String firstLanguage;
+    private String learnLanguage;
+//    private String nation;
+//    private String gender;
+//    private String availableLanguage;
+//    private String hobby;
+//    private String interest;
+
+    public void update(String firstLanguage, String learnLanguage) {
         this.firstLanguage = firstLanguage;
-        this.availableLanguage = availableLanguage;
         this.learnLanguage = learnLanguage;
-        this.hobby = hobby;
-        this.interest = interest;
     }
 
     @ManyToMany(cascade = CascadeType.ALL)

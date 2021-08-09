@@ -11,20 +11,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class DetailTopicSaveRequestDto {
-
     private String context;
-    private List<UserAnswer> userAnswerList;
 
     @Builder
-    public DetailTopicSaveRequestDto(String context, List<UserAnswer> userAnswerList) {
+    public DetailTopicSaveRequestDto(String context) {
         this.context = context;
-        this.userAnswerList = userAnswerList;
     }
 
     public DetailTopic toEntity() {
         DetailTopic detailTopic = DetailTopic.builder()
                 .context(context)
-                .userAnswerList(userAnswerList)
                 .build();
         return detailTopic;
     }
