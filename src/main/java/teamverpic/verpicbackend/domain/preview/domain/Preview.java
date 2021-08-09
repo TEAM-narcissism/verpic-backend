@@ -3,11 +3,14 @@ package teamverpic.verpicbackend.domain.preview.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import teamverpic.verpicbackend.domain.topic.domain.Topic;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity(name = "preview")
 public class Preview {
@@ -17,10 +20,11 @@ public class Preview {
     private Long id;
 
     @Column
-    private String subject;
-
-    @Column
     private String context;
+
+    @OneToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "preview")
     private List<DetailTopic> detailTopicList;
@@ -39,9 +43,9 @@ public class Preview {
     }
 
     @Builder
-    private Preview(String subject, String context, List<DetailTopic> detailTopicList, List<Expression> expressionList) {
-        this.subject = subject;
+    private Preview(String context, Topic topic, List<DetailTopic> detailTopicList, List<Expression> expressionList) {
         this.context = context;
+        this.topic = topic;
         this.detailTopicList = detailTopicList;
         this.expressionList = expressionList;
     }

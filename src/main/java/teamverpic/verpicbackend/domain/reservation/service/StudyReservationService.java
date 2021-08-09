@@ -21,12 +21,9 @@ public class StudyReservationService {
         return studyReservationRepository.save(StudyReservation.builder()
                 .familiarLanguage(Language.valueOf(reservation.get("familiarLanguage")))
                 .unfamiliarLanguage(Language.valueOf(reservation.get("unfamiliarLanguage")))
-                .isSoldOut(Boolean.parseBoolean(reservation.get("isSoldOut")))
                 .userLevel(Level.valueOf(reservation.get("userLevel")))
                 .startTime(Integer.parseInt(reservation.get("startTime")))
-                .topicId(Long.valueOf(reservation.get("topicId")))
-                .userId(Long.valueOf(reservation.get("userId")))
-                .build()).getReservationId();
+                .build()).getId();
     }
 
     public void deleteReservation(Long reservationId){
