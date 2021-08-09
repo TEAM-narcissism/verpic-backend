@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -123,6 +124,13 @@ public class UserController {
     public UserResponseDto profile (@PathVariable Long id) {
         return userService.findById(id);
     }
+
+    @GetMapping("/users/current-login-user")
+    public UserResponseDto getLoginUserByToken(Authentication authentication) {
+        return userService.findByEmail(authentication.getName());
+    }
+
+
 
     // 유저 프로필 수정
     @PutMapping("/users/{id}")

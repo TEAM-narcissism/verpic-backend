@@ -24,6 +24,16 @@ public class ExceptionAdvice {
         return new ResponseEntity<>(httpResponseDto, getHttpHeaders(),httpResponseDto.getHttpStatus());
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<HttpResponseDto> handler(NullPointerException e){
+        HttpResponseDto httpResponseDto = new HttpResponseDto();
+        httpResponseDto.setMessage(e.getMessage());
+        httpResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(),httpResponseDto.getHttpStatus());
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<HttpResponseDto> handler(IllegalArgumentException e){
         HttpResponseDto httpResponseDto = new HttpResponseDto();
