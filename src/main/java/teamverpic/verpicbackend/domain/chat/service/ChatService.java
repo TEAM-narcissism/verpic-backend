@@ -25,7 +25,6 @@ public class ChatService {
     @Resource
     private final Map<Long, Set<String>> roomId2SessionIDs;
 
-
     public void chatEnter(ChatMessageDto message, String userName) {
         message.setSenderName("Verpic");
         message.setTimeStamp(new Date());
