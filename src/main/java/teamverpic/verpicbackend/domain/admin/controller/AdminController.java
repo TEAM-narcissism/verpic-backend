@@ -4,34 +4,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
-import teamverpic.verpicbackend.domain.topic.domain.Topic;
+import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
+import teamverpic.verpicbackend.domain.topic.service.TopicService;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/administration/topics")
 public class AdminController {
 
-    private final TopicRepository topicRepository;
+    private final TopicService topicService;
 
     @GetMapping("")
     public String showTopicList(Model model){
-        List<Topic> topics = topicRepository.findAll();
-        model.addAttribute("topics", topics);
+        List<TopicDto> allTopics = topicService.getAllTopics();
+        model.addAttribute("topics", allTopics);
         return "administration/topics";
     }
 
     @GetMapping("/{topicId}")
     public String item(@PathVariable Long topicId, Model model) {
-        Topic topic = topicRepository.findById(topicId).get();
+        TopicDto topic = topicService.getTopicByTopicId(topicId);
         model.addAttribute("topic", topic);
         return "administration/topic";
     }
@@ -50,17 +47,8 @@ public class AdminController {
     @PostMapping("/add")
     public String addTopic(@RequestParam Map<String, String> param, Model model) throws ParseException {
 
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(param.get("studyDate"));
-        Day today = getToday(date);
-
-        Topic newtopic=Topic.builder().studyDay(today)
-                .studyDate(date).numOfParticipant(0)
-                .previewId(9l).theme(param.get("theme"))
-                .origImgName("set").imgName("set")
-                .imgPath("set").build();
-
-        topicRepository.save(newtopic);
-        model.addAttribute("topic", newtopic);
+        TopicDto newTopic = topicService.createTopic(param);
+        model.addAttribute("topic", newTopic);
 
         return "administration/topic";
     }
@@ -70,7 +58,7 @@ public class AdminController {
         List<Day> days=new ArrayList<>();
         days.add(Day.MON); days.add(Day.TUES); days.add(Day.WED); days.add(Day.THUR);
         days.add(Day.FRI); days.add(Day.SAT); days.add(Day.SUN);
-        Topic topic = topicRepository.findById(topicId).get();
+        TopicDto topic = topicService.getTopicByTopicId(topicId);
 
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         Date d=new Date();
@@ -87,46 +75,7 @@ public class AdminController {
                        @RequestParam Map<String, String> param,
                        Model model) throws Exception {
 
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(param.get("studyDate"));
-        Day day = getToday(date);
-
-        Topic updatedtopic=Topic.builder()
-                .topicId(Long.valueOf(param.get("topicId")))
-                .studyDay(day)
-                .studyDate(date)
-                .numOfParticipant(Integer.valueOf(param.get("numOfParticipant")))
-                .previewId(Long.valueOf(param.get("previewId")))
-                .theme(param.get("theme"))
-                .origImgName("changed")
-                .imgName("changed")
-                .imgPath("changed")
-                .build();
-
-        topicRepository.save(updatedtopic);
+        topicService.editTopic(param, topicId);
         return "redirect:/administration/topics/{topicId}";
-    }
-
-    private Day getToday(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("u");
-
-        String format = simpleDateFormat.format(date);
-        Day today;
-
-        switch(Integer.parseInt(format)){
-            case 1: today=Day.MON;
-                break;
-            case 2: today=Day.TUES;
-                break;
-            case 3: today=Day.WED;
-                break;
-            case 4: today=Day.THUR;
-                break;
-            case 5: today=Day.FRI;
-                break;
-            case 6: today=Day.SAT;
-                break;
-            default: today=Day.SUN;
-        }
-        return today;
     }
 }
