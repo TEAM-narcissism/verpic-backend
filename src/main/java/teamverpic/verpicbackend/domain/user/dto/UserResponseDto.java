@@ -13,7 +13,6 @@ public class UserResponseDto {
     private String lastName;
     private Date birthDate;
     private String email;
-    private String password;
 
     // 프로필 설정 시 추가 (detail_profile)
     private String firstLanguage;
@@ -30,7 +29,6 @@ public class UserResponseDto {
         this.lastName = entity.getLastName();
         this.birthDate = entity.getBirthDate();
         this.email = entity.getEmail();
-        this.password = entity.getPassword();
 
         this.firstLanguage = entity.getFirstLanguage();
         this.learnLanguage = entity.getLearnLanguage();

@@ -10,6 +10,7 @@ import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
 import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
+import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
 import teamverpic.verpicbackend.domain.user.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 
@@ -65,13 +66,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * 유저 검색
-     * 검색 창에 입력한 string으로 firstName, lastName, email을 순서대로 조회하여 결과를 출력함
-     * @param searchString
-     * @return Page<User>
-     */
-    public Page<User> searchUser(Pageable pageable, String searchString){
+    public Page<UserSearchDto> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
         HashSet<User> totalset=new HashSet<>();
         result.addAll(userRepository.findAllByFirstNameContaining(searchString));
@@ -85,7 +80,10 @@ public class UserService {
 
         int count=result.size();
 
-        return new PageImpl<User>(result, pageable, count);
+        List<UserSearchDto> outcome=new ArrayList<>();
+        result.forEach(user->outcome.add(new UserSearchDto(user)));
+
+        return new PageImpl<UserSearchDto>(outcome, pageable, count);
     }
 
     public UserResponseDto findByEmail(String email) {
