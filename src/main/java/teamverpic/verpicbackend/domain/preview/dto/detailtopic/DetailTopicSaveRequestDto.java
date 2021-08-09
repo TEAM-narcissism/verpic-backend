@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class DetailTopicSaveRequestDto {
-
     private String context;
 
     @Builder

@@ -1,21 +1,13 @@
 package teamverpic.verpicbackend.domain.topic.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
-import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
 
-import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -69,9 +61,7 @@ public class TopicController {
 
     @GetMapping("/topic/{day}")
     public List<TopicDto> showTopics(@PathVariable Day day){
-
         List<TopicDto> topics = topicService.getTopicsByDay(day);
-
         return topics;
     }
 }
