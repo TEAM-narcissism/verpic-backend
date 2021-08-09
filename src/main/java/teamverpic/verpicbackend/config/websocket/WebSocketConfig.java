@@ -8,8 +8,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
-import teamverpic.verpicbackend.handler.ChatRoomSubscriptionInterceptor;
-import teamverpic.verpicbackend.handler.StompHandler;
+import teamverpic.verpicbackend.domain.chat.handler.ChatRoomSubscriptionInterceptor;
 
 
 @EnableScheduling
@@ -24,6 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
+                .setAllowedOrigins("http://localhost:3000")
                 .withSockJS();
 
     }
@@ -46,6 +46,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         container.setMaxBinaryMessageBufferSize(8192);
         return container;
     }
+
+
 
 
 }
