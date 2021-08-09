@@ -132,17 +132,10 @@ public class UserController {
 
     // 검색
     @GetMapping("/search")
-    public ResponseEntity<UserSearchDto> search(@RequestParam(value="searchString") String searchString, final Pageable pageable){
-        HttpHeaders headers= new HttpHeaders(); // get 방식이므로 header의 content-type을 정해줄 필요가 없음
-        UserSearchDto body = new UserSearchDto();
+    public Page<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
+                                      final Pageable pageable){
 
-        Page<User> searchResult=userService.searchUser(pageable, searchString);
-
-        body.setMessage("유저 검색 완료");
-        Map data = new HashMap<String, Object>();
-        data.put("search result", searchResult);
-        body.setUsers(data);
-
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+        Page<UserSearchDto> searchResult=userService.searchUser(pageable, searchString);
+        return searchResult;
     }
 }

@@ -1,9 +1,24 @@
 package teamverpic.verpicbackend.domain.user.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
-@Data
+import java.util.Date;
+
+@Getter
 public class UserSearchDto {
-    private String message;
-    private Object users;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private Date birthDate;
+    private String email;
+
+    public UserSearchDto(User user) {
+        this.id=user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.birthDate = user.getBirthDate();
+        this.email = user.getEmail();
+    }
 }
