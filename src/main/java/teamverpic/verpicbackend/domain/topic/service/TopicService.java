@@ -21,17 +21,19 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-<<<<<<< HEAD
     public TopicDto createTopic(Map<String, String> topic) throws ParseException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic=Topic.builder().studyDay(today)
-                .studyDate(date).numOfParticipant(0)
-                .previewId(0l).theme(topic.get("theme"))
-                .origImgName("set").imgName("set")
-                .imgPath("set").build();
+        Topic newtopic = Topic.builder()
+                .studyDay(today)
+                .studyDate(date)
+                .theme(topic.get("theme"))
+                .origImgName("set")
+                .imgName("set")
+                .imgPath("set")
+                .build();
 
         Topic save = topicRepository.save(newtopic);
 
@@ -43,36 +45,18 @@ public class TopicService {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic=Topic.builder().topicId(id)
-                .studyDay(today).studyDate(date)
-                .numOfParticipant(0).previewId(0l)
-                .theme(topic.get("theme")).origImgName("set")
-                .imgName("set").imgPath("set").build();
+        Topic newtopic = Topic.builder()
+                .studyDay(today)
+                .studyDate(date)
+                .theme(topic.get("theme"))
+                .origImgName("set")
+                .imgName("set")
+                .imgPath("set")
+                .build();
 
         Topic save = topicRepository.save(newtopic);
 
         return new TopicDto(save);
-=======
-    public Long createTopic(Map<String, String> topic) throws ParseException {
-        Date studyDate=new SimpleDateFormat("MM/dd").parse(topic.get("studyDate"));
-
-//        Image image=Image.builder()
-//                .imgName(topic.get("imgName"))
-//                .imgPath(topic.get("imgPath"))
-//                .origImgName(topic.get("origImgName"))
-//                .build();
-        Topic savedTopic = topicRepository.save(Topic.builder()
-                .studyDay(Day.valueOf(topic.get("studyDay")))
-                .studyDate(studyDate)
-                .theme(topic.get("theme"))
-//                .image(image)
-                .origImgName("origImgName")
-                .imgName("imgName")
-                .imgPath("imgPath")
-                .build());
-
-        return savedTopic.getId();
->>>>>>> user_profile
     }
 
 //    public Page<Topic> getTopics(Pageable pageable, Day day){
@@ -85,8 +69,8 @@ public class TopicService {
 //    }
 
     public List<TopicDto> getAllTopics(){
-        List<TopicDto> topicDtos=new ArrayList<>();
-        topicRepository.findAll().forEach(topic->topicDtos.add(new TopicDto(topic)));
+        List<TopicDto> topicDtos =new ArrayList<>();
+        topicRepository.findAll().forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
         return topicDtos;
     }
@@ -98,8 +82,8 @@ public class TopicService {
     }
 
     public List<TopicDto> getTopicsByDay(Day day){
-        List<TopicDto> topicDtos=new ArrayList<>();
-        topicRepository.findAllByStudyDay(day).forEach(topic->topicDtos.add(new TopicDto(topic)));
+        List<TopicDto> topicDtos =new ArrayList<>();
+        topicRepository.findAllByStudyDay(day).forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
         return topicDtos;
     }
