@@ -42,7 +42,7 @@ public class MatchService {
         }
 
         reservations.forEach(reservation -> {
-            log.info("reservation userid : {}", reservation.getUserId());
+            //log.info("reservation userid : {}", reservation.getUserId());
             filteredReservations
                     [reservation.getFamiliarLanguage().ordinal()]
                     [reservation.getUnfamiliarLanguage().ordinal()]
