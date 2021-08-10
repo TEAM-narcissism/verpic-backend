@@ -4,13 +4,10 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-<<<<<<< HEAD
-import teamverpic.verpicbackend.domain.preview.domain.DetailTopic;
+
 import teamverpic.verpicbackend.domain.preview.domain.UserAnswer;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
-=======
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
->>>>>>> eb6445e346950866393f16999921088b46954e61
 
 import javax.persistence.*;
 import java.util.*;
