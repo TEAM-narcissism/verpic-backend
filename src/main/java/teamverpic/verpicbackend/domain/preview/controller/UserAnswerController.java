@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.preview.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.preview.dto.useranswer.UserAnswerResponseDto;
 import teamverpic.verpicbackend.domain.preview.dto.useranswer.UserAnswerSaveRequestDto;
@@ -13,24 +14,25 @@ public class UserAnswerController {
 
     private final UserAnswerService userAnswerService;
 
-    @PostMapping("/previews/{preview_id}/detail_topics/{detail_topic_id}")
-    public Long save(@PathVariable Long detail_topic_id, @RequestBody UserAnswerSaveRequestDto requestDto) {
-        return userAnswerService.save(detail_topic_id, requestDto);
+    @PostMapping("/detail_topics/{detail_topic_id}/user_answers")
+    public Long save(@PathVariable Long detail_topic_id, @RequestBody UserAnswerSaveRequestDto requestDto, Authentication authentication) {
+        String email = authentication.getName();
+        return userAnswerService.save(email, detail_topic_id, requestDto);
     }
 
-    @PutMapping("/api/v1/posts/{id}")
-    public Long update(@PathVariable Long id, @RequestBody UserAnswerUpdateRequestDto requestDto) {
-        return userAnswerService.update(id, requestDto);
+    @PutMapping("/user_answers/{user_answer_id}")
+    public Long update(@PathVariable Long user_answer_id, @RequestBody UserAnswerUpdateRequestDto requestDto) {
+        return userAnswerService.update(user_answer_id, requestDto);
     }
 
-    @GetMapping("/api/v1/posts/{id}")
-    public UserAnswerResponseDto findById (@PathVariable Long id) {
-        return userAnswerService.findById(id);
+    @GetMapping("/user_answers/{user_answer_id}")
+    public UserAnswerResponseDto findById (@PathVariable Long user_answer_id) {
+        return userAnswerService.findById(user_answer_id);
     }
 
-    @DeleteMapping("/api/v1/posts/{id}")
-    public Long delete(@PathVariable Long id) {
-        userAnswerService.delete(id);
-        return id;
+    @DeleteMapping("/user_answers/{user_answer_id}")
+    public Long delete(@PathVariable Long user_answer_id) {
+        userAnswerService.delete(user_answer_id);
+        return user_answer_id;
     }
 }
