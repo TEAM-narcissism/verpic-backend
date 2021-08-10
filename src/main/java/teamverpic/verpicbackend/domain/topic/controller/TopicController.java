@@ -3,8 +3,10 @@ package teamverpic.verpicbackend.domain.topic.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
+import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
 
 import java.util.List;
@@ -15,6 +17,11 @@ import java.util.List;
 public class TopicController {
 
     private final TopicService topicService;
+
+    @PostMapping("topics")
+    public Long save(@RequestBody TopicSaveRequestDto requestDto) {
+        return topicService.save(requestDto);
+    }
 
 //    @PostMapping("/topic")
 //    public ResponseEntity<TopicDto> addTopic(@RequestBody Map<String, String> topic) {
