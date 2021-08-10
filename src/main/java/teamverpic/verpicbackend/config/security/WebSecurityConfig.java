@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -32,12 +33,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.httpBasic()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/**").permitAll()
+                    .authorizeRequests()
+                        .antMatchers("/ws-stomp/**").permitAll()
+                        .antMatchers("/admin/**").hasRole("ADMIN")
+                        .antMatchers("/user/**").hasRole("USER")
+                        .antMatchers("/**").permitAll()
+
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                UsernamePasswordAuthenticationFilter.class);
+                    .oauth2Login()
+                        .userInfoEndpoint()
+                            .userService(customOAuth2UserService);
+
+        http.httpBasic()
+                .and()
+                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 }
