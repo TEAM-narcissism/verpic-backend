@@ -71,12 +71,10 @@ public class MatchService {
             if (matcher != null) {
                 System.out.println("MatchService.match");
                 Match match = Match.builder().build();
-                User reservationUser = userRepository.findById(reservation.getUserId())
-                        .orElseThrow(() -> new NoSuchElementException("MatchService.match 유저가 존재하지 않습니다."));
-
-                User matcherUser = userRepository.findById(matcher.getUserId())
-                        .orElseThrow(() -> new NoSuchElementException("MatchService.match 유저가 존재하지 않습니다."));
-
+                
+                User reservationUser = reservation.getUser();
+                User matcherUser = matcher.getUser();
+                
                 MatchUser matchUser1 = MatchUser.builder().user(reservationUser).match(match).build();
                 MatchUser matchUser2 = MatchUser.builder().user(matcherUser).match(match).build();
 
