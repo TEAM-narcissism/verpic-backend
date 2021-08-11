@@ -45,16 +45,17 @@ public class Topic {
     @JoinColumn(name = "preview_id")
     private Preview preview;
 
-    @Builder
-    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant){
-        this.id=id;
-        this.studyDate=studyDate;
-        this.studyDay=studyDay;
-        this.theme=theme;
-        this.numOfParticipant=numOfParticipant;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
     private List<StudyReservation> studyReservationList;
+
+    @Builder
+    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant) {
+        this.id = id;
+        this.studyDate = studyDate;
+        this.studyDay = studyDay;
+        this.theme = theme;
+        this.numOfParticipant = numOfParticipant;
+    }
 
     public void addStudyReservation(StudyReservation studyReservation) {
         studyReservation.setTopic(this);

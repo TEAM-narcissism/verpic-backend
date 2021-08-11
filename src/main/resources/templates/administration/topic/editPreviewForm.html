@@ -19,7 +19,7 @@
         <div>
             <label for="id">Preview ID</label>
             <input type="text" id="id" name="id" class="form-control" value="1"
-                   th:value="${preview.id}" readonly>
+                   th:value="${previewId}" readonly>
         </div>
         <div>
             <label for="context">Context</label>
@@ -56,22 +56,6 @@
                     <th>Meaning</th>
                     <th>Example</th>
                 </tr>
-<!--                <tr th:each="expression : ${expressionList}">-->
-<!--                    <td>-->
-<!--                        <input type="text" id="expressionWord" name="expressionWord"-->
-<!--                               th:value="${expression.word}">-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <textarea id="expressionMeaning" name="expressionMeaning"-->
-<!--                                  th:text="${expression.meaning}">-->
-<!--                        </textarea>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <textarea id="expressionExample" name="expressionExample"-->
-<!--                                  th:text="${expression.example}">-->
-<!--                        </textarea>-->
-<!--                    </td>-->
-<!--                </tr>-->
                 <tr>
                     <td>
                         <input type="text" id="expressionWord1" name="expressionWord1"
@@ -163,7 +147,7 @@
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
                         onclick="location.href='preview.html'"
-                        th:onclick="|location.href='@{/administration/topics/preview/{previewId}(previewId=${preview.id})}'|"
+                        th:onclick="|location.href='@{/administration/topics/preview/{previewId}(previewId=${previewId})}'|"
                         type="button">Cancel</button>
             </div>
         </div>

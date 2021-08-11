@@ -140,6 +140,7 @@ public class AdminTopicController {
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
+        model.addAttribute("previewId", previewId);
         return "/administration/topic/preview";
     }
 
@@ -152,6 +153,7 @@ public class AdminTopicController {
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
+        model.addAttribute("previewId", previewId);
         return "/administration/topic/editPreviewForm";
     }
 
