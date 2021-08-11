@@ -42,7 +42,7 @@ public class MatchService {
         }
 
         reservations.forEach(reservation -> {
-            log.info("reservation userid : {}", reservation.getUserId());
+            log.info("reservation userid : {}", reservation.getUser().getId());
             filteredReservations
                     [reservation.getFamiliarLanguage().ordinal()]
                     [reservation.getUnfamiliarLanguage().ordinal()]
@@ -71,10 +71,10 @@ public class MatchService {
             if (matcher != null) {
                 System.out.println("MatchService.match");
                 Match match = Match.builder().build();
-                User reservationUser = userRepository.findById(reservation.getUserId())
+                User reservationUser = userRepository.findById(reservation.getUser().getId())
                         .orElseThrow(() -> new NoSuchElementException("MatchService.match 유저가 존재하지 않습니다."));
 
-                User matcherUser = userRepository.findById(matcher.getUserId())
+                User matcherUser = userRepository.findById(matcher.getUser().getId())
                         .orElseThrow(() -> new NoSuchElementException("MatchService.match 유저가 존재하지 않습니다."));
 
                 MatchUser matchUser1 = MatchUser.builder().user(reservationUser).match(match).build();
