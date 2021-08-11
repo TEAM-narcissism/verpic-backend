@@ -32,7 +32,6 @@ class DetailTopicTest {
         detailTopicRepository.save(detailTopic);
 
         UserAnswer userAnswer = UserAnswer.builder()
-                .user_id(1L)
                 .answer("i like blue")
                 .build();
 

@@ -4,6 +4,9 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import teamverpic.verpicbackend.domain.preview.domain.UserAnswer;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 
 import javax.persistence.*;
@@ -33,12 +36,42 @@ public class User implements UserDetails {
     @Column(length = 300, nullable = false)
     private String password;
 
-    @Column
     private String picture;
+
+    private String firstLanguage;
+
+    private String learnLanguage;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    // 프로필 설정 시 추가 (detail_profile)
+//    private String nation;
+//    private String gender;
+//    private String availableLanguage;
+//    private String hobby;
+//    private String interest;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserAnswer> userAnswerList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<StudyReservation> studyReservationList;
+
+    public void addUserAnswer(UserAnswer userAnswer) {
+        userAnswer.setUser(this);
+        this.userAnswerList.add(userAnswer);
+    }
+
+    public void addStudyReservation(StudyReservation studyReservation) {
+        studyReservation.setUser(this);
+        this.studyReservationList.add(studyReservation);
+    }
+
+    public String getRoleKey() {
+        return this.roles.get(0);
+    }
 
     // OAuth2 Login
     public User OAuth_update(String name, String picture) {
@@ -47,20 +80,6 @@ public class User implements UserDetails {
 
         return this;
     }
-
-    public String getRoleKey() {
-        return this.roles.get(0);
-    }
-
-
-    // 프로필 설정 시 추가 (detail_profile)
-    private String firstLanguage;
-    private String learnLanguage;
-//    private String nation;
-//    private String gender;
-//    private String availableLanguage;
-//    private String hobby;
-//    private String interest;
 
     public void update(String firstLanguage, String learnLanguage) {
         this.firstLanguage = firstLanguage;
@@ -79,7 +98,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<MatchUser> matches = Collections.synchronizedList(new ArrayList<>());
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

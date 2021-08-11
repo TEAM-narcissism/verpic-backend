@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationDto;
@@ -23,6 +24,7 @@ public class StudyReservationController {
     @CrossOrigin
     @PostMapping("/reservation")
     public ResponseEntity<StudyReservationDto> reservation(
+            Authentication authentication,
             @RequestBody Map<String, String> reservation){
 
         StudyReservationDto studyReservationDto=new StudyReservationDto();
@@ -30,7 +32,7 @@ public class StudyReservationController {
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         try{
-            studyReservationService.registerReservation(reservation);
+            studyReservationService.registerReservation(authentication.getName(), reservation);
         }
         catch(IllegalStateException e){
             studyReservationDto.setMessage("중복 스터디 예약 불가");

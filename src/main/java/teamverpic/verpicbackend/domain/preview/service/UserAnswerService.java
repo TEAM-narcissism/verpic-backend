@@ -9,21 +9,30 @@ import teamverpic.verpicbackend.domain.preview.dto.useranswer.UserAnswerSaveRequ
 import teamverpic.verpicbackend.domain.preview.dto.useranswer.UserAnswerUpdateRequestDto;
 import teamverpic.verpicbackend.domain.preview.dao.DetailTopicRepository;
 import teamverpic.verpicbackend.domain.preview.dao.UserAnswerRepository;
+import teamverpic.verpicbackend.domain.user.dao.UserRepository;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserAnswerService {
     private final UserAnswerRepository userAnswerRepository;
     private final DetailTopicRepository detailTopicRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Long save(Long detail_topic_id, UserAnswerSaveRequestDto requestDto) {
+    public Long save(String email, Long detail_topic_id, UserAnswerSaveRequestDto requestDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. email=" + email));
+
         DetailTopic detailTopic = detailTopicRepository.findById(detail_topic_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 DetailTopic이 없습니다. id=" + detail_topic_id));
 
         UserAnswer userAnswer = requestDto.toEntity();
+        userAnswer.setUser(user);
+        user.addUserAnswer(userAnswer);
         detailTopic.addUserAnswer(userAnswer);
 
         return userAnswerRepository.save(userAnswer).getId();

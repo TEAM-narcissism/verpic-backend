@@ -2,12 +2,19 @@ package teamverpic.verpicbackend.domain.topic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
+import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewResponseDto;
+import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 //import teamverpic.verpicbackend.domain.Image;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 //import teamverpic.verpicbackend.dto.ImageDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
+import teamverpic.verpicbackend.domain.topic.dto.TopicResponseDto;
+import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -20,19 +27,29 @@ import java.util.*;
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final PreviewRepository previewRepository;
+
+    @Transactional
+    public Long save(TopicSaveRequestDto requestDto) {
+        return topicRepository.save(requestDto.toEntity()).getId();
+    }
+
+    @Transactional
+    public TopicResponseDto findById(Long id) {
+        Topic entity = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
+
+        return new TopicResponseDto(entity);
+    }
 
     public TopicDto createTopic(Map<String, String> topic) throws ParseException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic = Topic.builder()
-                .studyDay(today)
-                .studyDate(date)
+        Topic newtopic=Topic.builder().studyDay(today)
+                .studyDate(date).numOfParticipant(0)
                 .theme(topic.get("theme"))
-                .origImgName("set")
-                .imgName("set")
-                .imgPath("set")
                 .build();
 
         Topic save = topicRepository.save(newtopic);
@@ -45,14 +62,14 @@ public class TopicService {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic = Topic.builder()
-                .studyDay(today)
-                .studyDate(date)
-                .theme(topic.get("theme"))
-                .origImgName("set")
-                .imgName("set")
-                .imgPath("set")
-                .build();
+        Topic newtopic=topicRepository.getById(id);
+        Preview byId = previewRepository.getById(id);
+        newtopic.setPreview(byId);
+        newtopic.setId(id);
+        newtopic.setStudyDay(today);
+        newtopic.setStudyDate(date);
+        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
+        newtopic.setTheme(topic.get("theme"));
 
         Topic save = topicRepository.save(newtopic);
 
