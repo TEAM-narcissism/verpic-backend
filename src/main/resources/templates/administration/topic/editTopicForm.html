@@ -23,12 +23,12 @@
         </div>
         <div>
             <label for="theme">theme</label>
-            <input type="text" id="theme" name="theme" class="form-control" th:value="${topic.theme}">
+            <input type="text" id="theme" name="theme" class="form-control" th:value="${topic.theme}" required>
         </div>
         <div>
             <label for="studyDate">Date</label>
             <input type="date" id="studyDate" name="studyDate" class="form-control"
-                   th:value="${topic.studyDate}" th:min="${today}">
+                   th:value="${topic.studyDate}" th:min="${today}" required>
         </div>
         <div>
             <label for="numOfParticipant">Number of participant</label>

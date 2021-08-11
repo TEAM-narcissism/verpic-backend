@@ -19,12 +19,12 @@
     <form action="topic.html" th:action method="post">
         <div>
             <label for="theme">Theme</label>
-            <input type="text" id="theme" th:name="theme" class="form-control" placeholder="Enter topic theme">
+            <input type="text" id="theme" th:name="theme" class="form-control" placeholder="Enter topic theme" required>
         </div>
         <div>
             <label for="studyDate">Date</label>
             <input type="date" id="studyDate" name="studyDate" class="form-control"
-                   value="2021-08-31" th:min="${today}">
+                   th:min="${today}" required>
         </div>
         <hr class="my-4">
         <div class="row">

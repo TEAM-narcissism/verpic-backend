@@ -23,27 +23,22 @@
         </div>
         <div>
             <label for="context">Context</label>
-            <textarea id="context" name="context" class="form-control" th:text="${preview.context}">
-            </textarea>
+            <textarea id="context" name="context" class="form-control" th:text="${preview.context}" required></textarea>
         </div>
         <div>
-            <label for="detailTopicList">Date</label>
+            <label for="detailTopicList">Detail Topic List</label>
             <table class="tb_col" id="detailTopicList" name="detailTopicList">
                 <tr>
                     <th>Context</th>
                 </tr>
                 <tr>
                     <td>
-                        <textarea id="detailContext1" name="detailContext1" class="form-control"
-                                  th:text="${detailTopicList.get(0).context}">
-                        </textarea>
+                        <textarea id="detailContext1" name="detailContext1" class="form-control" th:text="${detailTopicList.get(0).context}" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <textarea id="detailContext2" name="detailContext2" class="form-control"
-                        th:text="${detailTopicList.get(1).context}">
-                        </textarea>
+                        <textarea id="detailContext2" name="detailContext2" class="form-control" th:text="${detailTopicList.get(1).context}" required></textarea>
                     </td>
                 </tr>
             </table>
@@ -59,81 +54,61 @@
                 <tr>
                     <td>
                         <input type="text" id="expressionWord1" name="expressionWord1"
-                               th:value="${expressionList.get(0).word}">
+                               th:value="${expressionList.get(0).word}" required>
                     </td>
                     <td>
-                        <textarea id="expressionMeaning1" name="expressionMeaning1"
-                                th:text="${expressionList.get(0).meaning}">
-                        </textarea>
+                        <textarea id="expressionMeaning1" name="expressionMeaning1" th:text="${expressionList.get(0).meaning}" required></textarea>
                     </td>
                     <td>
-                        <textarea id="expressionExample1" name="expressionExample1"
-                                  th:text="${expressionList.get(0).example}">
-                        </textarea>
+                        <textarea id="expressionExample1" name="expressionExample1" th:text="${expressionList.get(0).example}" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="text" id="expressionWord2" name="expressionWord2"
-                               th:value="${expressionList.get(1).word}">
+                               th:value="${expressionList.get(1).word}" required>
                     </td>
                     <td>
-                        <textarea id="expressionMeaning2" name="expressionMeaning2"
-                                  th:text="${expressionList.get(1).meaning}">
-                        </textarea>
+                        <textarea id="expressionMeaning2" name="expressionMeaning2" th:text="${expressionList.get(1).meaning}" required></textarea>
                     </td>
                     <td>
-                        <textarea id="expressionExample2" name="expressionExample2"
-                                  th:text="${expressionList.get(1).example}">
-                        </textarea>
+                        <textarea id="expressionExample2" name="expressionExample2" th:text="${expressionList.get(1).example}" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="text" id="expressionWord3" name="expressionWord3"
-                               th:value="${expressionList.get(2).word}">
+                               th:value="${expressionList.get(2).word}" required>
                     </td>
                     <td>
-                        <textarea id="expressionMeaning3" name="expressionMeaning3"
-                                  th:text="${expressionList.get(2).meaning}">
-                        </textarea>
+                        <textarea id="expressionMeaning3" name="expressionMeaning3" th:text="${expressionList.get(2).meaning}" required></textarea>
                     </td>
                     <td>
-                        <textarea id="expressionExample3" name="expressionExample3"
-                                  th:text="${expressionList.get(2).example}">
-                        </textarea>
+                        <textarea id="expressionExample3" name="expressionExample3" th:text="${expressionList.get(2).example}" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="text" id="expressionWord4" name="expressionWord4"
-                               th:value="${expressionList.get(3).word}">
+                               th:value="${expressionList.get(3).word}" required>
                     </td>
                     <td>
-                        <textarea id="expressionMeaning4" name="expressionMeaning4"
-                                  th:text="${expressionList.get(3).meaning}">
-                        </textarea>
+                        <textarea id="expressionMeaning4" name="expressionMeaning4" th:text="${expressionList.get(3).meaning}" required></textarea>
                     </td>
                     <td>
-                        <textarea id="expressionExample4" name="expressionExample4"
-                                  th:text="${expressionList.get(3).example}">
-                        </textarea>
+                        <textarea id="expressionExample4" name="expressionExample4" th:text="${expressionList.get(3).example}" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="text" id="expressionWord5" name="expressionWord5"
-                               th:value="${expressionList.get(4).word}">
+                               th:value="${expressionList.get(4).word}" required>
                     </td>
                     <td>
-                        <textarea id="expressionMeaning5" name="expressionMeaning5"
-                                  th:text="${expressionList.get(4).meaning}">
-                        </textarea>
+                        <textarea id="expressionMeaning5" name="expressionMeaning5" th:text="${expressionList.get(4).meaning}" required></textarea>
                     </td>
                     <td>
-                        <textarea id="expressionExample5" name="expressionExample5"
-                                  th:text="${expressionList.get(4).example}">
-                        </textarea>
+                        <textarea id="expressionExample5" name="expressionExample5" th:text="${expressionList.get(4).example}" required></textarea>
                     </td>
                 </tr>
             </table>
