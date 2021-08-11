@@ -11,7 +11,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class Topic {
 
@@ -31,16 +30,25 @@ public class Topic {
 //    @Embedded
 //    private Image image;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String origImgName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String imgName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String imgPath;
 
     @OneToOne
     @JoinColumn(name = "preview_id")
     private Preview preview;
+
+    @Builder
+    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant){
+        this.id=id;
+        this.studyDate=studyDate;
+        this.studyDay=studyDay;
+        this.theme=theme;
+        this.numOfParticipant=numOfParticipant;
+    }
 }

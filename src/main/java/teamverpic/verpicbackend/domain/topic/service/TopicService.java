@@ -2,6 +2,8 @@ package teamverpic.verpicbackend.domain.topic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 //import teamverpic.verpicbackend.domain.Image;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
@@ -20,8 +22,9 @@ import java.util.*;
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final PreviewRepository previewRepository;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
     public TopicDto createTopic(Map<String, String> topic) throws ParseException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
@@ -29,9 +32,8 @@ public class TopicService {
 
         Topic newtopic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .previewId(0l).theme(topic.get("theme"))
-                .origImgName("set").imgName("set")
-                .imgPath("set").build();
+                .theme(topic.get("theme"))
+                .build();
 
         Topic save = topicRepository.save(newtopic);
 
@@ -43,36 +45,39 @@ public class TopicService {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic=Topic.builder().topicId(id)
-                .studyDay(today).studyDate(date)
-                .numOfParticipant(0).previewId(0l)
-                .theme(topic.get("theme")).origImgName("set")
-                .imgName("set").imgPath("set").build();
+        Topic newtopic=topicRepository.getById(id);
+        Preview byId = previewRepository.getById(id);
+        newtopic.setPreview(byId);
+        newtopic.setId(id);
+        newtopic.setStudyDay(today);
+        newtopic.setStudyDate(date);
+        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
+        newtopic.setTheme(topic.get("theme"));
 
         Topic save = topicRepository.save(newtopic);
 
         return new TopicDto(save);
-=======
-    public Long createTopic(Map<String, String> topic) throws ParseException {
-        Date studyDate=new SimpleDateFormat("MM/dd").parse(topic.get("studyDate"));
-
-//        Image image=Image.builder()
-//                .imgName(topic.get("imgName"))
-//                .imgPath(topic.get("imgPath"))
-//                .origImgName(topic.get("origImgName"))
-//                .build();
-        Topic savedTopic = topicRepository.save(Topic.builder()
-                .studyDay(Day.valueOf(topic.get("studyDay")))
-                .studyDate(studyDate)
-                .theme(topic.get("theme"))
-//                .image(image)
-                .origImgName("origImgName")
-                .imgName("imgName")
-                .imgPath("imgPath")
-                .build());
-
-        return savedTopic.getId();
->>>>>>> user_profile
+//=======
+//    public Long createTopic(Map<String, String> topic) throws ParseException {
+//        Date studyDate=new SimpleDateFormat("MM/dd").parse(topic.get("studyDate"));
+//
+////        Image image=Image.builder()
+////                .imgName(topic.get("imgName"))
+////                .imgPath(topic.get("imgPath"))
+////                .origImgName(topic.get("origImgName"))
+////                .build();
+//        Topic savedTopic = topicRepository.save(Topic.builder()
+//                .studyDay(Day.valueOf(topic.get("studyDay")))
+//                .studyDate(studyDate)
+//                .theme(topic.get("theme"))
+////                .image(image)
+//                .origImgName("origImgName")
+//                .imgName("imgName")
+//                .imgPath("imgPath")
+//                .build());
+//
+//        return savedTopic.getId();
+//>>>>>>> user_profile
     }
 
 //    public Page<Topic> getTopics(Pageable pageable, Day day){

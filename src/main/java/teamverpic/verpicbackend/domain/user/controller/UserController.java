@@ -134,7 +134,7 @@ public class UserController {
     @GetMapping("/search")
     public Page<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
                                       final Pageable pageable){
-        
+
         Page<UserSearchDto> searchResult=userService.searchUser(pageable, searchString);
         return searchResult;
 

@@ -9,18 +9,16 @@ import java.util.Date;
 @Getter
 public class TopicDto {
 
-    private Long topicId;
+    private Long id;
     private Date studyDate;
     private Day studyDay;
-    private Long previewId;
     private String theme;
     private int numOfParticipant;
 
     public TopicDto(Topic topic){
-        this.topicId=topic.getTopicId();
+        this.id=topic.getId();
         this.studyDate=topic.getStudyDate();
         this.studyDay=topic.getStudyDay();
-        this.previewId=topic.getPreviewId();
         this.theme=topic.getTheme();
         this.numOfParticipant=topic.getNumOfParticipant();
     }
