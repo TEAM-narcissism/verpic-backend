@@ -13,7 +13,7 @@ public class PreviewController {
 
     private final PreviewService previewService;
 
-    @PostMapping("topics/{topic_id}/previews")
+    @PostMapping("/topics/{topic_id}/previews")
     public Long save(@PathVariable Long topic_id, @RequestBody PreviewSaveRequestDto requestDto) {
         return previewService.save(topic_id, requestDto);
     }

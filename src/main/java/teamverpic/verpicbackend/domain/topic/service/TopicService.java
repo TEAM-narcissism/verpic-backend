@@ -4,12 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
+import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewResponseDto;
+import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 //import teamverpic.verpicbackend.domain.Image;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 //import teamverpic.verpicbackend.dto.ImageDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
+import teamverpic.verpicbackend.domain.topic.dto.TopicResponseDto;
+import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -24,7 +29,19 @@ public class TopicService {
     private final TopicRepository topicRepository;
     private final PreviewRepository previewRepository;
 
-//<<<<<<< HEAD
+    @Transactional
+    public Long save(TopicSaveRequestDto requestDto) {
+        return topicRepository.save(requestDto.toEntity()).getId();
+    }
+
+    @Transactional
+    public TopicResponseDto findById(Long id) {
+        Topic entity = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
+
+        return new TopicResponseDto(entity);
+    }
+
     public TopicDto createTopic(Map<String, String> topic) throws ParseException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
@@ -57,27 +74,6 @@ public class TopicService {
         Topic save = topicRepository.save(newtopic);
 
         return new TopicDto(save);
-//=======
-//    public Long createTopic(Map<String, String> topic) throws ParseException {
-//        Date studyDate=new SimpleDateFormat("MM/dd").parse(topic.get("studyDate"));
-//
-////        Image image=Image.builder()
-////                .imgName(topic.get("imgName"))
-////                .imgPath(topic.get("imgPath"))
-////                .origImgName(topic.get("origImgName"))
-////                .build();
-//        Topic savedTopic = topicRepository.save(Topic.builder()
-//                .studyDay(Day.valueOf(topic.get("studyDay")))
-//                .studyDate(studyDate)
-//                .theme(topic.get("theme"))
-////                .image(image)
-//                .origImgName("origImgName")
-//                .imgName("imgName")
-//                .imgPath("imgPath")
-//                .build());
-//
-//        return savedTopic.getId();
-//>>>>>>> user_profile
     }
 
 //    public Page<Topic> getTopics(Pageable pageable, Day day){
@@ -90,8 +86,8 @@ public class TopicService {
 //    }
 
     public List<TopicDto> getAllTopics(){
-        List<TopicDto> topicDtos=new ArrayList<>();
-        topicRepository.findAll().forEach(topic->topicDtos.add(new TopicDto(topic)));
+        List<TopicDto> topicDtos =new ArrayList<>();
+        topicRepository.findAll().forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
         return topicDtos;
     }
@@ -103,8 +99,8 @@ public class TopicService {
     }
 
     public List<TopicDto> getTopicsByDay(Day day){
-        List<TopicDto> topicDtos=new ArrayList<>();
-        topicRepository.findAllByStudyDay(day).forEach(topic->topicDtos.add(new TopicDto(topic)));
+        List<TopicDto> topicDtos =new ArrayList<>();
+        topicRepository.findAllByStudyDay(day).forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
         return topicDtos;
     }

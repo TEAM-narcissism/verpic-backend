@@ -17,7 +17,7 @@ public class DetailTopicController {
         return detailTopicService.save(preview_id, requestDto);
     }
 
-    @GetMapping("/previews/{preview_id}/detail_topics/{detail_topic_id}")
+    @GetMapping("detail_topics/{detail_topic_id}")
     public DetailTopicResponseDto findById(@PathVariable Long detail_topic_id) {
         return detailTopicService.findById(detail_topic_id);
     }

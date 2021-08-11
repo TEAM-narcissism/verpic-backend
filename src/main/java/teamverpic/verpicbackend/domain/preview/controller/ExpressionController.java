@@ -17,7 +17,7 @@ public class ExpressionController {
         return expressionService.save(preview_id, requestDto);
     }
 
-    @GetMapping("/previews/{preview_id}/expressions/{expression_id}")
+    @GetMapping("/expressions/{expression_id}")
     public ExpressionResponseDto findById(@PathVariable Long expression_id) {
         return expressionService.findById(expression_id);
     }

@@ -2,10 +2,12 @@ package teamverpic.verpicbackend.domain.topic.domain;
 
 import lombok.*;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -50,5 +52,12 @@ public class Topic {
         this.studyDay=studyDay;
         this.theme=theme;
         this.numOfParticipant=numOfParticipant;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
+    private List<StudyReservation> studyReservationList;
+
+    public void addStudyReservation(StudyReservation studyReservation) {
+        studyReservation.setTopic(this);
+        this.studyReservationList.add(studyReservation);
     }
 }

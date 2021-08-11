@@ -16,11 +16,12 @@ public class TopicDto {
     private int numOfParticipant;
 
     public TopicDto(Topic topic){
+
         this.id=topic.getId();
         this.studyDate=topic.getStudyDate();
         this.studyDay=topic.getStudyDay();
         this.theme=topic.getTheme();
-        this.numOfParticipant=topic.getNumOfParticipant();
+        this.id = topic.getId();
+        this.numOfParticipant = topic.getNumOfParticipant();
     }
-
 }
