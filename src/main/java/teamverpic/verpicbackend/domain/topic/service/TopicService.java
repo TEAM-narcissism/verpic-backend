@@ -2,6 +2,8 @@ package teamverpic.verpicbackend.domain.topic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
+import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewResponseDto;
 import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
@@ -25,6 +27,7 @@ import java.util.*;
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final PreviewRepository previewRepository;
 
     @Transactional
     public Long save(TopicSaveRequestDto requestDto) {
@@ -44,13 +47,9 @@ public class TopicService {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic = Topic.builder()
-                .studyDay(today)
-                .studyDate(date)
+        Topic newtopic=Topic.builder().studyDay(today)
+                .studyDate(date).numOfParticipant(0)
                 .theme(topic.get("theme"))
-//                .origImgName("set")
-//                .imgName("set")
-//                .imgPath("set")
                 .build();
 
         Topic save = topicRepository.save(newtopic);
@@ -63,14 +62,14 @@ public class TopicService {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
 
-        Topic newtopic = Topic.builder()
-                .studyDay(today)
-                .studyDate(date)
-                .theme(topic.get("theme"))
-//                .origImgName("set")
-//                .imgName("set")
-//                .imgPath("set")
-                .build();
+        Topic newtopic=topicRepository.getById(id);
+        Preview byId = previewRepository.getById(id);
+        newtopic.setPreview(byId);
+        newtopic.setId(id);
+        newtopic.setStudyDay(today);
+        newtopic.setStudyDate(date);
+        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
+        newtopic.setTheme(topic.get("theme"));
 
         Topic save = topicRepository.save(newtopic);
 

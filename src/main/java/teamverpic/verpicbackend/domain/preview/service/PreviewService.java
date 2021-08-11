@@ -17,6 +17,7 @@ import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,10 +32,22 @@ public class PreviewService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+topic_id));
 
         Preview preview = requestDto.toEntity();
+
         preview.setTopic(topic);
         topic.setPreview(preview);
 
         return previewRepository.save(preview).getId();
+    }
+
+    @Transactional
+    public void edit(Long topic_id, PreviewSaveRequestDto requestDto){
+        Topic topic = topicRepository.findById(topic_id)
+                .orElseThrow(()-> new IllegalStateException("해당 Topic이 없습니다. id="+topic_id));
+        Preview preview = previewRepository.findById(topic_id)
+                .orElseThrow(() -> new IllegalStateException("해당 Preview가 없습니다. id=" + topic_id));
+
+        preview.setContext(requestDto.getContext());
+        previewRepository.save(preview);
     }
 
     @Transactional
