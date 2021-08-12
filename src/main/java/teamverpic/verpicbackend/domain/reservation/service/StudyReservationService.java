@@ -28,6 +28,9 @@ public class StudyReservationService {
 
         Topic topic = topicRepository.getById(Long.parseLong(reservation.get("topicId")));
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않아요."));
+
+        topic.setNumOfParticipant(topic.getNumOfParticipant()+1);
+
         return studyReservationRepository.save(StudyReservation.builder()
                 .topic(topic)
                 .user(user)
