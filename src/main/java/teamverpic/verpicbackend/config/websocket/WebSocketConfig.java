@@ -3,6 +3,8 @@ package teamverpic.verpicbackend.config.websocket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,6 +17,7 @@ import teamverpic.verpicbackend.domain.chat.handler.ChatRoomSubscriptionIntercep
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
    // private final StompHandler stompHandler;
