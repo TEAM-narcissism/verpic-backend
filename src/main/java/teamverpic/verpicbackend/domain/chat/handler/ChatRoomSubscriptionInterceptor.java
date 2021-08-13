@@ -6,13 +6,17 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.chat.domain.ChatRoom;
 import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.chat.dao.ChatRoomRepository;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.*;
 
 @Slf4j
@@ -26,12 +30,23 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
     private final Map<Long, Set<String>> roomId2SessionIDs;
     @Resource
     private final Map<String, Long> sessionId2RoomId;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String sessionId = accessor.getSessionId();
         accessor.setLeaveMutable(false);
+        String token = accessor.getFirstNativeHeader("Authorization");
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        else {
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+
+
         switch (accessor.getCommand()) {
             case SUBSCRIBE:
                 System.out.println("Subscribe");
@@ -52,6 +67,10 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
             case DISCONNECT:
                 removeSessionUser(sessionId);
                 break;
+            case CONNECT:
+
+                break;
+
             default:
                 break;
         }
