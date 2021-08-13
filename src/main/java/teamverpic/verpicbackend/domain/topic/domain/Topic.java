@@ -29,17 +29,8 @@ public class Topic {
 
     private int numOfParticipant;
 
-//    @Embedded
-//    private Image image;
-
-    @Column(nullable = true)
-    private String origImgName;
-
-    @Column(nullable = true)
-    private String imgName;
-
-    @Column(nullable = true)
-    private String imgPath;
+    @Column(nullable = true, length = 64)
+    private String photos;
 
     @OneToOne
     @JoinColumn(name = "preview_id")
@@ -48,13 +39,17 @@ public class Topic {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
     private List<StudyReservation> studyReservationList;
 
+    @Column(nullable = true, length = 64)
+    private String photosImagePath;
+
     @Builder
-    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant) {
+    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant, String photos) {
         this.id = id;
         this.studyDate = studyDate;
         this.studyDay = studyDay;
         this.theme = theme;
         this.numOfParticipant = numOfParticipant;
+        this.photos=photos;
     }
 
     public void addStudyReservation(StudyReservation studyReservation) {

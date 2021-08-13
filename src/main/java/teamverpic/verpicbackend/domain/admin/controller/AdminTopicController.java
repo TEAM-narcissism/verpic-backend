@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.domain.preview.dto.detailtopic.DetailTopicResponseDto;
 import teamverpic.verpicbackend.domain.preview.dto.detailtopic.DetailTopicSaveRequestDto;
 import teamverpic.verpicbackend.domain.preview.dto.expression.ExpressionResponseDto;
@@ -17,6 +18,7 @@ import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -35,14 +37,14 @@ public class AdminTopicController {
     public String showTopicList(Model model){
         List<TopicDto> allTopics = topicService.getAllTopics();
         model.addAttribute("topics", allTopics);
-        return "administration/topic/topics";
+        return "administration/topics/topics";
     }
 
     @GetMapping("/{topicId}")
     public String showTopic(@PathVariable Long topicId, Model model) {
         TopicDto topic = topicService.getTopicByTopicId(topicId);
         model.addAttribute("topic", topic);
-        return "administration/topic/topic";
+        return "administration/topics/topic";
     }
 
     @GetMapping("/addTopic")
@@ -52,15 +54,18 @@ public class AdminTopicController {
         String today=format.format(d);
 
         model.addAttribute("today", today);
-        return "administration/topic/addTopicForm";
+        return "administration/topics/addTopicForm";
     }
 
     @PostMapping("/addTopic")
-    public String addTopic(@RequestParam Map<String, String> param, Model model) throws ParseException {
-        TopicDto newTopic = topicService.createTopic(param);
+    public String addTopic(@RequestParam Map<String, String> param,
+                           @RequestParam("image") MultipartFile multipartFile,
+                           Model model) throws ParseException, IOException {
+
+        TopicDto newTopic = topicService.createTopic(param, multipartFile);
         model.addAttribute("topicId", newTopic.getId());
 
-        return "administration/topic/addPreviewForm";
+        return "administration/topics/addPreviewForm";
     }
 
     @PostMapping("/addTopic/addPreview")
@@ -114,20 +119,16 @@ public class AdminTopicController {
         model.addAttribute("days", days);
         model.addAttribute("topic", topic);
         model.addAttribute("today", today);
-        return "administration/topic/editTopicForm";
+        return "administration/topics/editTopicForm";
     }
 
     @PostMapping("/{topicId}/edit")
     public String editTopic(@PathVariable Long topicId,
                             @RequestParam Map<String, String> param,
+                            @RequestParam("image") MultipartFile multipartFile,
                             Model model) throws Exception {
 
-        param.forEach((key, value)->{
-            System.out.println("key = " + key);
-            System.out.println("value = " + value);
-        });
-
-        topicService.editTopic(param, topicId);
+        topicService.editTopic(param, multipartFile, topicId);
         return "redirect:/administration/topics/{topicId}";
     }
 
@@ -141,7 +142,7 @@ public class AdminTopicController {
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
         model.addAttribute("previewId", previewId);
-        return "/administration/topic/preview";
+        return "/administration/topics/preview";
     }
 
     @GetMapping("/preview/{previewId}/edit")
@@ -154,7 +155,7 @@ public class AdminTopicController {
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
         model.addAttribute("previewId", previewId);
-        return "/administration/topic/editPreviewForm";
+        return "/administration/topics/editPreviewForm";
     }
 
     @PostMapping("/preview/{previewId}/edit")
