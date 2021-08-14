@@ -53,6 +53,7 @@
                 <th>Word</th>
                 <th>Meaning</th>
                 <th>Example</th>
+                <th>Pronunciation</th>
             </tr>
             <tr>
                 <td>
@@ -68,6 +69,12 @@
                     <textarea id="expressionExample1" name="expressionExample1"
                               th:text="${expressionList.get(0).example}" readonly>
                         </textarea>
+                </td>
+                <td>
+                    <audio id="audio1" controls>
+                        <source th:src="@{data:audio/mpeg;base64,{aud}(aud=${base64EncodedAudio1})}" type="audio/mpeg">
+                        <p>Your browser does not support the audio element.!</p>
+                    </audio>
                 </td>
             </tr>
             <tr>
@@ -85,6 +92,12 @@
                               th:text="${expressionList.get(1).example}" readonly>
                         </textarea>
                 </td>
+                <td>
+                    <audio id="audio2" controls>
+                        <source th:src="@{data:audio/mpeg;base64,{aud}(aud=${base64EncodedAudio2})}" type="audio/mpeg">
+                        <p>Your browser does not support the audio element.!</p>
+                    </audio>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -100,6 +113,12 @@
                     <textarea id="expressionExample3" name="expressionExample3"
                               th:text="${expressionList.get(2).example}" readonly>
                         </textarea>
+                </td>
+                <td>
+                    <audio id="audio3" controls>
+                        <source th:src="@{data:audio/mpeg;base64,{aud}(aud=${base64EncodedAudio3})}" type="audio/mpeg">
+                        <p>Your browser does not support the audio element.!</p>
+                    </audio>
                 </td>
             </tr>
             <tr>
@@ -117,6 +136,12 @@
                               th:text="${expressionList.get(3).example}" readonly>
                         </textarea>
                 </td>
+                <td>
+                    <audio id="audio4" controls>
+                        <source th:src="@{data:audio/mpeg;base64,{aud}(aud=${base64EncodedAudio4})}" type="audio/mpeg">
+                        <p>Your browser does not support the audio element.!</p>
+                    </audio>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -132,6 +157,12 @@
                     <textarea id="expressionExample5" name="expressionExample5"
                               th:text="${expressionList.get(4).example}" readonly>
                         </textarea>
+                </td>
+                <td>
+                    <audio id="audio5" controls>
+                        <source th:src="@{data:audio/mpeg;base64,{aud}(aud=${base64EncodedAudio5})}" type="audio/mpeg">
+                        <p>Your browser does not support the audio element.!</p>
+                    </audio>
                 </td>
             </tr>
         </table>

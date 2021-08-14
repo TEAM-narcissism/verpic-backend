@@ -12,13 +12,18 @@ public class ExpressionSaveRequestDto {
     private String word;
     private String meaning;
     private String example;
-    private String pronounce;
+    private String audios;
+    private String contentType;
+    private byte[] pronounce;
 
     @Builder
-    public ExpressionSaveRequestDto(String word, String meaning, String example, String pronounce) {
+    public ExpressionSaveRequestDto(String word, String meaning, String example, String audios,
+                                    String contentType, byte[] pronounce) {
         this.word = word;
         this.meaning = meaning;
         this.example = example;
+        this.audios=audios;
+        this.contentType=contentType;
         this.pronounce = pronounce;
     }
 
@@ -27,6 +32,8 @@ public class ExpressionSaveRequestDto {
                 .word(word)
                 .meaning(meaning)
                 .example(example)
+                .audios(audios)
+                .contentType(contentType)
                 .pronounce(pronounce)
                 .build();
         return expression;

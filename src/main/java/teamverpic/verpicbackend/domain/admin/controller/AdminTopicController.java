@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.domain.preview.dto.detailtopic.DetailTopicResponseDto;
@@ -20,6 +21,7 @@ import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -73,24 +75,45 @@ public class AdminTopicController {
     }
 
     @PostMapping("/addTopic/addPreview")
-    public String addPreview(@RequestParam Map<String, String> param, Model model){
+    public String addPreview(@RequestParam Map<String, String> param,
+                             @RequestParam("expressionPronunciation") List<MultipartFile> multipartFiles,
+                             Model model) throws IOException {
         Long topicId = Long.valueOf(param.get("previewId"));
         Long previewId = Long.valueOf(param.get("previewId"));
         PreviewSaveRequestDto previewDto=new PreviewSaveRequestDto(param.get("context"));
+        String fileName[]=new String[5];
+        String contentType[]=new String[5];
+        byte[] data[]=new byte[5][];
+        int count=0;
+
+        for (MultipartFile file : multipartFiles){
+            fileName[count]=StringUtils.cleanPath(file.getOriginalFilename());
+            contentType[count]=file.getContentType();
+            data[count++]=file.getBytes();
+        }
+
+        for(int i=0;i<5;i++){
+            System.out.println("fileName["+i+"] = " + Arrays.toString(fileName[i].getBytes()));
+        }
 
         DetailTopicSaveRequestDto detailTopicDto1=new DetailTopicSaveRequestDto(param.get("detailContext1"));
         DetailTopicSaveRequestDto detailTopicDto2=new DetailTopicSaveRequestDto(param.get("detailContext2"));
 
         ExpressionSaveRequestDto expressionDto1=new ExpressionSaveRequestDto(
-                param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"), "pronounciation1");
+                param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"),
+                fileName[0], contentType[0], data[0]);
         ExpressionSaveRequestDto expressionDto2=new ExpressionSaveRequestDto(
-                param.get("expressionWord2"), param.get("expressionMeaning2"), param.get("expressionExample2"), "pronounciation2");
+                param.get("expressionWord2"), param.get("expressionMeaning2"), param.get("expressionExample2"),
+                fileName[1], contentType[1], data[1]);
         ExpressionSaveRequestDto expressionDto3=new ExpressionSaveRequestDto(
-                param.get("expressionWord3"), param.get("expressionMeaning3"), param.get("expressionExample3"), "pronounciation3");
+                param.get("expressionWord3"), param.get("expressionMeaning3"), param.get("expressionExample3"),
+                fileName[2], contentType[2], data[2]);
         ExpressionSaveRequestDto expressionDto4=new ExpressionSaveRequestDto(
-                param.get("expressionWord4"), param.get("expressionMeaning4"), param.get("expressionExample4"), "pronounciation4");
+                param.get("expressionWord4"), param.get("expressionMeaning4"), param.get("expressionExample4"),
+                fileName[3], contentType[3], data[3]);
         ExpressionSaveRequestDto expressionDto5=new ExpressionSaveRequestDto(
-                param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"), "pronounciation5");
+                param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"),
+                fileName[4], contentType[4], data[4]);
 
         previewService.save(topicId, previewDto);
 
@@ -141,7 +164,17 @@ public class AdminTopicController {
         PreviewResponseDto previewDto=previewService.findById(previewId);
         List<DetailTopicResponseDto> detailTopicDtoList = detailTopicService.findByPreviewId(previewId);
         List<ExpressionResponseDto> expressionDtoList=expressionService.findByPreviewId(previewId);
+        String base64EncodedAudio1 = Base64.encodeBase64String(expressionDtoList.get(0).getPronounce());
+        String base64EncodedAudio2 = Base64.encodeBase64String(expressionDtoList.get(1).getPronounce());
+        String base64EncodedAudio3 = Base64.encodeBase64String(expressionDtoList.get(2).getPronounce());
+        String base64EncodedAudio4 = Base64.encodeBase64String(expressionDtoList.get(3).getPronounce());
+        String base64EncodedAudio5 = Base64.encodeBase64String(expressionDtoList.get(4).getPronounce());
 
+        model.addAttribute("base64EncodedAudio1", base64EncodedAudio1);
+        model.addAttribute("base64EncodedAudio2", base64EncodedAudio2);
+        model.addAttribute("base64EncodedAudio3", base64EncodedAudio3);
+        model.addAttribute("base64EncodedAudio4", base64EncodedAudio4);
+        model.addAttribute("base64EncodedAudio5", base64EncodedAudio5);
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
@@ -164,7 +197,9 @@ public class AdminTopicController {
 
     @PostMapping("/preview/{previewId}/edit")
     public String editPreviewForm(@PathVariable Long previewId,
-                                  @RequestParam Map<String, String> param, Model model){
+                                  @RequestParam Map<String, String> param,
+                                  @RequestParam("expressionPronunciation") List<MultipartFile> multipartFiles,
+                                  Model model) throws IOException {
         Long topicId = Long.valueOf(param.get("id"));
         PreviewSaveRequestDto previewDto=new PreviewSaveRequestDto(param.get("context"));
 
@@ -175,16 +210,32 @@ public class AdminTopicController {
         detailTopicDtos.add(detailTopicDto2);
 
         List<ExpressionSaveRequestDto> expressionDtos=new ArrayList<>();
+        String fileName[]=new String[5];
+        String contentType[]=new String[5];
+        byte[] data[]=new byte[5][];
+        int count=0;
+
+        for (MultipartFile file : multipartFiles){
+            fileName[count]=StringUtils.cleanPath(file.getOriginalFilename());
+            contentType[count]=file.getContentType();
+            data[count++]=file.getBytes();
+        }
+
         ExpressionSaveRequestDto expressionDto1=new ExpressionSaveRequestDto(
-                param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"), "pronounciation1");
+                param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"),
+                fileName[0], contentType[0], data[0]);
         ExpressionSaveRequestDto expressionDto2=new ExpressionSaveRequestDto(
-                param.get("expressionWord2"), param.get("expressionMeaning2"), param.get("expressionExample2"), "pronounciation2");
+                param.get("expressionWord2"), param.get("expressionMeaning2"), param.get("expressionExample2"),
+                fileName[1], contentType[1], data[1]);
         ExpressionSaveRequestDto expressionDto3=new ExpressionSaveRequestDto(
-                param.get("expressionWord3"), param.get("expressionMeaning3"), param.get("expressionExample3"), "pronounciation3");
+                param.get("expressionWord3"), param.get("expressionMeaning3"), param.get("expressionExample3"),
+                fileName[2], contentType[2], data[2]);
         ExpressionSaveRequestDto expressionDto4=new ExpressionSaveRequestDto(
-                param.get("expressionWord4"), param.get("expressionMeaning4"), param.get("expressionExample4"), "pronounciation4");
+                param.get("expressionWord4"), param.get("expressionMeaning4"), param.get("expressionExample4"),
+                fileName[3], contentType[3], data[3]);
         ExpressionSaveRequestDto expressionDto5=new ExpressionSaveRequestDto(
-                param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"), "pronounciation5");
+                param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"),
+                fileName[4], contentType[4], data[4]);
         expressionDtos.add(expressionDto1);
         expressionDtos.add(expressionDto2);
         expressionDtos.add(expressionDto3);
@@ -199,6 +250,17 @@ public class AdminTopicController {
         List<DetailTopicResponseDto> detailTopicDtoList = detailTopicService.findByPreviewId(previewId);
         List<ExpressionResponseDto> expressionDtoList=expressionService.findByPreviewId(previewId);
 
+        String base64EncodedAudio1 = Base64.encodeBase64String(expressionDtoList.get(0).getPronounce());
+        String base64EncodedAudio2 = Base64.encodeBase64String(expressionDtoList.get(1).getPronounce());
+        String base64EncodedAudio3 = Base64.encodeBase64String(expressionDtoList.get(2).getPronounce());
+        String base64EncodedAudio4 = Base64.encodeBase64String(expressionDtoList.get(3).getPronounce());
+        String base64EncodedAudio5 = Base64.encodeBase64String(expressionDtoList.get(4).getPronounce());
+
+        model.addAttribute("base64EncodedAudio1", base64EncodedAudio1);
+        model.addAttribute("base64EncodedAudio2", base64EncodedAudio2);
+        model.addAttribute("base64EncodedAudio3", base64EncodedAudio3);
+        model.addAttribute("base64EncodedAudio4", base64EncodedAudio4);
+        model.addAttribute("base64EncodedAudio5", base64EncodedAudio5);
         model.addAttribute("preview", preview);
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);

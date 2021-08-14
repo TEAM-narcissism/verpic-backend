@@ -38,13 +38,13 @@ public class DetailTopicService {
     @Transactional
     public void edit(Long preview_id, List<DetailTopicSaveRequestDto> requestDtos){
         List<DetailTopic> detailTopicList = detailTopicRepository.findByPreviewId(preview_id);
-//        Preview preview=previewRepository.getById(preview_id);
+        Preview preview=previewRepository.getById(preview_id);
 
         int count=0;
         for(DetailTopic detailTopic : detailTopicList){
 
             detailTopic.setContext(requestDtos.get(count++).getContext());
-//            detailTopic.setPreview(preview);
+            detailTopic.setPreview(preview);
         }
 
         detailTopicList.forEach(detailTopic ->{
