@@ -14,7 +14,9 @@ public class TopicDto {
     private Day studyDay;
     private String theme;
     private int numOfParticipant;
-    private String photosImagePath;
+    private String photos;
+    private String contentType;
+    private byte[] data;
 
     public TopicDto(Topic topic){
 
@@ -24,6 +26,8 @@ public class TopicDto {
         this.theme=topic.getTheme();
         this.id = topic.getId();
         this.numOfParticipant = topic.getNumOfParticipant();
-        this.photosImagePath=topic.getPhotosImagePath();
+        this.photos=topic.getPhotos();
+        this.contentType=topic.getContentType();
+        this.data=topic.getData();
     }
 }

@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import teamverpic.verpicbackend.domain.photo.FileUploadUtil;
-import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
-import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
@@ -26,7 +23,6 @@ import java.util.*;
 public class TopicService {
 
     private final TopicRepository topicRepository;
-    private final PreviewRepository previewRepository;
 
     @Transactional
     public Long save(TopicSaveRequestDto requestDto) {
@@ -50,17 +46,12 @@ public class TopicService {
 
         Topic newtopic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .theme(topic.get("theme"))
-                .photos(fileName)
+                .theme(topic.get("theme")).photos(fileName)
+                .contentType(multipartFile.getContentType())
+                .data(multipartFile.getBytes())
                 .build();
 
-
         Topic save = topicRepository.save(newtopic);
-        save.setPhotosImagePath("/images/" + save.getId() + "/" + fileName);
-        topicRepository.save(newtopic);
-
-        String uploadDir = "src/main/resources/images/" + newtopic.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
         return new TopicDto(save);
     }
@@ -73,20 +64,14 @@ public class TopicService {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         Topic newtopic=topicRepository.getById(id);
-        Preview byId = previewRepository.getById(id);
-        newtopic.setPreview(byId);
-        newtopic.setId(id);
         newtopic.setStudyDay(today);
         newtopic.setStudyDate(date);
-        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
         newtopic.setTheme(topic.get("theme"));
         newtopic.setPhotos(fileName);
-        newtopic.setPhotosImagePath("/images/" + newtopic.getId() + "/" + fileName);
+        newtopic.setContentType(multipartFile.getContentType());
+        newtopic.setData(multipartFile.getBytes());
 
         Topic save = topicRepository.save(newtopic);
-
-        String uploadDir = "src/main/resources/images/" + newtopic.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
         return new TopicDto(save);
     }

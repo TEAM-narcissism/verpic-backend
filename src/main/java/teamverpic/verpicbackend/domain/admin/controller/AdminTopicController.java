@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.admin.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,10 @@ public class AdminTopicController {
     @GetMapping("/{topicId}")
     public String showTopic(@PathVariable Long topicId, Model model) {
         TopicDto topic = topicService.getTopicByTopicId(topicId);
+        String base64EncodedImage = Base64.encodeBase64String(topic.getData());
+
         model.addAttribute("topic", topic);
+        model.addAttribute("base64EncodedImage", base64EncodedImage);
         return "administration/topics/topic";
     }
 
