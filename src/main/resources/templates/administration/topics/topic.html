@@ -40,6 +40,11 @@
         <input type="text" id="numOfParticipant" name="numOfParticipant" class="form-control"
                value="0" th:value="${topic.numOfParticipant}" readonly>
     </div>
+    <div>
+        <label for="photo">Photo</label>
+        <img id="photo" name="photo" th:src="@{data:image/png;base64,{img}(img=${base64EncodedImage})}"
+             alt="photo"  height="400" width="300" />
+    </div>
     <hr class="my-4">
     <div class="row">
         <div class="col">

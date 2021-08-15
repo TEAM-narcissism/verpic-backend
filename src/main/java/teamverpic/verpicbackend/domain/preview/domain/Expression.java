@@ -27,17 +27,26 @@ public class Expression {
     private String example;
 
     @Column
-    private String pronounce;
+    private String audios;
+
+    @Column
+    private String contentType;
+
+    @Column
+    @Lob
+    private byte[] pronounce;
 
     @ManyToOne
     @JoinColumn(name = "preview_id")
     private Preview preview;
 
     @Builder
-    private Expression(String word, String meaning, String example, String pronounce) {
+    private Expression(String word, String meaning, String example, String audios, String contentType, byte[] pronounce) {
         this.word = word;
         this.meaning = meaning;
         this.example = example;
+        this.audios=audios;
+        this.contentType=contentType;
         this.pronounce = pronounce;
     }
 }

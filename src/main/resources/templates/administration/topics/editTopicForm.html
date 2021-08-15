@@ -15,7 +15,7 @@
     <div class="py-5 text-center">
         <h2>Topic 수정 Form</h2>
     </div>
-    <form action="topic.html" th:action method="post">
+    <form action="topic.html" th:action enctype="multipart/form-data" method="post">
         <div>
             <label for="topicId">topic ID</label>
             <input type="text" id="topicId" name="topicId" class="form-control" value="1"
@@ -23,18 +23,22 @@
         </div>
         <div>
             <label for="theme">theme</label>
-            <input type="text" id="theme" name="theme" class="form-control" th:value="${topic.theme}">
+            <input type="text" id="theme" name="theme" class="form-control" th:value="${topic.theme}" required>
         </div>
         <div>
             <label for="studyDate">Date</label>
             <input type="date" id="studyDate" name="studyDate" class="form-control"
-                   th:value="${topic.studyDate}" th:min="${today}">
+                   th:value="${topic.studyDate}" th:min="${today}" required>
         </div>
         <div>
             <label for="numOfParticipant">Number of participant</label>
             <input type="text" id="numOfParticipant" name="numOfParticipant"
                    class="form-control" value="0"
                    th:value="${topic.numOfParticipant}" readonly>
+        </div>
+        <div>
+            <label>Photos: </label>
+            <input type="file" id="image" name="image" accept="image/png, image/jpeg" required />
         </div>
         <div>
             <label for="previewId">topic ID</label>

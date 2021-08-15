@@ -11,11 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import teamverpic.verpicbackend.common.response.StatusEnum;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
-import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
-import teamverpic.verpicbackend.domain.user.dto.HttpResponseDto;
+import teamverpic.verpicbackend.common.response.HttpResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.domain.user.service.UserService;
@@ -61,7 +61,7 @@ public class UserController {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("Token", token);
         body.setData(data);
-        body.setHttpStatus(HttpStatus.OK);
+        body.setHttpStatus(StatusEnum.OK);
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
@@ -78,17 +78,17 @@ public class UserController {
         catch(Exception e) {
             if(e instanceof IllegalStateException) {
                 body.setMessage("중복 이메일 가입 불가");
-                body.setHttpStatus(HttpStatus.BAD_REQUEST);
+                body.setHttpStatus(StatusEnum.BAD_REQUEST);
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
             }
             else if(e instanceof ParseException) {
                 body.setMessage("생일 날짜 형식 오류");
-                body.setHttpStatus(HttpStatus.BAD_REQUEST);
+                body.setHttpStatus(StatusEnum.BAD_REQUEST);
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
             }
         }
         body.setMessage("회원가입 성공");
-        body.setHttpStatus(HttpStatus.CREATED);
+        body.setHttpStatus(StatusEnum.OK);
         return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
     }
 
@@ -105,7 +105,7 @@ public class UserController {
         }catch(Exception e) {
             if(e.getMessage().equals("가입되지 않은 E-MAIL 입니다.") || e.getMessage().equals("잘못된 비밀번호입니다.")) {
                 body.setMessage("아이디 또는 비밀번호 오류");
-                body.setHttpStatus(HttpStatus.BAD_REQUEST);
+                body.setHttpStatus(StatusEnum.BAD_REQUEST);
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
             }
         }
@@ -114,7 +114,7 @@ public class UserController {
         Map<String, Object> data = new HashMap<String, Object>(); // 로그인 DTO 별도 지정 필요? 현재:(Token : ~)
         data.put("Token", token);
         body.setData(data);
-        body.setHttpStatus(HttpStatus.OK);
+        body.setHttpStatus(StatusEnum.OK);
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 

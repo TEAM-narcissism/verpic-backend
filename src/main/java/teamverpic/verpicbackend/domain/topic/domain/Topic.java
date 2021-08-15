@@ -3,7 +3,6 @@ package teamverpic.verpicbackend.domain.topic.domain;
 import lombok.*;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
-import teamverpic.verpicbackend.domain.topic.domain.Day;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,17 +28,13 @@ public class Topic {
 
     private int numOfParticipant;
 
-//    @Embedded
-//    private Image image;
+    @Column(nullable = true, length = 64)
+    private String photos;
 
-    @Column(nullable = true)
-    private String origImgName;
+    private String contentType;
 
-    @Column(nullable = true)
-    private String imgName;
-
-    @Column(nullable = true)
-    private String imgPath;
+    @Lob
+    private byte[] data;
 
     @OneToOne
     @JoinColumn(name = "preview_id")
@@ -47,6 +42,19 @@ public class Topic {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
     private List<StudyReservation> studyReservationList;
+
+    @Builder
+    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant,
+                 String photos, String contentType, byte[] data) {
+        this.id = id;
+        this.studyDate = studyDate;
+        this.studyDay = studyDay;
+        this.theme = theme;
+        this.numOfParticipant = numOfParticipant;
+        this.photos=photos;
+        this.contentType=contentType;
+        this.data=data;
+    }
 
     public void addStudyReservation(StudyReservation studyReservation) {
         studyReservation.setTopic(this);

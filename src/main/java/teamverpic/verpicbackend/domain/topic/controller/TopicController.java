@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.topic.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;

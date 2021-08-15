@@ -2,21 +2,17 @@ package teamverpic.verpicbackend.domain.topic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
-import teamverpic.verpicbackend.domain.preview.domain.Preview;
-import teamverpic.verpicbackend.domain.preview.domain.Preview;
-import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewResponseDto;
-import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
-//import teamverpic.verpicbackend.domain.Image;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
-//import teamverpic.verpicbackend.dto.ImageDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.dto.TopicResponseDto;
 import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,7 +23,6 @@ import java.util.*;
 public class TopicService {
 
     private final TopicRepository topicRepository;
-    private final PreviewRepository previewRepository;
 
     @Transactional
     public Long save(TopicSaveRequestDto requestDto) {
@@ -42,14 +37,18 @@ public class TopicService {
         return new TopicResponseDto(entity);
     }
 
-    public TopicDto createTopic(Map<String, String> topic) throws ParseException {
+    public TopicDto createTopic(Map<String, String> topic,
+                                MultipartFile multipartFile) throws ParseException, IOException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         Topic newtopic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .theme(topic.get("theme"))
+                .theme(topic.get("theme")).photos(fileName)
+                .contentType(multipartFile.getContentType())
+                .data(multipartFile.getBytes())
                 .build();
 
         Topic save = topicRepository.save(newtopic);
@@ -57,19 +56,20 @@ public class TopicService {
         return new TopicDto(save);
     }
 
-    public TopicDto editTopic(Map<String, String> topic, Long id) throws ParseException {
+    public TopicDto editTopic(Map<String, String> topic, MultipartFile multipartFile,
+                              Long id) throws ParseException, IOException {
 
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
         Day today = getToday(date);
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         Topic newtopic=topicRepository.getById(id);
-        Preview byId = previewRepository.getById(id);
-        newtopic.setPreview(byId);
-        newtopic.setId(id);
         newtopic.setStudyDay(today);
         newtopic.setStudyDate(date);
-        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
         newtopic.setTheme(topic.get("theme"));
+        newtopic.setPhotos(fileName);
+        newtopic.setContentType(multipartFile.getContentType());
+        newtopic.setData(multipartFile.getBytes());
 
         Topic save = topicRepository.save(newtopic);
 
