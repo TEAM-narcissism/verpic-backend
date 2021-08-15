@@ -15,7 +15,7 @@
     <div class="py-5 text-center">
         <h2>Preview 수정 Form</h2>
     </div>
-    <form action="preview.html" th:action method="post">
+    <form action="preview.html" th:action enctype="multipart/form-data" method="post">
         <div>
             <label for="id">Preview ID</label>
             <input type="text" id="id" name="id" class="form-control" value="1"
@@ -50,6 +50,7 @@
                     <th>Word</th>
                     <th>Meaning</th>
                     <th>Example</th>
+                    <th>Pronunciation</th>
                 </tr>
                 <tr>
                     <td>
@@ -61,6 +62,9 @@
                     </td>
                     <td>
                         <textarea id="expressionExample1" name="expressionExample1" th:text="${expressionList.get(0).example}" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
                     </td>
                 </tr>
                 <tr>
@@ -74,6 +78,9 @@
                     <td>
                         <textarea id="expressionExample2" name="expressionExample2" th:text="${expressionList.get(1).example}" required></textarea>
                     </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -85,6 +92,9 @@
                     </td>
                     <td>
                         <textarea id="expressionExample3" name="expressionExample3" th:text="${expressionList.get(2).example}" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
                     </td>
                 </tr>
                 <tr>
@@ -98,6 +108,9 @@
                     <td>
                         <textarea id="expressionExample4" name="expressionExample4" th:text="${expressionList.get(3).example}" required></textarea>
                     </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -109,6 +122,9 @@
                     </td>
                     <td>
                         <textarea id="expressionExample5" name="expressionExample5" th:text="${expressionList.get(4).example}" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
                     </td>
                 </tr>
             </table>
