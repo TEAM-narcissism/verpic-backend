@@ -1,4 +1,4 @@
-package teamverpic.verpicbackend.domain.user.exception;
+package teamverpic.verpicbackend.common.exception;
 
 
 public class CustomNullPointerException extends NullPointerException {

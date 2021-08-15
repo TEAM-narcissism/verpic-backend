@@ -1,4 +1,4 @@
-package teamverpic.verpicbackend.domain.user.controller;
+package teamverpic.verpicbackend.common.exception;
 
 
 import org.springframework.http.HttpHeaders;
@@ -7,8 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import teamverpic.verpicbackend.domain.user.exception.CustomNullPointerException;
-import teamverpic.verpicbackend.domain.user.dto.HttpResponseDto;
+import teamverpic.verpicbackend.common.response.HttpResponseDto;
+import teamverpic.verpicbackend.common.response.StatusEnum;
 
 import java.nio.charset.Charset;
 
@@ -19,18 +19,18 @@ public class ExceptionAdvice {
     public ResponseEntity<HttpResponseDto> handler(CustomNullPointerException e){
         HttpResponseDto httpResponseDto = new HttpResponseDto();
         httpResponseDto.setMessage(e.getMessage());
-        httpResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+        httpResponseDto.setHttpStatus(StatusEnum.BAD_REQUEST);
 
-        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(),httpResponseDto.getHttpStatus());
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<HttpResponseDto> handler(NullPointerException e){
         HttpResponseDto httpResponseDto = new HttpResponseDto();
         httpResponseDto.setMessage(e.getMessage());
-        httpResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+        httpResponseDto.setHttpStatus(StatusEnum.BAD_REQUEST);
 
-        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(),httpResponseDto.getHttpStatus());
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 
@@ -38,9 +38,9 @@ public class ExceptionAdvice {
     public ResponseEntity<HttpResponseDto> handler(IllegalArgumentException e){
         HttpResponseDto httpResponseDto = new HttpResponseDto();
         httpResponseDto.setMessage(e.getMessage());
-        httpResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST);
+        httpResponseDto.setHttpStatus(StatusEnum.UNAUTHORIZED);
 
-        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(),httpResponseDto.getHttpStatus());
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 
