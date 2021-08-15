@@ -70,7 +70,9 @@ public class MatchService {
             // 매칭이 가능한 경우 단순히 새로운 match를 생성하고 저장하는 부분
             if (matcher != null) {
                 System.out.println("MatchService.match");
-                Match match = Match.builder().build();
+                Match match = Match.builder()
+                        .reservation(reservation)
+                        .build();
                 
                 User reservationUser = reservation.getUser();
                 User matcherUser = matcher.getUser();
@@ -80,7 +82,6 @@ public class MatchService {
                 match.addParticipants(new ArrayList<>(Arrays.asList(matchUser1, matchUser2)));
                 reservationUser.addUserMatch(matchUser1);
                 matcherUser.addUserMatch(matchUser2);
-
 
                 reservation.setSoldOut(true);
                 matcher.setSoldOut(true);

@@ -35,19 +35,18 @@ public class UserController {
     private final UserService userService;
     private final HttpSession httpSession;
 
-    //Main Page
-//    @GetMapping("/test")
-//    public String mainPage() {
-//        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-//        if (user == null) {
-//            return "main"; // 원래 메인 페이지
-//        }
-//        return "redirect:/oauth2-login/get-jwt";
-//    }
+//    Main Page
+    @GetMapping("/test")
+    public String GoogleLogin() {
+        System.out.println("UserController.GoogleLogin");
+        return "redirect:/oauth2/authorization/google";
+    }
 
     // OAuth2 Login
+//    @GetMapping("/login/oauth2/code/google")
     @GetMapping("/oauth2-login/get-jwt")
     public ResponseEntity<HttpResponseDto> OAuth2_login() {
+        System.out.println("UserController.OAuth2_login");
         HttpHeaders headers= new HttpHeaders();
         HttpResponseDto body = new HttpResponseDto();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
