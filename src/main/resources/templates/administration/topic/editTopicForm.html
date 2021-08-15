@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <style>
+ .container {
+ max-width: 560px;
+ }
+ </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Topic 수정 Form</h2>
+    </div>
+    <form action="topic.html" th:action method="post">
+        <div>
+            <label for="topicId">topic ID</label>
+            <input type="text" id="topicId" name="topicId" class="form-control" value="1"
+                   th:value="${topic.id}" readonly>
+        </div>
+        <div>
+            <label for="theme">theme</label>
+            <input type="text" id="theme" name="theme" class="form-control" th:value="${topic.theme}">
+        </div>
+        <div>
+            <label for="studyDate">Date</label>
+            <input type="date" id="studyDate" name="studyDate" class="form-control"
+                   th:value="${topic.studyDate}" th:min="${today}">
+        </div>
+        <div>
+            <label for="numOfParticipant">Number of participant</label>
+            <input type="text" id="numOfParticipant" name="numOfParticipant"
+                   class="form-control" value="0"
+                   th:value="${topic.numOfParticipant}" readonly>
+        </div>
+        <div>
+            <label for="previewId">topic ID</label>
+            <input type="text" id="previewId" name="previewId" class="form-control" value="1"
+                   th:value="${topic.id}" hidden>
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Submit
+                </button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='topic.html'"
+                        th:onclick="|location.href='@{/administration/topics/{topicId}(topicId=${topic.id})}'|"
+                        type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

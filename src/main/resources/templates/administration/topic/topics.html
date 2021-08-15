@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2>토픽 목록</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary float-end"
+                    onclick="location.href='addTopicForm.html'"
+                    th:onclick="|location.href='@{/administration/topics/addTopic}'|"
+                    type="button">토픽 등록</button>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>topic ID</th>
+                <th>theme</th>
+                <th>Date</th>
+                <th>Day</th>
+                <th>numOfParticipant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topic : ${topics}">
+                <td><a href="topic.html" th:href="@{|/administration/topics/${topic.id}|}" th:text="${topic.id}">topic id</a></td>
+                <td><a href="topic.html" th:href="@{|/administration/topics/${topic.id}|}" th:text="${topic.theme}">theme</a></td>
+                <td th:text="${topic.studyDate}">date</td>
+                <td th:text="${topic.studyDay}">day</td>
+                <td th:text="${topic.numOfParticipant}">number of participant</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

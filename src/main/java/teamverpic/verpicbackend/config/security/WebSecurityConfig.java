@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/user/**").hasRole("USER")
                         .antMatchers("/**").permitAll()
+
                 .and()
                     .oauth2Login()
                         .userInfoEndpoint()
