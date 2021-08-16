@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
+import teamverpic.verpicbackend.domain.reservation.service.StudyReservationService;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
@@ -18,6 +20,7 @@ import java.util.List;
 public class TopicController {
 
     private final TopicService topicService;
+    private final StudyReservationService studyReservationService;
 
     @PostMapping("topics")
     public Long save(@RequestBody TopicSaveRequestDto requestDto) {
@@ -71,5 +74,12 @@ public class TopicController {
     public List<TopicDto> showTopics(@PathVariable Day day){
         List<TopicDto> topics = topicService.getTopicsByDay(day);
         return topics;
+    }
+
+    @GetMapping("/topic/reservationList/{userId}/{day}")
+    public List<TopicDto> showTopicsByUserIdFromReservations(@PathVariable Long userId,
+                                                             @PathVariable Day day){
+        List<StudyReservation> reservations = studyReservationService.findReservationsByUserId(userId);
+        return topicService.getTopicsByReservations(reservations, day);
     }
 }

@@ -9,4 +9,5 @@ public interface StudyReservationRepository extends JpaRepository<StudyReservati
 
 
     public List<StudyReservation> findByTopicIdAndUserId(Long topicId, Long userId);
+    List<StudyReservation> findByUserId(Long userId);
 }

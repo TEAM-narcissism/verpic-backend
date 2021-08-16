@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
@@ -103,6 +104,17 @@ public class TopicService {
         topicRepository.findAllByStudyDay(day).forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
         return topicDtos;
+    }
+
+    public List<TopicDto> getTopicsByReservations(List<StudyReservation> reservations, Day day){
+        List<TopicDto> topics=new ArrayList<>();
+
+        for(StudyReservation reservation : reservations){
+            if(day==reservation.getTopic().getStudyDay()){
+                topics.add(new TopicDto(reservation.getTopic()));
+            }
+        }
+        return topics;
     }
 
     private Day getToday(Date date) {

@@ -72,4 +72,8 @@ public class StudyReservationService {
             studyReservationRepository.deleteById(reservationId);
         }
     }
+
+    public List<StudyReservation> findReservationsByUserId(Long userId){
+        return studyReservationRepository.findByUserId(userId);
+    }
 }
