@@ -20,7 +20,10 @@ public class Vocabulary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private List<String> repeated_words = new ArrayList<String>();
+    @ElementCollection
+    @CollectionTable(name = "repeated_words", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "repeated_word")
+    private List<String> repeated_words;
 
     @ManyToOne
     @JoinColumn(name = "feedback_id")
