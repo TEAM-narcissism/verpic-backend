@@ -7,9 +7,10 @@ import lombok.Setter;
 import teamverpic.verpicbackend.domain.feedback.analysis.Analysis;
 import teamverpic.verpicbackend.domain.feedback.script.Script;
 import teamverpic.verpicbackend.domain.feedback.vocabulary.Vocabulary;
-import teamverpic.verpicbackend.domain.matching.domain.Match;
+import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,11 +24,11 @@ public class Feedback {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "match_id")
-    private Match match;
+    @JoinColumn(name = "matchUser_id")
+    private MatchUser matchUser;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "feedback")
-    private List<Script> scripts;
+    private List<Script> scripts = new ArrayList<Script>();
 
     public void addScript(Script script) {
         script.setFeedback(this);
@@ -35,14 +36,15 @@ public class Feedback {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "feedback")
-    private List<Vocabulary> vocabularies;
+    private List<Vocabulary> vocabularies = new ArrayList<Vocabulary>();
 
     public void addVocabulary(Vocabulary vocabulary) {
         vocabulary.setFeedback(this);
         this.vocabularies.add(vocabulary);
     }
 
-    private List<Analysis> analyses;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feedback")
+    private List<Analysis> analyses = new ArrayList<Analysis>();
 
     public void addAnalysis(Analysis analysis) {
         analysis.setFeedback(this);
@@ -50,8 +52,8 @@ public class Feedback {
     }
 
     @Builder
-    public Feedback(Match match, List<Script> scripts, List<Vocabulary> vocabularies, List<Analysis> analyses){
-        this.match = match;
+    public Feedback(MatchUser matchUser, List<Script> scripts, List<Vocabulary> vocabularies, List<Analysis> analyses){
+        this.matchUser = matchUser;
         this.scripts = scripts;
         this.vocabularies = vocabularies;
         this.analyses = analyses;

@@ -16,8 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity(name = "_MATCH")
 @Builder
+@Entity(name = "_MATCH")
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,15 +36,4 @@ public class Match {
             this.participants.add(participant);
         });
     }
-
-    //STT
-    private String record1;
-
-    private String record2;
-
-    //피드백
-    @OneToOne
-    @JoinColumn(name = "feedback_id")
-    private Feedback feedback;
-
 }

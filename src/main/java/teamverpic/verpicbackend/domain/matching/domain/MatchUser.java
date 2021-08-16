@@ -1,15 +1,16 @@
 package teamverpic.verpicbackend.domain.matching.domain;
 
 import lombok.*;
+import teamverpic.verpicbackend.domain.feedback.Feedback;
 import teamverpic.verpicbackend.domain.user.domain.User;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
 @Getter
+@Entity(name = "matchUser")
 public class MatchUser {
 
     @Id
@@ -23,4 +24,14 @@ public class MatchUser {
     @ManyToOne
     @JoinColumn(name = "_match_id")
     private Match match;
+
+    //STT
+    private String record_first;
+
+    private String record_second;
+
+    //피드백
+    @OneToOne
+    @JoinColumn(name = "feedback_id")
+    private Feedback feedback;
 }

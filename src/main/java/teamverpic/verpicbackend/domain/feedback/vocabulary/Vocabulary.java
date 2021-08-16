@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import teamverpic.verpicbackend.domain.feedback.Feedback;
+import teamverpic.verpicbackend.domain.feedback.script.Script;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,7 +20,7 @@ public class Vocabulary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private List<String> repeated_words;
+    private List<String> repeated_words = new ArrayList<String>();
 
     @ManyToOne
     @JoinColumn(name = "feedback_id")
