@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface StudyReservationRepository extends JpaRepository<StudyReservation, Long> {
 
-
-    public List<StudyReservation> findByTopicIdAndUserId(Long topicId, Long userId);
+    List<StudyReservation> findByTopicIdAndUserId(Long topicId, Long userId);
     List<StudyReservation> findByUserId(Long userId);
 }

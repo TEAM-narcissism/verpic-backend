@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -38,59 +39,46 @@ public class TopicService {
         return new TopicResponseDto(entity);
     }
 
-    public TopicDto createTopic(Map<String, String> topic,
+    public TopicDto createTopic(Map<String, String> topicMap,
                                 MultipartFile multipartFile) throws ParseException, IOException {
 
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topicMap.get("studyDate"));
         Day today = getToday(date);
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-        Topic newtopic=Topic.builder().studyDay(today)
+        Topic topic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .theme(topic.get("theme")).photos(fileName)
+                .theme(topicMap.get("theme")).photos(fileName)
                 .contentType(multipartFile.getContentType())
                 .data(multipartFile.getBytes())
                 .build();
 
-        Topic save = topicRepository.save(newtopic);
+        Topic save = topicRepository.save(topic);
 
         return new TopicDto(save);
     }
 
-    public TopicDto editTopic(Map<String, String> topic, MultipartFile multipartFile,
+    public TopicDto editTopic(Map<String, String> topicMap, MultipartFile multipartFile,
                               Long id) throws ParseException, IOException {
 
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topicMap.get("studyDate"));
         Day today = getToday(date);
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
-        Topic newtopic=topicRepository.getById(id);
-        newtopic.setStudyDay(today);
-        newtopic.setStudyDate(date);
-        newtopic.setTheme(topic.get("theme"));
-        newtopic.setPhotos(fileName);
-        newtopic.setContentType(multipartFile.getContentType());
-        newtopic.setData(multipartFile.getBytes());
+        Topic topic=topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
 
-        Topic save = topicRepository.save(newtopic);
+        topic.update(date, today, topicMap.get("theme"),fileName, multipartFile.getContentType(), multipartFile.getBytes());
 
+        Topic save = topicRepository.save(topic);
         return new TopicDto(save);
     }
 
-//    public Page<Topic> getTopics(Pageable pageable, Day day){
-//        List<Topic> result = topicRepository.findAllByStudyDay(day);
-//
-//
-//
-//        int count=result.size();
-//        return new PageImpl<Topic>(result, pageable, count);
-//    }
 
     public List<TopicDto> getAllTopics(){
-        List<TopicDto> topicDtos =new ArrayList<>();
-        topicRepository.findAll().forEach(topic-> topicDtos.add(new TopicDto(topic)));
-
-        return topicDtos;
+        return topicRepository.findAll().stream().map(
+                TopicDto::new
+        ).collect(Collectors.toList());
     }
 
     public TopicDto getTopicByTopicId(Long id){
@@ -100,10 +88,10 @@ public class TopicService {
     }
 
     public List<TopicDto> getTopicsByDay(Day day){
-        List<TopicDto> topicDtos =new ArrayList<>();
-        topicRepository.findAllByStudyDay(day).forEach(topic-> topicDtos.add(new TopicDto(topic)));
 
-        return topicDtos;
+        return topicRepository.findAllByStudyDay(day).stream().map(
+                TopicDto::new
+        ).collect(Collectors.toList());
     }
 
     public List<TopicDto> getTopicsByReservations(List<StudyReservation> reservations, Day day){
