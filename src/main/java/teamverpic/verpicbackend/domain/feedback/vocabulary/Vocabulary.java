@@ -18,6 +18,9 @@ public class Vocabulary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ElementCollection
+    @CollectionTable(name = "repeated_words", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "repeated_word")
     private List<String> repeated_words;
 
     @ManyToOne

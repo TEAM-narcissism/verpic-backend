@@ -42,6 +42,7 @@ public class Feedback {
         this.vocabularies.add(vocabulary);
     }
 
+    @OneToMany(mappedBy = "feedback")
     private List<Analysis> analyses;
 
     public void addAnalysis(Analysis analysis) {
