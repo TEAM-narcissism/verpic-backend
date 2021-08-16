@@ -11,8 +11,11 @@ import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
+import teamverpic.verpicbackend.domain.user.dao.UserRepository;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +24,7 @@ public class TopicController {
 
     private final TopicService topicService;
     private final StudyReservationService studyReservationService;
+    private final UserRepository userRepository;
 
     @PostMapping("topics")
     public Long save(@RequestBody TopicSaveRequestDto requestDto) {
@@ -76,10 +80,11 @@ public class TopicController {
         return topics;
     }
 
-    @GetMapping("/topic/reservationList/{userId}/{day}")
-    public List<TopicDto> showTopicsByUserIdFromReservations(@PathVariable Long userId,
-                                                             @PathVariable Day day){
-        List<StudyReservation> reservations = studyReservationService.findReservationsByUserId(userId);
+    @GetMapping("/topic/reservationList/{day}")
+    public List<TopicDto> showTopicsByUserIdFromReservations(@PathVariable Day day,
+                                                             Authentication authentication){
+        String email = authentication.getName();
+        List<StudyReservation> reservations = studyReservationService.findReservationsByUserEmail(email);
         return topicService.getTopicsByReservations(reservations, day);
     }
 }

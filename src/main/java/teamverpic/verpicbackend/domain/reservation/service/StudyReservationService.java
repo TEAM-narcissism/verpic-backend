@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.reservation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.common.exception.CustomNullPointerException;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
@@ -73,7 +74,8 @@ public class StudyReservationService {
         }
     }
 
-    public List<StudyReservation> findReservationsByUserId(Long userId){
+    public List<StudyReservation> findReservationsByUserEmail(String email){
+        Long userId = userRepository.findByEmail(email).get().getId();
         return studyReservationRepository.findByUserId(userId);
     }
 }
