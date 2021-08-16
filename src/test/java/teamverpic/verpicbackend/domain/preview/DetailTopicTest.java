@@ -1,4 +1,4 @@
-package teamverpic.verpicbackend.domainold;
+package teamverpic.verpicbackend.domain.preview;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

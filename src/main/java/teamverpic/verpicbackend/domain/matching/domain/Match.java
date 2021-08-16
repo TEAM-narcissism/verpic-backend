@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import teamverpic.verpicbackend.domain.feedback.analysis.Analysis;
-import teamverpic.verpicbackend.domain.feedback.script.Script;
-import teamverpic.verpicbackend.domain.feedback.vocabulary.Vocabulary;
+import teamverpic.verpicbackend.domain.feedback.Feedback;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 
 import javax.persistence.*;
@@ -18,8 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity(name = "_MATCH")
 @Builder
+@Entity(name = "_MATCH")
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,22 +36,4 @@ public class Match {
             this.participants.add(participant);
         });
     }
-
-    //STT
-    private String record1;
-
-    private String record2;
-
-    //피드백
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "match")
-    private List<Script> scripts;
-
-    public void addScript(Script script) {
-        script.setMatch(this);
-        this.scripts.add(script);
-    }
-
-//    private Vocabulary vocabulary;
-//
-//    private Analysis analysis;
 }
