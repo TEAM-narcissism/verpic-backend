@@ -3,7 +3,7 @@ package teamverpic.verpicbackend.domain.feedback.script;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import teamverpic.verpicbackend.domain.matching.domain.Match;
+import teamverpic.verpicbackend.domain.feedback.Feedback;
 
 import javax.persistence.*;
 
@@ -20,6 +20,7 @@ public class Script {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "match_id")
-    private Match match;
+    @JoinColumn(name = "feedback_id")
+    private Feedback feedback;
+
 }

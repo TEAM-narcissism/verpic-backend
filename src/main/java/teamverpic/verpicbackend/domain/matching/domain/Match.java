@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import teamverpic.verpicbackend.domain.feedback.analysis.Analysis;
-import teamverpic.verpicbackend.domain.feedback.script.Script;
-import teamverpic.verpicbackend.domain.feedback.vocabulary.Vocabulary;
+import teamverpic.verpicbackend.domain.feedback.Feedback;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 
 import javax.persistence.*;
@@ -45,15 +43,8 @@ public class Match {
     private String record2;
 
     //피드백
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "match")
-    private List<Script> scripts;
+    @OneToOne
+    @JoinColumn(name = "feedback_id")
+    private Feedback feedback;
 
-    public void addScript(Script script) {
-        script.setMatch(this);
-        this.scripts.add(script);
-    }
-
-//    private Vocabulary vocabulary;
-//
-//    private Analysis analysis;
 }
