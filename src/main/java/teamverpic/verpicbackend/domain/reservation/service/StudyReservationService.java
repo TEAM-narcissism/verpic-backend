@@ -8,6 +8,7 @@ import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
+import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
@@ -16,8 +17,10 @@ import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.service.UserService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -27,6 +30,7 @@ public class StudyReservationService {
     private final StudyReservationRepository studyReservationRepository;
     private final TopicRepository topicRepository;
     private final UserRepository userRepository;
+
     public void registerReservation(String userEmail, Map<String, String> reservation){
 
         Topic topic = topicRepository.getById(Long.parseLong(reservation.get("topicId")));
@@ -77,5 +81,17 @@ public class StudyReservationService {
     public List<StudyReservation> findReservationsByUserEmail(String email){
         Long userId = userRepository.findByEmail(email).get().getId();
         return studyReservationRepository.findByUserId(userId);
+    }
+
+    public List<StudyReservationResponseDto> findReservationsByUserId(Long id){
+
+        List<StudyReservation> studyReservationList = studyReservationRepository.findByUserId(id);
+
+        List<StudyReservationResponseDto> studyReservationResponseDtoList =
+                studyReservationList.stream().map(
+                        StudyReservationResponseDto::new
+                ).collect(Collectors.toList());
+
+        return studyReservationResponseDtoList;
     }
 }

@@ -56,18 +56,13 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAnswer> userAnswerList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<StudyReservation> studyReservationList;
 
     public void addUserAnswer(UserAnswer userAnswer) {
         userAnswer.setUser(this);
         this.userAnswerList.add(userAnswer);
     }
 
-    public void addStudyReservation(StudyReservation studyReservation) {
-        studyReservation.setUser(this);
-        this.studyReservationList.add(studyReservation);
-    }
+
 
     public String getRoleKey() {
         return this.roles.get(0);
