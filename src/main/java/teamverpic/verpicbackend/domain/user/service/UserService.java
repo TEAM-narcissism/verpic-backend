@@ -27,7 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
-        Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(user.get("birthDate"));
+        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
         validateDuplicateUser(user.get("email"));
         return userRepository.save(User.builder()
