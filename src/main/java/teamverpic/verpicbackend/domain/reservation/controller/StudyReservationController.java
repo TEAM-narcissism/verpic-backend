@@ -3,7 +3,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.reservation.service.StudyReservationService;
+
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -13,9 +16,8 @@ public class StudyReservationController {
 
     private final StudyReservationService studyReservationService;
 
-
     @CrossOrigin
-    @PostMapping("/")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public String reservation(
             Authentication authentication,
@@ -31,6 +33,12 @@ public class StudyReservationController {
         studyReservationService.deleteReservation(reservationId, authentication.getName());
 
         return "스터디 취소 성공";
+    }
+
+    @GetMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudyReservationResponseDto> findReservationByUserId(@PathVariable Long userId) {
+        return studyReservationService.findReservationsByUserId(userId);
     }
 
 }

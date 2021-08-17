@@ -40,9 +40,6 @@ public class Topic {
     @JoinColumn(name = "preview_id")
     private Preview preview;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
-    private List<StudyReservation> studyReservationList;
-
     @Builder
     public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant,
                  String photos, String contentType, byte[] data) {
@@ -56,11 +53,6 @@ public class Topic {
         this.data=data;
     }
 
-    public void addStudyReservation(StudyReservation studyReservation) {
-        studyReservation.setTopic(this);
-        this.studyReservationList.add(studyReservation);
-    }
-
     @Builder
     public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant) {
         this.id = id;
@@ -68,5 +60,15 @@ public class Topic {
         this.studyDay = studyDay;
         this.theme = theme;
         this.numOfParticipant = numOfParticipant;
+    }
+
+    public void update(Date studyDate, Day studyDay, String theme, String photos, String contentType, byte[] data) {
+
+        this.studyDate = studyDate;
+        this.studyDay = studyDay;
+        this.theme = theme;
+        this.photos=photos;
+        this.contentType=contentType;
+        this.data=data;
     }
 }
