@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import teamverpic.verpicbackend.domain.matching.service.MatchService;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
+import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 
 
 @Slf4j

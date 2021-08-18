@@ -56,6 +56,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	//google cloud speech (Sound to Text)
+	implementation platform('com.google.cloud:libraries-bom:20.9.0')
+	compileOnly 'com.google.cloud:google-cloud-speech'
+	compileOnly 'com.google.cloud:google-cloud-storage'
 }
 
 test {
