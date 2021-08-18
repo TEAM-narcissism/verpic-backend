@@ -23,9 +23,6 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "reservation_id")
-    private StudyReservation reservation;
 
     @Builder.Default
     @OneToMany(mappedBy = "match")
