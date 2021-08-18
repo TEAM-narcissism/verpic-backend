@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @Controller
@@ -33,7 +34,6 @@ import java.util.Random;
 public class AnalysisController {
 
     private final AnalysisService analysisService;
-    private final UserRepository userRepository;
 
     @PostMapping(value = "/save")
     public ResponseEntity<HttpResponseDto> saveAudio(
@@ -73,15 +73,21 @@ public class AnalysisController {
     @PostMapping(value = "/create-script")
     public ResponseEntity<HttpResponseDto> createScript(
             Authentication authentication,
-            @RequestParam("matchId") String matchId,
-            @RequestParam("sessionOrder") String Order
-            ) {
+            @RequestParam("matchId") String matchId
+    ) throws IOException, CustomAuthenticationException, ExecutionException, InterruptedException {
         HttpHeaders headers= new HttpHeaders();
         HttpResponseDto body = new HttpResponseDto();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
+        if(isAnonymousUser(authentication.getName())) {
+            throw new CustomAuthenticationException("로그인 오류");
+        }
 
+        analysisService.soundToText(authentication.getName(), Long.parseLong(matchId));
 
+        body.setHttpStatus(HttpStatus.OK);
+        body.setMessage("완료");
+        body.setData(null);
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 

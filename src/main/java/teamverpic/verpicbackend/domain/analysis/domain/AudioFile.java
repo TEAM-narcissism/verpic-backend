@@ -22,8 +22,10 @@ public class AudioFile {
     private Long audioFileId;
 
     private String fileDir;
+    private String fileName;
     private Language lang;
     private Integer sessionOrder;
+    private boolean merged;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
