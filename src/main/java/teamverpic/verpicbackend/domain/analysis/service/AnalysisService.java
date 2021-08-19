@@ -93,13 +93,13 @@ public class AnalysisService {
         AudioFile audioFile = audioRepository.findByMatchAndUser(match, user)
                 .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
 
-        String projectId = "sage-cycling-323315";
-        String bucketName = "verpic";
+        String projectId = "verpic-1628699741057";
+        String bucketName = "verpic-speech-record";
         String objectName = audioFile.getFileName();
         String filePath = audioFile.getFileDir();
         uploadToGoogle(projectId, bucketName, objectName, filePath);
 
-        asyncRecognizeGcs("gs://verpic-test/" + objectName);
+        asyncRecognizeGcs("gs://verpic-speech-record/" + objectName);
 
         deleteFromGoogle(projectId, bucketName, objectName);
     }
@@ -111,7 +111,7 @@ public class AnalysisService {
                         GoogleCredentials
                                 .fromStream(
                                         ResourceUtils
-                                                .getURL("/Users/yk0318ha/Downloads/sage-cycling-323315-adda04a992b8.json")
+                                                .getURL("/Users/yk0318ha/Downloads/verpic-1628699741057-7298f7a6fc47.json")
                                                 .openStream()))
                 .build()
                 .getService();
@@ -132,10 +132,10 @@ public class AnalysisService {
             // Configure remote file request for FLAC
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
-                            .setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+                            .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                             .setLanguageCode("ko-KR")
-                            .setSampleRateHertz(48000)
-                            .setAudioChannelCount(2)
+                            .setSampleRateHertz(44100)
+                            .setAudioChannelCount(1)
                             .build();
             RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(gcsUri).build();
 
@@ -165,7 +165,7 @@ public class AnalysisService {
             // 오디오 파일에 대한 설정부분
         RecognitionConfig config = RecognitionConfig.newBuilder()
                 .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                .setSampleRateHertz(41400)
+                .setSampleRateHertz(44100)
                 .setLanguageCode("ko-KR")
                 .build();
 
