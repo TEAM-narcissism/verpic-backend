@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;

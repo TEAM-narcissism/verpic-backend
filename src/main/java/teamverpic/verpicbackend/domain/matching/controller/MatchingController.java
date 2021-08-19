@@ -8,6 +8,7 @@ import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
 import teamverpic.verpicbackend.domain.matching.service.MatchService;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
+import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 
 import java.util.List;
 
