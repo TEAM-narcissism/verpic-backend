@@ -2,15 +2,13 @@ package teamverpic.verpicbackend.domain.matching.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
 import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
 import teamverpic.verpicbackend.domain.matching.service.MatchService;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
-import teamverpic.verpicbackend.domain.user.domain.User;
-import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
+
+
 
 import java.util.List;
 
