@@ -53,10 +53,10 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-
 	implementation platform('com.google.cloud:libraries-bom:20.9.0')
 
 	implementation 'com.google.cloud:google-cloud-speech'
+	implementation 'com.google.cloud:google-cloud-storage'
 
 	//implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
 }

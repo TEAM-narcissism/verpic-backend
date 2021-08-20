@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamverpic.verpicbackend.domain.feedback.Feedback;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -23,17 +24,22 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "reservation_id")
-    private StudyReservation reservation;
 
     @Builder.Default
     @OneToMany(mappedBy = "match")
     private Set<MatchUser> participants = Collections.synchronizedSet(new HashSet<>());
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<AudioFile> audioFileList;
+
     public void addParticipants(List<MatchUser> participants) {
         participants.forEach(participant -> {
             this.participants.add(participant);
         });
+    }
+
+    public void addAudioFile(AudioFile audioFile) {
+        audioFile.setMatch(this);
+        this.audioFileList.add(audioFile);
     }
 }

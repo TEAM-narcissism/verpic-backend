@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.preview.domain.UserAnswer;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
@@ -46,16 +47,12 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    // 프로필 설정 시 추가 (detail_profile)
-//    private String nation;
-//    private String gender;
-//    private String availableLanguage;
-//    private String hobby;
-//    private String interest;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAnswer> userAnswerList;
 
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<AudioFile> audioFileList;
 
     public void addUserAnswer(UserAnswer userAnswer) {
         userAnswer.setUser(this);
@@ -63,6 +60,11 @@ public class User implements UserDetails {
     }
 
 
+
+    public void addAudioFile(AudioFile audioFile) {
+        audioFile.setUser(this);
+        this.audioFileList.add(audioFile);
+    }
 
     public String getRoleKey() {
         return this.roles.get(0);
