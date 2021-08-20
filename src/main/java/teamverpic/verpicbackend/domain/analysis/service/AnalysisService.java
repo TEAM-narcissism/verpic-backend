@@ -107,12 +107,6 @@ public class AnalysisService {
     public void uploadToGoogle(String projectId, String bucketName, String objectName, String filePath) throws  IOException{
         Storage storage = StorageOptions.newBuilder()
                 .setProjectId(projectId)
-                .setCredentials(
-                        GoogleCredentials
-                                .fromStream(
-                                        ResourceUtils
-                                                .getURL("/Users/yk0318ha/Downloads/verpic-1628699741057-7298f7a6fc47.json")
-                                                .openStream()))
                 .build()
                 .getService();
         BlobId blobId = BlobId.of(bucketName, objectName);
@@ -156,43 +150,5 @@ public class AnalysisService {
                 System.out.printf("Transcription: %s\n", alternative.getTranscript());
             }
         }
-    }
-
-    public static void longRecognitionSpeech(String filePath) throws IOException, ExecutionException, InterruptedException {
-        SpeechClient speech = SpeechClient.create();
-
-
-            // 오디오 파일에 대한 설정부분
-        RecognitionConfig config = RecognitionConfig.newBuilder()
-                .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                .setSampleRateHertz(44100)
-                .setLanguageCode("ko-KR")
-                .build();
-
-        RecognitionAudio audio = getRecognitionAudio(filePath);
-        OperationFuture<LongRunningRecognizeResponse, LongRunningRecognizeMetadata> response =
-                speech.longRunningRecognizeAsync(config, audio);
-        while (!response.isDone()) {
-            System.out.println("Waiting for response...");
-            Thread.sleep(10000);
-        }
-
-        List<SpeechRecognitionResult> results = response.get().getResultsList();
-
-        for (SpeechRecognitionResult result: results) {
-            SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-            System.out.printf("Transcription: %s\n",alternative.getTranscript());
-        }
-        speech.close();
-    }
-
-    public static RecognitionAudio getRecognitionAudio(String filePath) throws IOException {
-        RecognitionAudio recognitionAudio;
-
-        recognitionAudio = RecognitionAudio.newBuilder()
-                .setUri(filePath)
-                .build();
-
-        return recognitionAudio;
     }
 }

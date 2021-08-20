@@ -23,6 +23,7 @@ public class ServerTimeController {
 
     @GetMapping("/time/{matchId}")
     public Long getRemainTime(@PathVariable Long matchId) {
+        System.out.println("matchId = " + matchId);
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 매치가 없습니다."));
         List<MatchUser> matchUser = matchUserRepository.findByMatchId(matchId);
