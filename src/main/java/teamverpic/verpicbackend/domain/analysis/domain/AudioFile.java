@@ -34,4 +34,12 @@ public class AudioFile {
     @ManyToOne
     @JoinColumn(name = "match_id")
     private Match match;
+
+    @OneToOne
+    private Script script;
+
+    public void setScript(Script script) {
+        script.setAudioFile(this);
+        this.script = script;
+    }
 }
