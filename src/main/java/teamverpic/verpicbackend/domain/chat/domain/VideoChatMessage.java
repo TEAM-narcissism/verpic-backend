@@ -19,7 +19,7 @@ public class VideoChatMessage {
     @Id
     private String id;
     private Long matchId;
-    private String senderName;
+    private Long matchUserId;
     private String message;
     private Date timeStamp;
 }

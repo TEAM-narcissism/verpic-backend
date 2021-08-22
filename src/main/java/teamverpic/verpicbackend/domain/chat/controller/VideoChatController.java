@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.chat.dto.VideoChatMessageDto;
 import teamverpic.verpicbackend.domain.chat.service.VideoChatService;
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 import java.security.Principal;
 
@@ -28,13 +29,15 @@ public class VideoChatController {
     @MessageMapping("/videochat/enter")
     public void enter(@Payload VideoChatMessageDto messageDto, StompHeaderAccessor accessor, Principal principal) {
         Authentication authentication = getAuthentication(accessor);
-        videoChatService.enter(messageDto, authentication.getName(), principal);
+        User user = (User) authentication.getPrincipal();
+        videoChatService.enter(messageDto, user, principal);
     }
 
     @MessageMapping("/videochat/message")
     public void send(@Payload VideoChatMessageDto messageDto, StompHeaderAccessor accessor) {
         Authentication authentication = getAuthentication(accessor);
-        videoChatService.send(messageDto, authentication.getName());
+        User user = (User) authentication.getPrincipal();
+        videoChatService.send(messageDto, user);
     }
 
     @GetMapping("/videochat/{matchId}")
