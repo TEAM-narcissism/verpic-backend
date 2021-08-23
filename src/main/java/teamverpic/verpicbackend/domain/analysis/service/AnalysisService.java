@@ -73,11 +73,13 @@ public class AnalysisService {
         // Sound to Text
         List<SpeechRecognitionResult> sttResult = asyncRecognizeGcs("gs://verpic-speech-record/" + objectName, audioFile.getLang());
         Script script = Script.builder().build();
+        double totalTime = 0.0;
+        int totalWordCount = 0;
         scriptRepository.save(script);
-        double wpm;
         audioFile.setScript(script);
         for (SpeechRecognitionResult result : sttResult) {
             SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+            totalWordCount += alternative.getWordsCount();
             log.trace("Transcription : {}", alternative.getTranscript());
 
             int iterNum = 0;
@@ -101,13 +103,15 @@ public class AnalysisService {
                 sentence.setEndSecond((double)wordInfoList.get(iterNum - 1).getStartTime().getSeconds()
                         + ((double)wordInfoList.get(iterNum - 1).getStartTime().getNanos() / 1000000000));
                 sentenceRepository.save(sentence);
-
+                totalTime += (double)wordInfoList.get(iterNum - 1).getStartTime().getSeconds()
+                        + ((double)wordInfoList.get(iterNum - 1).getStartTime().getNanos() / 1000000000);
             }
         }
 
+        script.setWpm((double)totalWordCount / totalTime * 60);
+        scriptRepository.save(script);
         // 파일 삭제 (구글 스토리지)
         deleteFromGoogle(projectId, bucketName, objectName);
-
         return 0L;
     }
 
