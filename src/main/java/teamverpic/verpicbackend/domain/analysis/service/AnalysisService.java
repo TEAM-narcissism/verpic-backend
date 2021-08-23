@@ -1,7 +1,6 @@
 package teamverpic.verpicbackend.domain.analysis.service;
 
 import com.google.api.gax.longrunning.OperationFuture;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1.*;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -9,10 +8,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.language.bm.Lang;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.domain.analysis.dao.AudioRepository;
 import teamverpic.verpicbackend.domain.analysis.dao.ScriptRepository;
@@ -20,6 +16,8 @@ import teamverpic.verpicbackend.domain.analysis.dao.SentenceRepository;
 import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.analysis.domain.Script;
 import teamverpic.verpicbackend.domain.analysis.domain.Sentence;
+import teamverpic.verpicbackend.domain.analysis.dto.ScriptDto;
+import teamverpic.verpicbackend.domain.analysis.dto.SentenceDto;
 import teamverpic.verpicbackend.domain.matching.dao.MatchRepository;
 import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
@@ -30,8 +28,7 @@ import teamverpic.verpicbackend.domain.user.exception.CustomAuthenticationExcept
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -52,7 +49,8 @@ public class AnalysisService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. email=" + email));
 
-        Match match = matchRepository.findById(matchId).orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
 
         AudioFile audioFile = AudioFile.builder()
                 .fileDir(fileDir)
@@ -106,11 +104,40 @@ public class AnalysisService {
             }
         }
 
-
         // 파일 삭제 (구글 스토리지)
         deleteFromGoogle(projectId, bucketName, objectName);
 
         return 0L;
+    }
+
+    public ScriptDto getMatchScript(String email, Long matchId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. email=" + email));
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
+
+        List<AudioFile> audioFileList = match.getAudioFileList();
+        List<SentenceDto> matchScript = new ArrayList<SentenceDto>();
+        for (AudioFile audioFile : audioFileList) {
+            Script script = audioFile.getScript();
+            List<Sentence> sentenceList = script.getSentenceList();
+            for (Sentence sentence : sentenceList) {
+                matchScript.add(new SentenceDto(
+                        audioFile.getUser().getFirstName() + audioFile.getUser().getLastName(),
+                        sentence.getSentence(),
+                        audioFile.getUser().getId(),
+                        audioFile.getSessionOrder(),
+                        sentence.getStartSecond(),
+                        sentence.getEndSecond()
+                ));
+            }
+        }
+        System.out.println("matchScript.size() = " + matchScript.size());
+        Collections.sort(matchScript);
+        return new ScriptDto(
+                user.getId(),
+                matchScript
+        );
     }
 
     public String saveFile(MultipartFile multipartFile, String userName, String fileName) throws IOException {

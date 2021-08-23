@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Builder
 public class Script {
@@ -19,13 +18,14 @@ public class Script {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scriptId;
+    private int wpm;
 
-    @OneToOne
+    @OneToOne(mappedBy = "script")
     private AudioFile audioFile;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sentence")
-    private List<Sentence> sentenceList = new ArrayList<Sentence>();
+    @OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Sentence> sentenceList = new ArrayList<>();
 
     public void addSentence(Sentence sentence) {
         sentence.setScript(this);

@@ -12,7 +12,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Builder
 public class AudioFile {
@@ -27,15 +26,16 @@ public class AudioFile {
     private Integer sessionOrder;
     private boolean merged;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "match_id")
     private Match match;
 
     @OneToOne
+    @JoinColumn(name = "script_id")
     private Script script;
 
     public void setScript(Script script) {

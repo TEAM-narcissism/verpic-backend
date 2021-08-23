@@ -50,9 +50,9 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAnswer> userAnswerList;
 
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<AudioFile> audioFileList;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AudioFile> audioFileList = new ArrayList<>();
 
     public void addUserAnswer(UserAnswer userAnswer) {
         userAnswer.setUser(this);

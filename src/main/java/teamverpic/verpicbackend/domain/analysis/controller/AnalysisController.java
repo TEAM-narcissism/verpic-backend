@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.common.response.StatusEnum;
 import teamverpic.verpicbackend.domain.analysis.dao.AudioRepository;
+import teamverpic.verpicbackend.domain.analysis.dto.ScriptDto;
 import teamverpic.verpicbackend.domain.analysis.service.AnalysisService;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
@@ -68,6 +69,25 @@ public class AnalysisController {
         body.setHttpStatus(StatusEnum.OK);
         body.setMessage("음성 파일 저장 및 스크립트 생성 완료");
         body.setData(null);
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/getscript")
+    public ResponseEntity<HttpResponseDto> getMatchScript(
+            Authentication authentication,
+            @RequestParam("matchId") String matchId
+    ) throws IOException, CustomAuthenticationException, ExecutionException, InterruptedException{
+        HttpHeaders headers= new HttpHeaders();
+        HttpResponseDto body = new HttpResponseDto();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        if(authentication == null || isAnonymousUser(authentication.getName())) {
+            throw new CustomAuthenticationException("로그인 오류");
+        }
+
+        body.setHttpStatus(StatusEnum.OK);
+        body.setMessage("성공");
+        body.setData(analysisService.getMatchScript(authentication.getName(), Long.parseLong(matchId)));
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
