@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine AS builder
-COPY graldew .
+COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
