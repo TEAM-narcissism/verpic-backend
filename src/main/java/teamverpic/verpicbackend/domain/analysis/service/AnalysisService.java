@@ -89,7 +89,7 @@ public class AnalysisService {
         audioFile.setScript(script);
         for (SpeechRecognitionResult result : sttResult) {
             SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-            System.out.println("Transcription : " + alternative.getTranscript());
+            log.trace("Transcription : {}", alternative.getTranscript());
 
             int iterNum = 0;
             List<WordInfo> wordInfoList = alternative.getWordsList();

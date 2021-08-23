@@ -48,7 +48,7 @@ public class AnalysisController {
         HttpResponseDto body = new HttpResponseDto();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        if(isAnonymousUser(authentication.getName())) {
+        if(authentication == null || isAnonymousUser(authentication.getName())) {
             throw new CustomAuthenticationException("로그인 오류");
         }
 
@@ -80,7 +80,7 @@ public class AnalysisController {
         HttpResponseDto body = new HttpResponseDto();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        if(isAnonymousUser(authentication.getName())) {
+        if(authentication == null || isAnonymousUser(authentication.getName())) {
             throw new CustomAuthenticationException("로그인 오류");
         }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import teamverpic.verpicbackend.common.response.HttpResponseDto;
 import teamverpic.verpicbackend.common.response.StatusEnum;
+import teamverpic.verpicbackend.domain.user.exception.CustomAuthenticationException;
 
 import java.nio.charset.Charset;
 
@@ -17,7 +18,7 @@ import java.nio.charset.Charset;
 public class ExceptionAdvice {
 
     @ExceptionHandler(CustomNullPointerException.class)
-    public ResponseEntity<HttpResponseDto> handler(CustomNullPointerException e){
+    public ResponseEntity<HttpResponseDto> handler(CustomNullPointerException e) {
         System.out.println("e = " + e);
         HttpResponseDto httpResponseDto = new HttpResponseDto();
         httpResponseDto.setMessage(e.getMessage());
@@ -25,20 +26,19 @@ public class ExceptionAdvice {
 
         return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
     }
-//
-//    @ExceptionHandler(NullPointerException.class)
-//    public ResponseEntity<HttpResponseDto> handler(NullPointerException e){
-//        System.out.println("e = " + e);
-//        HttpResponseDto httpResponseDto = new HttpResponseDto();
-//        httpResponseDto.setMessage(e.getMessage());
-//        httpResponseDto.setHttpStatus(StatusEnum.BAD_REQUEST);
-//
-//        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
-//    }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<HttpResponseDto> handler(NullPointerException e) {
+        System.out.println("e = " + e);
+        HttpResponseDto httpResponseDto = new HttpResponseDto();
+        httpResponseDto.setMessage(e.getMessage());
+        httpResponseDto.setHttpStatus(StatusEnum.BAD_REQUEST);
+
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<HttpResponseDto> handler(IllegalArgumentException e){
+    public ResponseEntity<HttpResponseDto> handler(IllegalArgumentException e) {
         System.out.println("e = " + e);
         HttpResponseDto httpResponseDto = new HttpResponseDto();
         httpResponseDto.setMessage(e.getMessage());
@@ -48,7 +48,12 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<HttpResponseDto> handler(AuthenticationException e){
+    public ResponseEntity<HttpResponseDto> handler(AuthenticationException e) {
+        return errorResponse(e, StatusEnum.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({CustomAuthenticationException.class})
+    public ResponseEntity<HttpResponseDto> handler(CustomAuthenticationException e) {
         return errorResponse(e, StatusEnum.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
