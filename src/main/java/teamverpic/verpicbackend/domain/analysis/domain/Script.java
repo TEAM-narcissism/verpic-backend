@@ -27,6 +27,19 @@ public class Script {
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sentence> sentenceList = new ArrayList<>();
 
+    // 최빈단어
+    private String muwRankOne;
+    private int muwRankOneFreq;
+    private String muwRankTwo;
+    private int muwRankTwoFreq;
+    private String muwRankThree;
+    private int muwRankThreeFreq;
+    private String muwRankFour;
+    private int muwRankFourFreq;
+    private String muwRankFive;
+    private int muwRankFiveFreq;
+
+
     public void addSentence(Sentence sentence) {
         sentence.setScript(this);
         this.sentenceList.add(sentence);

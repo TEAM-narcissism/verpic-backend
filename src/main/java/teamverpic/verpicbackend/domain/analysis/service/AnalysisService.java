@@ -25,11 +25,15 @@ import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.user.exception.CustomAuthenticationException;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -43,7 +47,7 @@ public class AnalysisService {
     private final SentenceRepository sentenceRepository;
 
     public Long saveAudioAndStt(MultipartFile multipartFile, String email, Language lang, Integer order, Long matchId)
-            throws IOException, CustomAuthenticationException, InterruptedException, ExecutionException {
+            throws IOException, InterruptedException, ExecutionException {
         String fileName = fileNameGen();
         String fileDir = saveFile(multipartFile, email, fileName);
         User user = userRepository.findByEmail(email)
@@ -75,15 +79,17 @@ public class AnalysisService {
         Script script = Script.builder().build();
         double totalTime = 0.0;
         int totalWordCount = 0;
+        List<WordInfo> totalWordInfoList = new ArrayList<>();
         scriptRepository.save(script);
         audioFile.setScript(script);
+
         for (SpeechRecognitionResult result : sttResult) {
             SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
             totalWordCount += alternative.getWordsCount();
-            log.trace("Transcription : {}", alternative.getTranscript());
 
             int iterNum = 0;
             List<WordInfo> wordInfoList = alternative.getWordsList();
+            totalWordInfoList = Stream.concat(totalWordInfoList.stream(), wordInfoList.stream()).collect(Collectors.toList());
             String [] tempSentences = alternative.getTranscript().split("[.]");
             for (String tempSentence : tempSentences) {
                 String noWhiteSpace = tempSentence.replace(" ", "");
@@ -107,12 +113,58 @@ public class AnalysisService {
                         + ((double)wordInfoList.get(iterNum - 1).getStartTime().getNanos() / 1000000000);
             }
         }
-
+        // WPM
         script.setWpm((double)totalWordCount / totalTime * 60);
+
+        // Most Used Word
+        List<Entry<String, Integer>> entries = calMostUsedWord(totalWordInfoList);
+        if (entries.size() >= 1) {
+            script.setMuwRankOne(entries.get(0).getKey());
+            script.setMuwRankOneFreq(entries.get(0).getValue());
+        }
+        if (entries.size() >= 2) {
+            script.setMuwRankTwo(entries.get(1).getKey());
+            script.setMuwRankTwoFreq(entries.get(1).getValue());
+        }
+        if (entries.size() >= 3) {
+            script.setMuwRankThree(entries.get(2).getKey());
+            script.setMuwRankThreeFreq(entries.get(2).getValue());
+        }
+        if (entries.size() >= 4) {
+            script.setMuwRankFour(entries.get(3).getKey());
+            script.setMuwRankFourFreq(entries.get(3).getValue());
+        }
+        if (entries.size() >= 5) {
+            script.setMuwRankFive(entries.get(4).getKey());
+            script.setMuwRankFiveFreq(entries.get(4).getValue());
+        }
+
         scriptRepository.save(script);
+
         // 파일 삭제 (구글 스토리지)
         deleteFromGoogle(projectId, bucketName, objectName);
         return 0L;
+    }
+
+    public List<Entry<String, Integer>> calMostUsedWord(List<WordInfo> wordInfoList) {
+        Map<String, Integer> wordHashMap = new HashMap<>();
+        for (WordInfo wordInfo : wordInfoList) {
+            String word = wordInfo.getWord();
+            if (wordHashMap.containsKey(word))
+                wordHashMap.replace(word, wordHashMap.get(word) + 1);
+            else
+                wordHashMap.put(word, 1);
+        }
+        List<Entry<String, Integer>> listEntries = new ArrayList<>(wordHashMap.entrySet());
+
+        Collections.sort(listEntries, new Comparator<Entry<String, Integer>>() {
+            public int compare(Entry<String, Integer> obj1, Entry<String, Integer> obj2)
+            {
+                return obj2.getValue().compareTo(obj1.getValue());
+            }
+        });
+
+        return listEntries;
     }
 
     public ScriptDto getMatchScript(String email, Long matchId) {
