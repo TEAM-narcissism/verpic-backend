@@ -5,7 +5,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./grdadlew bootJar
+RUN ./gradlew bootJar
 
 FROM openjdk:8-jdk-alpine
 COPY --from=builder build.libs/*.jar app.jar
