@@ -94,15 +94,44 @@ public class TopicService {
         ).collect(Collectors.toList());
     }
 
-    public List<TopicDto> getTopicsByReservations(List<StudyReservation> reservations, Day day){
+    public List<TopicDto> getTopicsByReservationsLaterThanToday(List<StudyReservation> reservations) throws ParseException {
+        SimpleDateFormat topicDateFormat=new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date=new Date();
+        String today = topicDateFormat.format(date);
+        Date parsedToday = topicDateFormat.parse(today);
+
         List<TopicDto> topics=new ArrayList<>();
 
         for(StudyReservation reservation : reservations){
-            if(day==reservation.getTopic().getStudyDay()){
+            Date studyDate = reservation.getTopic().getStudyDate();
+            if(parsedToday.compareTo(studyDate)<=0){
                 topics.add(new TopicDto(reservation.getTopic()));
             }
         }
+
+        topics.sort(Comparator.comparing(TopicDto::getStudyDate));
         return topics;
+    }
+
+    public List<TopicDto> getTopicsLaterThanToday() throws ParseException {
+        SimpleDateFormat topicDateFormat=new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date=new Date();
+        String today = topicDateFormat.format(date);
+        Date parsedToday = topicDateFormat.parse(today);
+
+        List<TopicDto> allTopicsLaterThanToday=new ArrayList<>();
+        List<Topic> allTopics = topicRepository.findAll();
+
+        for(Topic topic : allTopics){
+            Date parsedTopicDate = topicDateFormat.parse(String.valueOf(topic.getStudyDate()));
+            if(parsedToday.compareTo(parsedTopicDate)<=0){
+                System.out.println("parsedTopicDate = " + parsedTopicDate);
+                allTopicsLaterThanToday.add(new TopicDto(topic));
+            }
+        }
+        allTopicsLaterThanToday.sort(Comparator.comparing(TopicDto::getStudyDate));
+
+        return allTopicsLaterThanToday;
     }
 
     private Day getToday(Date date) {

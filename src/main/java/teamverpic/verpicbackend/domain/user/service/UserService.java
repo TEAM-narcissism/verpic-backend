@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.user.domain.User;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
@@ -27,7 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
-        Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(user.get("birthDate"));
+        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
         validateDuplicateUser(user.get("email"));
         return userRepository.save(User.builder()

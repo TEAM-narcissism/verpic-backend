@@ -7,15 +7,19 @@ import teamverpic.verpicbackend.domain.matching.dao.MatchRepository;
 import teamverpic.verpicbackend.domain.matching.dao.MatchUserRepository;
 import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
+import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
+import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 import teamverpic.verpicbackend.domain.user.domain.User;
+import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,13 +75,12 @@ public class MatchService {
             if (matcher != null) {
                 System.out.println("MatchService.match");
                 Match match = Match.builder()
-                        .reservation(reservation)
                         .build();
                 
                 User reservationUser = reservation.getUser();
                 User matcherUser = matcher.getUser();
-                MatchUser matchUser1 = MatchUser.builder().user(reservationUser).match(match).build();
-                MatchUser matchUser2 = MatchUser.builder().user(matcherUser).match(match).build();
+                MatchUser matchUser1 = MatchUser.builder().user(reservationUser).match(match).reservation(reservation).build();
+                MatchUser matchUser2 = MatchUser.builder().user(matcherUser).match(match).reservation(matcher).build();
 
                 match.addParticipants(new ArrayList<>(Arrays.asList(matchUser1, matchUser2)));
                 reservationUser.addUserMatch(matchUser1);
@@ -94,5 +97,46 @@ public class MatchService {
                 userRepository.save(matcherUser);
             }
         });
+    }
+
+
+    public Match findByMatchId(String matchId) {
+
+        return matchRepository.findById(Long.parseLong(matchId)).orElseThrow(
+                () -> new IllegalArgumentException("해당 매치가 존재하지 않아요")
+        );
+    }
+
+    public List<MatchingResponseDto> findByUserId(Long userId) {
+        List<MatchUser> matchUsers = matchUserRepository.findByUserId(userId);
+
+        return matchUsers.stream().map(
+                matchUser -> new MatchingResponseDto(matchUser)
+        ).collect(Collectors.toList());
+    }
+
+    public List<UserResponseDto> findUserByMatchId(Long matchId) {
+        Match match = matchRepository.findById(matchId).orElseThrow(
+                () -> new IllegalArgumentException("해당 매치가 존재하지 않아요.")
+        );
+
+        return match.getParticipants().stream().map(
+                matchUser -> new UserResponseDto(matchUser.getUser())
+        ).collect(Collectors.toList());
+    }
+
+    public ParticipantCheckDto isParticipant(Long matchId, Long userId) {
+        List<UserResponseDto> userResponseDtos = findUserByMatchId(matchId);
+
+        boolean check = false;
+
+        for(UserResponseDto userResponseDto : userResponseDtos) {
+            if(userResponseDto.getId() == userId) {
+                check = true;
+                break;
+            }
+        }
+
+        return new ParticipantCheckDto(check);
     }
 }

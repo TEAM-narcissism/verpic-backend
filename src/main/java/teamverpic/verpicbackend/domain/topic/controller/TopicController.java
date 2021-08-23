@@ -11,6 +11,8 @@ import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
 import teamverpic.verpicbackend.domain.topic.service.TopicService;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
+
+import java.text.ParseException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,16 +29,22 @@ public class TopicController {
         return topicService.save(requestDto);
     }
 
-    @GetMapping("/topic/{day}")
-    public List<TopicDto> showTopics(@PathVariable Day day){
-        return topicService.getTopicsByDay(day);
+//    @GetMapping("/topic/{day}")
+//    public List<TopicDto> showTopics(@PathVariable Day day){
+//        return topicService.getTopicsByDay(day);
+//    }
+
+    @GetMapping("/topic")
+    public List<TopicDto> showEveryTopicLaterThanToday() throws ParseException {
+        return topicService.getTopicsLaterThanToday();
     }
 
-    @GetMapping("/topic/reservationList/{day}")
-    public List<TopicDto> showTopicsByUserIdFromReservations(@PathVariable Day day,
-                                                             Authentication authentication){
+    @GetMapping("/topic/reservationList")
+    public List<TopicDto> showTopicsByUserIdFromReservationsLaterThanToday(
+            Authentication authentication) throws ParseException {
+        System.out.println(authentication);
         String email = authentication.getName();
         List<StudyReservation> reservations = studyReservationService.findReservationsByUserEmail(email);
-        return topicService.getTopicsByReservations(reservations, day);
+        return topicService.getTopicsByReservationsLaterThanToday(reservations);
     }
 }
