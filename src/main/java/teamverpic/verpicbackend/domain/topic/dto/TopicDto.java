@@ -12,7 +12,8 @@ public class TopicDto {
     private Long id;
     private Date studyDate;
     private Day studyDay;
-    private String theme;
+    private String korTheme;
+    private String engTheme;
     private int numOfParticipant;
     private String photos;
     private String contentType;
@@ -23,7 +24,9 @@ public class TopicDto {
         this.id=topic.getId();
         this.studyDate=topic.getStudyDate();
         this.studyDay=topic.getStudyDay();
-        this.theme=topic.getTheme();
+//        this.theme=topic.getTheme();
+        this.korTheme=topic.getKorTheme();
+        this.engTheme=topic.getEngTheme();
         this.id = topic.getId();
         this.numOfParticipant = topic.getNumOfParticipant();
         this.photos=topic.getPhotos();

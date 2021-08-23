@@ -18,8 +18,12 @@
     <h4 class="mb-3">Topic 입력</h4>
     <form action="topic.html" th:action enctype="multipart/form-data" method="post">
         <div>
-            <label for="theme">Theme</label>
-            <input type="text" id="theme" th:name="theme" class="form-control" placeholder="Enter topic theme" required>
+            <label for="korTheme">Theme</label>
+            <input type="text" id="korTheme" th:name="korTheme" class="form-control" placeholder="Enter korean version topic theme" required>
+        </div>
+        <div>
+            <label for="engTheme">Theme</label>
+            <input type="text" id="engTheme" th:name="engTheme" class="form-control" placeholder="Enter english version topic theme" required>
         </div>
         <div>
             <label for="studyDate">Date</label>

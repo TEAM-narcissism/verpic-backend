@@ -48,7 +48,10 @@ public class TopicService {
 
         Topic topic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .theme(topicMap.get("theme")).photos(fileName)
+//                .theme(topicMap.get("theme"))
+                .korTheme(topicMap.get("korTheme"))
+                .engTheme(topicMap.get("engTheme"))
+                .photos(fileName)
                 .contentType(multipartFile.getContentType())
                 .data(multipartFile.getBytes())
                 .build();
@@ -68,7 +71,7 @@ public class TopicService {
         Topic topic=topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
 
-        topic.update(date, today, topicMap.get("theme"),fileName, multipartFile.getContentType(), multipartFile.getBytes());
+        topic.update(date, today, topicMap.get("korTheme"), topicMap.get("engTheme"), fileName, multipartFile.getContentType(), multipartFile.getBytes());
 
         Topic save = topicRepository.save(topic);
         return new TopicDto(save);

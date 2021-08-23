@@ -25,7 +25,7 @@
             <thead>
             <tr>
                 <th>topic ID</th>
-                <th>theme</th>
+                <th>korTheme</th>
                 <th>Date</th>
                 <th>Day</th>
                 <th>numOfParticipant</th>
@@ -34,7 +34,7 @@
             <tbody>
             <tr th:each="topic : ${topics}">
                 <td><a href="topic.html" th:href="@{|/administration/topics/${topic.id}|}" th:text="${topic.id}">topic id</a></td>
-                <td><a href="topic.html" th:href="@{|/administration/topics/${topic.id}|}" th:text="${topic.theme}">theme</a></td>
+                <td><a href="topic.html" th:href="@{|/administration/topics/${topic.id}|}" th:text="${topic.korTheme}">theme</a></td>
                 <td th:text="${topic.studyDate}">date</td>
                 <td th:text="${topic.studyDay}">day</td>
                 <td th:text="${topic.numOfParticipant}">number of participant</td>
