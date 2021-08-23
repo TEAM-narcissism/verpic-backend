@@ -1,5 +1,6 @@
 package teamverpic.verpicbackend.domain.analysis.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.cloud.speech.v1.*;
 import com.google.cloud.storage.BlobId;
@@ -8,6 +9,9 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpConnection;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import teamverpic.verpicbackend.domain.analysis.dao.AudioRepository;
@@ -27,6 +31,10 @@ import teamverpic.verpicbackend.domain.user.exception.CustomAuthenticationExcept
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -79,6 +87,7 @@ public class AnalysisService {
         Script script = Script.builder().build();
         double totalTime = 0.0;
         int totalWordCount = 0;
+        String totalScript = "";
         List<WordInfo> totalWordInfoList = new ArrayList<>();
         scriptRepository.save(script);
         audioFile.setScript(script);
@@ -86,6 +95,7 @@ public class AnalysisService {
         for (SpeechRecognitionResult result : sttResult) {
             SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
             totalWordCount += alternative.getWordsCount();
+            totalScript = totalScript + alternative.getTranscript() + " ";
 
             int iterNum = 0;
             List<WordInfo> wordInfoList = alternative.getWordsList();
@@ -117,27 +127,30 @@ public class AnalysisService {
         script.setWpm((double)totalWordCount / totalTime * 60);
 
         // Most Used Word
-        List<Entry<String, Integer>> entries = calMostUsedWord(totalWordInfoList);
-        if (entries.size() >= 1) {
-            script.setMuwRankOne(entries.get(0).getKey());
-            script.setMuwRankOneFreq(entries.get(0).getValue());
+        JSONArray wordObjects = requestMostUsedWord(totalScript, lang);
+        if (wordObjects.length() >= 1) {
+            script.setMuwRankOne(wordObjects.getJSONObject(0).getString("word"));
+            script.setMuwRankOneFreq(wordObjects.getJSONObject(0).getInt("count"));
         }
-        if (entries.size() >= 2) {
-            script.setMuwRankTwo(entries.get(1).getKey());
-            script.setMuwRankTwoFreq(entries.get(1).getValue());
+        if (wordObjects.length() >= 2) {
+            script.setMuwRankTwo(wordObjects.getJSONObject(1).getString("word"));
+            script.setMuwRankTwoFreq(wordObjects.getJSONObject(1).getInt("count"));
         }
-        if (entries.size() >= 3) {
-            script.setMuwRankThree(entries.get(2).getKey());
-            script.setMuwRankThreeFreq(entries.get(2).getValue());
+        if (wordObjects.length() >= 3) {
+            script.setMuwRankThree(wordObjects.getJSONObject(2).getString("word"));
+            script.setMuwRankThreeFreq(wordObjects.getJSONObject(2).getInt("count"));
         }
-        if (entries.size() >= 4) {
-            script.setMuwRankFour(entries.get(3).getKey());
-            script.setMuwRankFourFreq(entries.get(3).getValue());
+        if (wordObjects.length() >= 4) {
+            script.setMuwRankFour(wordObjects.getJSONObject(3).getString("word"));
+            script.setMuwRankFourFreq(wordObjects.getJSONObject(3).getInt("count"));
         }
-        if (entries.size() >= 5) {
-            script.setMuwRankFive(entries.get(4).getKey());
-            script.setMuwRankFiveFreq(entries.get(4).getValue());
+        if (wordObjects.length() >= 5) {
+            script.setMuwRankFive(wordObjects.getJSONObject(4).getString("word"));
+            script.setMuwRankFiveFreq(wordObjects.getJSONObject(4).getInt("count"));
         }
+
+
+
 
         scriptRepository.save(script);
 
@@ -146,25 +159,45 @@ public class AnalysisService {
         return 0L;
     }
 
-    public List<Entry<String, Integer>> calMostUsedWord(List<WordInfo> wordInfoList) {
-        Map<String, Integer> wordHashMap = new HashMap<>();
-        for (WordInfo wordInfo : wordInfoList) {
-            String word = wordInfo.getWord();
-            if (wordHashMap.containsKey(word))
-                wordHashMap.replace(word, wordHashMap.get(word) + 1);
-            else
-                wordHashMap.put(word, 1);
+    public JSONArray requestMostUsedWord(String script, Language lang)
+            throws IllegalStateException, IOException {
+        String language;
+        if (lang == Language.ENG)
+            language = "en";
+        else
+            language = "ko";
+        URL url = new URL("http://localhost:8000/api/mostused");
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept-Charset", "UTF-8");
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+
+        String inputLine = null;
+        StringBuffer outResult = new StringBuffer();
+
+        HashMap<String, Object> resultMap = new HashMap();
+        ObjectMapper mapper = new ObjectMapper();
+        resultMap.put("script", script);
+        resultMap.put("rank", 5);
+        resultMap.put("lang", language);
+        String jsonValue = mapper.writeValueAsString(resultMap);
+
+        OutputStream os = conn.getOutputStream();
+        os.write(jsonValue.getBytes("UTF-8"));
+        os.flush();
+        // 리턴된 결과 읽기
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        while ((inputLine = in.readLine()) != null) {
+            outResult.append(inputLine);
         }
-        List<Entry<String, Integer>> listEntries = new ArrayList<>(wordHashMap.entrySet());
+        conn.disconnect();
 
-        Collections.sort(listEntries, new Comparator<Entry<String, Integer>>() {
-            public int compare(Entry<String, Integer> obj1, Entry<String, Integer> obj2)
-            {
-                return obj2.getValue().compareTo(obj1.getValue());
-            }
-        });
-
-        return listEntries;
+        String returnString = outResult.toString();
+        JSONObject jsonObject = new JSONObject(returnString);
+        return jsonObject.getJSONArray("data");
     }
 
     public ScriptDto getMatchScript(String email, Long matchId) {
