@@ -24,7 +24,9 @@ public class Topic {
     @Enumerated(EnumType.STRING)
     private Day studyDay;
 
-    private String theme;
+//    private String theme;
+    private String korTheme;
+    private String engTheme;
 
     private int numOfParticipant;
 
@@ -41,12 +43,14 @@ public class Topic {
     private Preview preview;
 
     @Builder
-    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant,
+    public Topic(Long id, Date studyDate, Day studyDay, String korTheme, String engTheme, int numOfParticipant,
                  String photos, String contentType, byte[] data) {
         this.id = id;
         this.studyDate = studyDate;
         this.studyDay = studyDay;
-        this.theme = theme;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
         this.numOfParticipant = numOfParticipant;
         this.photos=photos;
         this.contentType=contentType;
@@ -54,19 +58,23 @@ public class Topic {
     }
 
     @Builder
-    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant) {
+    public Topic(Long id, Date studyDate, Day studyDay, String korTheme, String engTheme, int numOfParticipant) {
         this.id = id;
         this.studyDate = studyDate;
         this.studyDay = studyDay;
-        this.theme = theme;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
         this.numOfParticipant = numOfParticipant;
     }
 
-    public void update(Date studyDate, Day studyDay, String theme, String photos, String contentType, byte[] data) {
+    public void update(Date studyDate, Day studyDay, String korTheme, String engTheme, String photos, String contentType, byte[] data) {
 
         this.studyDate = studyDate;
         this.studyDay = studyDay;
-        this.theme = theme;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
         this.photos=photos;
         this.contentType=contentType;
         this.data=data;

@@ -15,20 +15,24 @@ import java.util.Date;
 public class TopicSaveRequestDto {
 //    private Date studyDate;
     private Day studyDay;
-    private String theme;
+    private String korTheme;
+    private String engTheme;
 
     @Builder
-    public TopicSaveRequestDto(Day studyDay, String theme){
+    public TopicSaveRequestDto(Day studyDay, String korTheme, String engTheme){
 //        this.studyDate = studyDate;
         this.studyDay = studyDay;
-        this.theme = theme;
+        this.korTheme = korTheme;
+        this.engTheme = engTheme;
     }
 
     public Topic toEntity() {
         Topic topic = Topic.builder()
 //                .studyDate(studyDate)
                 .studyDay(studyDay)
-                .theme(theme)
+//                .theme(theme)
+                .korTheme(korTheme)
+                .engTheme(engTheme)
                 .build();
         return topic;
     }

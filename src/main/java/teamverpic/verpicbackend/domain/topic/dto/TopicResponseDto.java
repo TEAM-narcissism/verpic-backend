@@ -10,11 +10,14 @@ import java.util.Date;
 public class TopicResponseDto {
     private Date studyDate;
     private Day studyDay;
-    private String theme;
+    private String korTheme;
+    private String engTheme;
 
     public TopicResponseDto(Topic entity) {
         this.studyDate = entity.getStudyDate();
         this.studyDay = entity.getStudyDay();
-        this.theme = entity.getTheme();
+//        this.theme = entity.getTheme();
+        this.korTheme=entity.getKorTheme();
+        this.engTheme=entity.getEngTheme();
     }
 }
