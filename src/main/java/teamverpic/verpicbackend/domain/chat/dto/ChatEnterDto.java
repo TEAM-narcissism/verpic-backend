@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ChatEnterDto {
-    private String name;
+    private Long matchUserId;
 
-    public ChatEnterDto(String name) {
-        this.name = name;
+    public ChatEnterDto(Long matchUserId) {
+        this.matchUserId = matchUserId;
     }
 }
