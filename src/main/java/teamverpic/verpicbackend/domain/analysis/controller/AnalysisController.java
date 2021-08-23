@@ -43,7 +43,7 @@ public class AnalysisController {
             @RequestParam("lang") String langString,
             @RequestParam("order") String order,
             @RequestParam("matchId") String matchId
-    ) throws IOException, CustomAuthenticationException{
+    ) throws IOException, CustomAuthenticationException, ExecutionException, InterruptedException{
         HttpHeaders headers= new HttpHeaders();
         HttpResponseDto body = new HttpResponseDto();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -57,7 +57,7 @@ public class AnalysisController {
             lang = Language.KOR;
         else
             lang = Language.ENG;
-        analysisService.saveAudio(
+        analysisService.saveAudioAndStt(
                 multipartFile,
                 authentication.getName(),
                 lang,
@@ -66,28 +66,7 @@ public class AnalysisController {
         );
 
         body.setHttpStatus(StatusEnum.OK);
-        body.setMessage("음성 파일 저장 완료");
-        body.setData(null);
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/create-script")
-    public ResponseEntity<HttpResponseDto> createScript(
-            Authentication authentication,
-            @RequestParam("matchId") String matchId
-    ) throws IOException, CustomAuthenticationException, ExecutionException, InterruptedException {
-        HttpHeaders headers= new HttpHeaders();
-        HttpResponseDto body = new HttpResponseDto();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        if(authentication == null || isAnonymousUser(authentication.getName())) {
-            throw new CustomAuthenticationException("로그인 오류");
-        }
-
-        analysisService.soundToText(authentication.getName(), Long.parseLong(matchId));
-
-        body.setHttpStatus(StatusEnum.OK);
-        body.setMessage("완료");
+        body.setMessage("음성 파일 저장 및 스크립트 생성 완료");
         body.setData(null);
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }

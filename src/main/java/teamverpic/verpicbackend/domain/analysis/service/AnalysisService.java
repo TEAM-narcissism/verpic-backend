@@ -45,7 +45,8 @@ public class AnalysisService {
     private final ScriptRepository scriptRepository;
     private final SentenceRepository sentenceRepository;
 
-    public Long saveAudio(MultipartFile multipartFile, String email, Language lang, Integer order, Long matchId) throws IOException, CustomAuthenticationException {
+    public Long saveAudioAndStt(MultipartFile multipartFile, String email, Language lang, Integer order, Long matchId)
+            throws IOException, CustomAuthenticationException, InterruptedException, ExecutionException {
         String fileName = fileNameGen();
         String fileDir = saveFile(multipartFile, email, fileName);
         User user = userRepository.findByEmail(email)
@@ -62,18 +63,7 @@ public class AnalysisService {
                 .build();
         user.addAudioFile(audioFile);
         match.addAudioFile(audioFile);
-        return audioRepository.save(audioFile
-        ).getAudioFileId();
-    }
-
-    public void soundToText(String email, Long matchId) throws IOException, ExecutionException, InterruptedException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. email=" + email));
-        Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
-
-        AudioFile audioFile = audioRepository.findByMatchAndUser(match, user)
-                .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
+        audioRepository.save(audioFile);
 
         // 파일 업로드 세팅 및 업러드 (구글 스토리지)
         String projectId = "verpic-1628699741057";
@@ -119,6 +109,8 @@ public class AnalysisService {
 
         // 파일 삭제 (구글 스토리지)
         deleteFromGoogle(projectId, bucketName, objectName);
+
+        return 0L;
     }
 
     public String saveFile(MultipartFile multipartFile, String userName, String fileName) throws IOException {
