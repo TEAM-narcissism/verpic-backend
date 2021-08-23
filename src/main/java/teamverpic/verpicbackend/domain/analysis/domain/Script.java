@@ -18,7 +18,7 @@ public class Script {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scriptId;
-    private int wpm;
+    private double wpm;
 
     @OneToOne(mappedBy = "script")
     private AudioFile audioFile;

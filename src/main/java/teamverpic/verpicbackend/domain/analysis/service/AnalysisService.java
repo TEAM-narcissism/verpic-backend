@@ -74,6 +74,7 @@ public class AnalysisService {
         List<SpeechRecognitionResult> sttResult = asyncRecognizeGcs("gs://verpic-speech-record/" + objectName, audioFile.getLang());
         Script script = Script.builder().build();
         scriptRepository.save(script);
+        double wpm;
         audioFile.setScript(script);
         for (SpeechRecognitionResult result : sttResult) {
             SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
@@ -85,7 +86,7 @@ public class AnalysisService {
             for (String tempSentence : tempSentences) {
                 String noWhiteSpace = tempSentence.replace(" ", "");
                 Sentence sentence = Sentence.builder()
-                        .sentence(tempSentence + ".")
+                        .sentence(tempSentence.trim() + ".")
                         .startSecond((double)wordInfoList.get(iterNum).getStartTime().getSeconds()
                                 + ((double)wordInfoList.get(iterNum).getStartTime().getNanos() / 1000000000))
                         .build();
