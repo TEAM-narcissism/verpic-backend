@@ -80,9 +80,9 @@ public class AdminTopicController {
         Long topicId = Long.valueOf(param.get("previewId"));
         Long previewId = Long.valueOf(param.get("previewId"));
         PreviewSaveRequestDto previewDto=new PreviewSaveRequestDto(param.get("context"));
-        String fileName[]=new String[5];
-        String contentType[]=new String[5];
-        byte[] data[]=new byte[5][];
+        String fileName[]=new String[10];
+        String contentType[]=new String[10];
+        byte[] data[]=new byte[10][];
         int count=0;
 
         for (MultipartFile file : multipartFiles){
@@ -91,7 +91,7 @@ public class AdminTopicController {
             data[count++]=file.getBytes();
         }
 
-        for(int i=0;i<5;i++){
+        for(int i=0;i<10;i++){
             System.out.println("fileName["+i+"] = " + Arrays.toString(fileName[i].getBytes()));
         }
 
@@ -113,6 +113,21 @@ public class AdminTopicController {
         ExpressionSaveRequestDto expressionDto5=new ExpressionSaveRequestDto(
                 param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"),
                 fileName[4], contentType[4], data[4]);
+        ExpressionSaveRequestDto expressionDto6=new ExpressionSaveRequestDto(
+                param.get("expressionWord6"), param.get("expressionMeaning6"), param.get("expressionExample6"),
+                fileName[5], contentType[5], data[5]);
+        ExpressionSaveRequestDto expressionDto7=new ExpressionSaveRequestDto(
+                param.get("expressionWord7"), param.get("expressionMeaning7"), param.get("expressionExample7"),
+                fileName[6], contentType[6], data[6]);
+        ExpressionSaveRequestDto expressionDto8=new ExpressionSaveRequestDto(
+                param.get("expressionWord8"), param.get("expressionMeaning8"), param.get("expressionExample8"),
+                fileName[7], contentType[7], data[7]);
+        ExpressionSaveRequestDto expressionDto9=new ExpressionSaveRequestDto(
+                param.get("expressionWord9"), param.get("expressionMeaning9"), param.get("expressionExample9"),
+                fileName[8], contentType[8], data[8]);
+        ExpressionSaveRequestDto expressionDto10=new ExpressionSaveRequestDto(
+                param.get("expressionWord10"), param.get("expressionMeaning10"), param.get("expressionExample10"),
+                fileName[9], contentType[9], data[9]);
 
         previewService.save(topicId, previewDto);
 
@@ -124,6 +139,11 @@ public class AdminTopicController {
         expressionService.save(previewId, expressionDto3);
         expressionService.save(previewId, expressionDto4);
         expressionService.save(previewId, expressionDto5);
+        expressionService.save(previewId, expressionDto6);
+        expressionService.save(previewId, expressionDto7);
+        expressionService.save(previewId, expressionDto8);
+        expressionService.save(previewId, expressionDto9);
+        expressionService.save(previewId, expressionDto10);
 
         List<TopicDto> allTopics = topicService.getAllTopics();
         model.addAttribute("topics", allTopics);
@@ -163,17 +183,29 @@ public class AdminTopicController {
         PreviewResponseDto previewDto=previewService.findById(previewId);
         List<DetailTopicResponseDto> detailTopicDtoList = detailTopicService.findByPreviewId(previewId);
         List<ExpressionResponseDto> expressionDtoList=expressionService.findByPreviewId(previewId);
+
         String base64EncodedAudio1 = Base64.encodeBase64String(expressionDtoList.get(0).getPronounce());
         String base64EncodedAudio2 = Base64.encodeBase64String(expressionDtoList.get(1).getPronounce());
         String base64EncodedAudio3 = Base64.encodeBase64String(expressionDtoList.get(2).getPronounce());
         String base64EncodedAudio4 = Base64.encodeBase64String(expressionDtoList.get(3).getPronounce());
         String base64EncodedAudio5 = Base64.encodeBase64String(expressionDtoList.get(4).getPronounce());
+        String base64EncodedAudio6 = Base64.encodeBase64String(expressionDtoList.get(5).getPronounce());
+        String base64EncodedAudio7 = Base64.encodeBase64String(expressionDtoList.get(6).getPronounce());
+        String base64EncodedAudio8 = Base64.encodeBase64String(expressionDtoList.get(7).getPronounce());
+        String base64EncodedAudio9 = Base64.encodeBase64String(expressionDtoList.get(8).getPronounce());
+        String base64EncodedAudio10 = Base64.encodeBase64String(expressionDtoList.get(9).getPronounce());
 
         model.addAttribute("base64EncodedAudio1", base64EncodedAudio1);
         model.addAttribute("base64EncodedAudio2", base64EncodedAudio2);
         model.addAttribute("base64EncodedAudio3", base64EncodedAudio3);
         model.addAttribute("base64EncodedAudio4", base64EncodedAudio4);
         model.addAttribute("base64EncodedAudio5", base64EncodedAudio5);
+        model.addAttribute("base64EncodedAudio6", base64EncodedAudio6);
+        model.addAttribute("base64EncodedAudio7", base64EncodedAudio7);
+        model.addAttribute("base64EncodedAudio8", base64EncodedAudio8);
+        model.addAttribute("base64EncodedAudio9", base64EncodedAudio9);
+        model.addAttribute("base64EncodedAudio10", base64EncodedAudio10);
+
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);
         model.addAttribute("preview", previewDto);
@@ -209,9 +241,9 @@ public class AdminTopicController {
         detailTopicDtos.add(detailTopicDto2);
 
         List<ExpressionSaveRequestDto> expressionDtos=new ArrayList<>();
-        String fileName[]=new String[5];
-        String contentType[]=new String[5];
-        byte[] data[]=new byte[5][];
+        String fileName[]=new String[10];
+        String contentType[]=new String[10];
+        byte[] data[]=new byte[10][];
         int count=0;
 
         for (MultipartFile file : multipartFiles){
@@ -235,11 +267,31 @@ public class AdminTopicController {
         ExpressionSaveRequestDto expressionDto5=new ExpressionSaveRequestDto(
                 param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"),
                 fileName[4], contentType[4], data[4]);
+        ExpressionSaveRequestDto expressionDto6=new ExpressionSaveRequestDto(
+                param.get("expressionWord6"), param.get("expressionMeaning6"), param.get("expressionExample6"),
+                fileName[5], contentType[5], data[5]);
+        ExpressionSaveRequestDto expressionDto7=new ExpressionSaveRequestDto(
+                param.get("expressionWord7"), param.get("expressionMeaning7"), param.get("expressionExample7"),
+                fileName[6], contentType[6], data[6]);
+        ExpressionSaveRequestDto expressionDto8=new ExpressionSaveRequestDto(
+                param.get("expressionWord8"), param.get("expressionMeaning8"), param.get("expressionExample8"),
+                fileName[7], contentType[7], data[7]);
+        ExpressionSaveRequestDto expressionDto9=new ExpressionSaveRequestDto(
+                param.get("expressionWord9"), param.get("expressionMeaning9"), param.get("expressionExample9"),
+                fileName[8], contentType[8], data[8]);
+        ExpressionSaveRequestDto expressionDto10=new ExpressionSaveRequestDto(
+                param.get("expressionWord10"), param.get("expressionMeaning10"), param.get("expressionExample10"),
+                fileName[9], contentType[9], data[9]);
         expressionDtos.add(expressionDto1);
         expressionDtos.add(expressionDto2);
         expressionDtos.add(expressionDto3);
         expressionDtos.add(expressionDto4);
         expressionDtos.add(expressionDto5);
+        expressionDtos.add(expressionDto6);
+        expressionDtos.add(expressionDto7);
+        expressionDtos.add(expressionDto8);
+        expressionDtos.add(expressionDto9);
+        expressionDtos.add(expressionDto10);
 
         previewService.edit(topicId, previewDto);
         detailTopicService.edit(previewId, detailTopicDtos);
@@ -254,12 +306,22 @@ public class AdminTopicController {
         String base64EncodedAudio3 = Base64.encodeBase64String(expressionDtoList.get(2).getPronounce());
         String base64EncodedAudio4 = Base64.encodeBase64String(expressionDtoList.get(3).getPronounce());
         String base64EncodedAudio5 = Base64.encodeBase64String(expressionDtoList.get(4).getPronounce());
+        String base64EncodedAudio6 = Base64.encodeBase64String(expressionDtoList.get(5).getPronounce());
+        String base64EncodedAudio7 = Base64.encodeBase64String(expressionDtoList.get(6).getPronounce());
+        String base64EncodedAudio8 = Base64.encodeBase64String(expressionDtoList.get(7).getPronounce());
+        String base64EncodedAudio9 = Base64.encodeBase64String(expressionDtoList.get(8).getPronounce());
+        String base64EncodedAudio10 = Base64.encodeBase64String(expressionDtoList.get(9).getPronounce());
 
         model.addAttribute("base64EncodedAudio1", base64EncodedAudio1);
         model.addAttribute("base64EncodedAudio2", base64EncodedAudio2);
         model.addAttribute("base64EncodedAudio3", base64EncodedAudio3);
         model.addAttribute("base64EncodedAudio4", base64EncodedAudio4);
         model.addAttribute("base64EncodedAudio5", base64EncodedAudio5);
+        model.addAttribute("base64EncodedAudio6", base64EncodedAudio6);
+        model.addAttribute("base64EncodedAudio7", base64EncodedAudio7);
+        model.addAttribute("base64EncodedAudio8", base64EncodedAudio8);
+        model.addAttribute("base64EncodedAudio9", base64EncodedAudio9);
+        model.addAttribute("base64EncodedAudio10", base64EncodedAudio10);
         model.addAttribute("preview", preview);
         model.addAttribute("detailTopicList", detailTopicDtoList);
         model.addAttribute("expressionList", expressionDtoList);
