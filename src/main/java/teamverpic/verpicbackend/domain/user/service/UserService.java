@@ -38,6 +38,8 @@ public class UserService {
                 .firstName(user.get("firstName"))
                 .lastName(user.get("lastName"))
                 .birthDate(birthDate)
+                .firstLanguage(user.get("firstLanguage"))
+                .learnLanguage(user.get("learnLanguage"))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getId();
     }

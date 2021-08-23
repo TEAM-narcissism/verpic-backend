@@ -8,12 +8,14 @@ import teamverpic.verpicbackend.domain.matching.dao.MatchUserRepository;
 import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
+import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 import teamverpic.verpicbackend.domain.user.domain.User;
+import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -97,6 +99,7 @@ public class MatchService {
         });
     }
 
+
     public Match findByMatchId(String matchId) {
 
         return matchRepository.findById(Long.parseLong(matchId)).orElseThrow(
@@ -110,5 +113,30 @@ public class MatchService {
         return matchUsers.stream().map(
                 matchUser -> new MatchingResponseDto(matchUser)
         ).collect(Collectors.toList());
+    }
+
+    public List<UserResponseDto> findUserByMatchId(Long matchId) {
+        Match match = matchRepository.findById(matchId).orElseThrow(
+                () -> new IllegalArgumentException("해당 매치가 존재하지 않아요.")
+        );
+
+        return match.getParticipants().stream().map(
+                matchUser -> new UserResponseDto(matchUser.getUser())
+        ).collect(Collectors.toList());
+    }
+
+    public ParticipantCheckDto isParticipant(Long matchId, Long userId) {
+        List<UserResponseDto> userResponseDtos = findUserByMatchId(matchId);
+
+        boolean check = false;
+
+        for(UserResponseDto userResponseDto : userResponseDtos) {
+            if(userResponseDto.getId() == userId) {
+                check = true;
+                break;
+            }
+        }
+
+        return new ParticipantCheckDto(check);
     }
 }

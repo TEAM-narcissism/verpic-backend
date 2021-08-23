@@ -2,13 +2,13 @@ package teamverpic.verpicbackend.domain.matching.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
+import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
 import teamverpic.verpicbackend.domain.matching.service.MatchService;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
-import teamverpic.verpicbackend.domain.user.dao.UserRepository;
+
+
 
 import java.util.List;
 
@@ -30,9 +30,14 @@ public class MatchingController {
     }
 
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public List<MatchingResponseDto> findByReservationId(@PathVariable Long userId) {
         return matchingService.findByUserId(userId);
+    }
+
+    @GetMapping("/participant-check/{matchId}/{userId}")
+    public ParticipantCheckDto isParticipant(@PathVariable Long matchId, @PathVariable Long userId) {
+        return matchingService.isParticipant(matchId, userId);
     }
 
 }
