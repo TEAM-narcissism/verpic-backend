@@ -99,17 +99,20 @@ public class AnalysisService {
                 Sentence sentence = Sentence.builder()
                         .sentence(tempSentence + ".")
                         .startSecond((double)wordInfoList.get(iterNum).getStartTime().getSeconds()
-                                + ((double)wordInfoList.get(iterNum).getStartTime().getNanos() / 100000000))
+                                + ((double)wordInfoList.get(iterNum).getStartTime().getNanos() / 1000000000))
                         .build();
                 script.addSentence(sentence);
-                sentenceRepository.save(sentence);
+
                 String tempString = "";
                 for (; iterNum < alternative.getWordsCount(); iterNum++) {
                     if(tempString.equals(noWhiteSpace))
                         break;
-
                     tempString = tempString + wordInfoList.get(iterNum).getWord();
                 }
+                sentence.setEndSecond((double)wordInfoList.get(iterNum - 1).getStartTime().getSeconds()
+                        + ((double)wordInfoList.get(iterNum - 1).getStartTime().getNanos() / 1000000000));
+                sentenceRepository.save(sentence);
+
             }
         }
 

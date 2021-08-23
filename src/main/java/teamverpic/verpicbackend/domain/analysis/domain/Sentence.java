@@ -16,6 +16,7 @@ public class Sentence {
 
     private String sentence;
     private double startSecond;
+    private double endSecond;
 
     @ManyToOne
     @JoinColumn(name = "script_id")
