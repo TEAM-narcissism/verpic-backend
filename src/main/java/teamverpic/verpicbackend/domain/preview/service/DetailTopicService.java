@@ -3,6 +3,10 @@ package teamverpic.verpicbackend.domain.preview.service;
 import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.springframework.stereotype.Service;
+import teamverpic.verpicbackend.domain.matching.dao.MatchRepository;
+import teamverpic.verpicbackend.domain.matching.dao.MatchUserRepository;
+import teamverpic.verpicbackend.domain.matching.domain.Match;
+import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 import teamverpic.verpicbackend.domain.preview.domain.DetailTopic;
 import teamverpic.verpicbackend.domain.preview.domain.Expression;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
@@ -10,10 +14,12 @@ import teamverpic.verpicbackend.domain.preview.dto.detailtopic.DetailTopicRespon
 import teamverpic.verpicbackend.domain.preview.dto.detailtopic.DetailTopicSaveRequestDto;
 import teamverpic.verpicbackend.domain.preview.dao.DetailTopicRepository;
 import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +27,7 @@ public class DetailTopicService {
 
     private final DetailTopicRepository detailTopicRepository;
     private final PreviewRepository previewRepository;
+    private final MatchUserRepository matchUserRepository;
 
     @Transactional
     public Long save(Long preview_id, DetailTopicSaveRequestDto requestDto) {
@@ -71,4 +78,18 @@ public class DetailTopicService {
 
         return entities;
     }
+
+    @Transactional
+    public List<DetailTopicResponseDto> findByMatchId(Long matchId) {
+
+        StudyReservation reservation = matchUserRepository.findByMatchId(matchId).get(0).getReservation();
+        List<DetailTopicResponseDto> detailTopicResponseDtoList = new ArrayList<>();
+
+        reservation.getTopic().getPreview().getDetailTopicList().forEach(detailTopic -> {
+            detailTopicResponseDtoList.add(new DetailTopicResponseDto(detailTopic));
+        });
+
+        return detailTopicResponseDtoList;
+    }
+
 }
