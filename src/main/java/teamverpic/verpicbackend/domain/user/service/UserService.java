@@ -11,6 +11,7 @@ import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
 import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.user.domain.User;
+import teamverpic.verpicbackend.domain.user.dto.UserJoinDto;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
 import teamverpic.verpicbackend.domain.user.dto.UserUpdateRequestDto;
@@ -28,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+
     public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
         Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
@@ -44,6 +46,25 @@ public class UserService {
                 .build()).getId();
     }
 
+    public String oauth_join(UserJoinDto userJoinDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+        Optional<User> user = userRepository.findByEmail(userJoinDto.getEmail());
+        if(user.isPresent()){
+            return jwtTokenProvider.createToken(user.get().getUsername(), user.get().getRoles());
+        } else {
+            User createdUser = User.builder()
+                    .email(userJoinDto.getEmail())
+                    .password(passwordEncoder.encode(userJoinDto.getPassword()))
+                    .firstName(userJoinDto.getFirstName())
+                    .lastName(userJoinDto.getLastName())
+                    .firstLanguage("KOR")
+                    .learnLanguage("ENG")
+                    .roles(Collections.singletonList("ROLE_USER")).build();
+
+            userRepository.save(createdUser);
+            return jwtTokenProvider.createToken(createdUser.getUsername(), createdUser.getRoles());
+        }
+    }
+
     private void validateDuplicateUser(String email) throws IllegalStateException {
         userRepository.findByEmail(email)
                 .ifPresent((m -> {
@@ -54,17 +75,13 @@ public class UserService {
     public String login(Map<String, String> user, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
         User member = userRepository.findByEmail(user.get("email"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
         return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
     }
 
-    public String OAuth2_login(SessionUser user, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
-        User member = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
-    }
 
     public Optional<User> findUser(String email) {
         return userRepository.findByEmail(email);

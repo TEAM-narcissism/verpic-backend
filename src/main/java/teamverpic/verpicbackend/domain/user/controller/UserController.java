@@ -1,6 +1,13 @@
 package teamverpic.verpicbackend.domain.user.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.common.response.StatusEnum;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
+import teamverpic.verpicbackend.domain.user.dto.UserJoinDto;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
 import teamverpic.verpicbackend.common.response.HttpResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
@@ -21,49 +29,56 @@ import teamverpic.verpicbackend.domain.user.dto.UserUpdateRequestDto;
 import teamverpic.verpicbackend.domain.user.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@PropertySource("classpath:application-oauth.properties")
 public class UserController {
 
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
-    private final HttpSession httpSession;
+    private final Environment environment;
 
-//    Main Page
-    @GetMapping("/test")
-    public String GoogleLogin() {
-        System.out.println("UserController.GoogleLogin");
-        return "redirect:/oauth2/authorization/google";
-    }
-
-    // OAuth2 Login
-//    @GetMapping("/login/oauth2/code/google")
-    @GetMapping("/oauth2-login/get-jwt")
-    public ResponseEntity<HttpResponseDto> OAuth2_login() {
-        System.out.println("UserController.OAuth2_login");
-        HttpHeaders headers= new HttpHeaders();
+    @PostMapping("/oauth/google")
+    public ResponseEntity<HttpResponseDto> exchange(@RequestBody Map<String, String> token) throws GeneralSecurityException, IOException {
         HttpResponseDto body = new HttpResponseDto();
+        HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        String token = "";
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        token = userService.OAuth2_login(user, jwtTokenProvider);
+        String googleAccessToken = token.get("accessToken");
 
-        System.out.println("user.getEmail() = " + user.getEmail());
+        String property = environment.getProperty("spring.security.oauth2.client.registration.google.client-id");
+        System.out.println("property = " + property);
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),  GsonFactory.getDefaultInstance())
+                .setAudience(Collections.singletonList(property))
+                .build();
 
-        body.setMessage("Log in with Google");
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put("Token", token);
-        body.setData(data);
-        body.setHttpStatus(StatusEnum.OK);
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+        GoogleIdToken idToken = verifier.verify(googleAccessToken);
+        String jwtToken = "";
+        if(idToken != null) {
+            String email = idToken.getPayload().getEmail();
+            String locale = (String) idToken.getPayload().get("locale");
+            String familyName = (String)idToken.getPayload().get("family_name");
+            String givenName = (String)idToken.getPayload().get("given_name");
+
+            UserJoinDto userJoinDto = new UserJoinDto(email, googleAccessToken, familyName, givenName);
+            jwtToken = userService.oauth_join(userJoinDto, passwordEncoder, jwtTokenProvider);
+        }
+        else {
+            throw new IllegalStateException("구글 로그인 오류.");
+        }
+
+        return getHttpResponseDtoResponseEntity(body, headers, jwtToken);
     }
+
 
     // 회원가입
     @PostMapping("/join")
@@ -109,13 +124,7 @@ public class UserController {
                 return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
             }
         }
-
-        body.setMessage("로그인 완료");
-        Map<String, Object> data = new HashMap<String, Object>(); // 로그인 DTO 별도 지정 필요? 현재:(Token : ~)
-        data.put("Token", token);
-        body.setData(data);
-        body.setHttpStatus(StatusEnum.OK);
-        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+        return getHttpResponseDtoResponseEntity(body, headers, token);
     }
 
     // 유저 프로필 조회
@@ -129,8 +138,6 @@ public class UserController {
         return userService.findByEmail(authentication.getName());
     }
 
-
-
     // 유저 프로필 수정
     @PutMapping("/users/{id}")
     public Long profile_update (@PathVariable Long id, @RequestBody UserUpdateRequestDto requestDto) {
@@ -141,9 +148,16 @@ public class UserController {
     @GetMapping("/search")
     public Page<UserSearchDto> search(@RequestParam(value="searchString") String searchString,
                                       final Pageable pageable){
-
         Page<UserSearchDto> searchResult=userService.searchUser(pageable, searchString);
         return searchResult;
+    }
 
+    private ResponseEntity<HttpResponseDto> getHttpResponseDtoResponseEntity(HttpResponseDto body, HttpHeaders headers, String jwtToken) {
+        body.setMessage("로그인 완료");
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("Token", jwtToken);
+        body.setData(data);
+        body.setHttpStatus(StatusEnum.OK);
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 }
