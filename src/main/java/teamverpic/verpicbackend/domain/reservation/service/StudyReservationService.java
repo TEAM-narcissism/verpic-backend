@@ -8,6 +8,7 @@ import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
+import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationDto;
 import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
@@ -83,15 +84,15 @@ public class StudyReservationService {
         return studyReservationRepository.findByUserId(userId);
     }
 
-    public List<StudyReservationResponseDto> findReservationsByUserId(Long id){
+    public List<StudyReservationDto> findReservationsByUserId(Long id){
 
         List<StudyReservation> studyReservationList = studyReservationRepository.findByUserId(id);
 
-        List<StudyReservationResponseDto> studyReservationResponseDtoList =
+        List<StudyReservationDto> studyReservationDtoList =
                 studyReservationList.stream().map(
-                        StudyReservationResponseDto::new
+                        StudyReservationDto::new
                 ).collect(Collectors.toList());
 
-        return studyReservationResponseDtoList;
+        return studyReservationDtoList;
     }
 }

@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationDto;
 import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.reservation.service.StudyReservationService;
 
@@ -37,7 +38,7 @@ public class StudyReservationController {
 
     @GetMapping("/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudyReservationResponseDto> findReservationByUserId(@PathVariable Long userId) {
+    public List<StudyReservationDto> findReservationByUserId(@PathVariable Long userId) {
         return studyReservationService.findReservationsByUserId(userId);
     }
 
