@@ -37,7 +37,6 @@ public class StudyReservationService {
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않아요."));
 
         List<StudyReservation> studyReservation = studyReservationRepository.findByTopicIdAndUserId(topic.getId(), user.getId());
-
         if(!studyReservation.isEmpty()) {
             studyReservation.forEach(reserv -> {
                 if(reserv.getStartTime() == Integer.parseInt(reservation.get("startTime"))) {
@@ -47,7 +46,6 @@ public class StudyReservationService {
             });
         }
         topic.setNumOfParticipant(topic.getNumOfParticipant()+1);
-
         studyReservationRepository.save(StudyReservation.builder()
                 .topic(topic)
                 .user(user)
@@ -83,9 +81,9 @@ public class StudyReservationService {
         return studyReservationRepository.findByUserId(userId);
     }
 
-    public List<StudyReservationResponseDto> findReservationsByUserId(Long id){
+    public List<StudyReservationResponseDto> findReservationsByUser(String email){
 
-        List<StudyReservation> studyReservationList = studyReservationRepository.findByUserId(id);
+        List<StudyReservation> studyReservationList = studyReservationRepository.findByUserEmail(email);
 
         List<StudyReservationResponseDto> studyReservationResponseDtoList =
                 studyReservationList.stream().map(

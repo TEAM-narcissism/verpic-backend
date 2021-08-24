@@ -24,7 +24,6 @@ public class TopicDto {
         this.id=topic.getId();
         this.studyDate=topic.getStudyDate();
         this.studyDay=topic.getStudyDay();
-//        this.theme=topic.getTheme();
         this.korTheme=topic.getKorTheme();
         this.engTheme=topic.getEngTheme();
         this.id = topic.getId();

@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
-import teamverpic.verpicbackend.domain.topic.domain.Topic;
-import teamverpic.verpicbackend.domain.user.domain.User;
-
-import javax.persistence.*;
+import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 
 @Data
 @Getter
@@ -21,7 +18,7 @@ public class StudyReservationResponseDto {
     private Language unfamiliarLanguage;
     private Level userLevel;
     private int startTime;
-    private Topic topic;
+    private TopicDto topic;
     private boolean isSoldOut;
 
     public StudyReservationResponseDto(StudyReservation studyReservation) {
@@ -30,7 +27,7 @@ public class StudyReservationResponseDto {
         this.unfamiliarLanguage = studyReservation.getUnfamiliarLanguage();
         this.userLevel = studyReservation.getUserLevel();
         this.startTime = studyReservation.getStartTime();
-        this.topic =studyReservation.getTopic();
+        this.topic = new TopicDto(studyReservation.getTopic());
         this.isSoldOut = studyReservation.isSoldOut();
     }
 

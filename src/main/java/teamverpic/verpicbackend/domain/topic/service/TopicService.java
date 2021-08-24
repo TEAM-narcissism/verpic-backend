@@ -9,8 +9,7 @@ import teamverpic.verpicbackend.domain.topic.domain.Day;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
-import teamverpic.verpicbackend.domain.topic.dto.TopicResponseDto;
-import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
+
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -23,21 +22,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class TopicService {
-
     private final TopicRepository topicRepository;
-
-    @Transactional
-    public Long save(TopicSaveRequestDto requestDto) {
-        return topicRepository.save(requestDto.toEntity()).getId();
-    }
-
-    @Transactional
-    public TopicResponseDto findById(Long id) {
-        Topic entity = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
-
-        return new TopicResponseDto(entity);
-    }
 
     public TopicDto createTopic(Map<String, String> topicMap,
                                 MultipartFile multipartFile) throws ParseException, IOException {
@@ -48,7 +33,6 @@ public class TopicService {
 
         Topic topic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-//                .theme(topicMap.get("theme"))
                 .korTheme(topicMap.get("korTheme"))
                 .engTheme(topicMap.get("engTheme"))
                 .photos(fileName)
@@ -88,13 +72,6 @@ public class TopicService {
         Topic topic = topicRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("해당 Topic이 존재하지 않음."));
         return new TopicDto(topic);
-    }
-
-    public List<TopicDto> getTopicsByDay(Day day){
-
-        return topicRepository.findAllByStudyDay(day).stream().map(
-                TopicDto::new
-        ).collect(Collectors.toList());
     }
 
     public List<TopicDto> getTopicsByReservationsLaterThanToday(List<StudyReservation> reservations) throws ParseException {
