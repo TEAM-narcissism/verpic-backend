@@ -32,14 +32,12 @@ public class StudyReservationController {
     @ResponseStatus(HttpStatus.OK)
     public String cancelReservation(Authentication authentication, @PathVariable Long reservationId){
         studyReservationService.deleteReservation(reservationId, authentication.getName());
-
         return "스터디 취소 성공";
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudyReservationDto> findReservationByUserId(@PathVariable Long userId) {
-        return studyReservationService.findReservationsByUserId(userId);
+    public List<StudyReservationResponseDto> findReservationByUserEmail(Authentication authentication) {
+        return studyReservationService.findReservationsByUser(authentication.getName());
     }
-
 }
