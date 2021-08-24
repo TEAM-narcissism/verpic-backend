@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationDto;
 import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.reservation.service.StudyReservationService;
 
@@ -39,5 +40,4 @@ public class StudyReservationController {
     public List<StudyReservationResponseDto> findReservationByUserEmail(Authentication authentication) {
         return studyReservationService.findReservationsByUser(authentication.getName());
     }
-
 }
