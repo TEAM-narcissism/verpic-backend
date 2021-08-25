@@ -9,4 +9,5 @@ public interface MatchUserRepository extends JpaRepository<MatchUser, Long> {
     MatchUser findByUserIdAndMatchId(Long userId, Long matchId);
     List<MatchUser> findByUserId(Long userId);
     List<MatchUser> findByMatchId(Long matchId);
+    List<MatchUser> findByUserEmail(String userEmail);
 }
