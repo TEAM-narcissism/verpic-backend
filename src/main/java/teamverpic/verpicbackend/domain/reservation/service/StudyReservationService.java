@@ -1,21 +1,18 @@
 package teamverpic.verpicbackend.domain.reservation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.common.exception.CustomNullPointerException;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
-import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationDto;
 import teamverpic.verpicbackend.domain.reservation.dto.StudyReservationResponseDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
 import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 import teamverpic.verpicbackend.domain.user.domain.User;
-import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
-import teamverpic.verpicbackend.domain.user.service.UserService;
+
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
