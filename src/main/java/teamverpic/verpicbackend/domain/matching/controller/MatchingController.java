@@ -2,6 +2,7 @@ package teamverpic.verpicbackend.domain.matching.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
 import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
@@ -33,6 +34,11 @@ public class MatchingController {
     @GetMapping("/user/{userId}")
     public List<MatchingResponseDto> findByReservationId(@PathVariable Long userId) {
         return matchingService.findByUserId(userId);
+    }
+
+    @GetMapping("/login-user/")
+    public List<MatchingResponseDto> findByReservationOfLoginUser(Authentication authentication) {
+        return matchingService.findByUserEmail(authentication.getName());
     }
 
     @GetMapping("/participant-check/{matchId}/{userId}")

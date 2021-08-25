@@ -115,6 +115,14 @@ public class MatchService {
         ).collect(Collectors.toList());
     }
 
+    public List<MatchingResponseDto> findByUserEmail(String email) {
+        List<MatchUser> matchUsers = matchUserRepository.findByUserEmail(email);
+
+        return matchUsers.stream().map(
+                matchUser -> new MatchingResponseDto(matchUser)
+        ).collect(Collectors.toList());
+    }
+
     public List<UserResponseDto> findUserByMatchId(Long matchId) {
         Match match = matchRepository.findById(matchId).orElseThrow(
                 () -> new IllegalArgumentException("해당 매치가 존재하지 않아요.")
