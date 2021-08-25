@@ -72,10 +72,10 @@ public class AnalysisController {
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/getscript")
+    @PostMapping(value = "/getscript/{matchId}")
     public ResponseEntity<HttpResponseDto> getMatchScript(
             Authentication authentication,
-            @RequestParam("matchId") String matchId
+            @PathVariable String matchId
     ) throws IOException, CustomAuthenticationException, ExecutionException, InterruptedException{
         HttpHeaders headers= new HttpHeaders();
         HttpResponseDto body = new HttpResponseDto();
@@ -87,7 +87,7 @@ public class AnalysisController {
 
         body.setHttpStatus(StatusEnum.OK);
         body.setMessage("성공");
-        body.setData(analysisService.getMatchScript(authentication.getName(), Long.parseLong(matchId)));
+        body.setData(analysisService.getMatchScriptAndAnalysis(authentication.getName(), Long.parseLong(matchId)));
         return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 

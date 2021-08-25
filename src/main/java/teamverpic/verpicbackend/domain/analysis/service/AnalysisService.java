@@ -20,6 +20,8 @@ import teamverpic.verpicbackend.domain.analysis.dao.SentenceRepository;
 import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.analysis.domain.Script;
 import teamverpic.verpicbackend.domain.analysis.domain.Sentence;
+import teamverpic.verpicbackend.domain.analysis.dto.AnalysisDto;
+import teamverpic.verpicbackend.domain.analysis.dto.MostUsedWordDto;
 import teamverpic.verpicbackend.domain.analysis.dto.ScriptDto;
 import teamverpic.verpicbackend.domain.analysis.dto.SentenceDto;
 import teamverpic.verpicbackend.domain.matching.dao.MatchRepository;
@@ -149,9 +151,6 @@ public class AnalysisService {
             script.setMuwRankFiveFreq(wordObjects.getJSONObject(4).getInt("count"));
         }
 
-
-
-
         scriptRepository.save(script);
 
         // 파일 삭제 (구글 스토리지)
@@ -200,14 +199,15 @@ public class AnalysisService {
         return jsonObject.getJSONArray("data");
     }
 
-    public ScriptDto getMatchScript(String email, Long matchId) {
+    public ScriptDto getMatchScriptAndAnalysis(String email, Long matchId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. email=" + email));
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 매치가 없습니다. matchId=" + matchId));
 
         List<AudioFile> audioFileList = match.getAudioFileList();
-        List<SentenceDto> matchScript = new ArrayList<SentenceDto>();
+        List<SentenceDto> matchScript = new ArrayList<>();
+        List<AnalysisDto> analysisList = new ArrayList<>();
         for (AudioFile audioFile : audioFileList) {
             Script script = audioFile.getScript();
             List<Sentence> sentenceList = script.getSentenceList();
@@ -221,12 +221,47 @@ public class AnalysisService {
                         sentence.getEndSecond()
                 ));
             }
+
+            // Get User Analysis
+            if (audioFile.getUser().getEmail().equals(email)) {
+                System.out.println("Asdf");
+                List<MostUsedWordDto> mostUsedWordList = new ArrayList<>();
+
+                mostUsedWordList.add(new MostUsedWordDto(
+                        script.getMuwRankOne(),
+                        script.getMuwRankOneFreq()
+                ));
+                mostUsedWordList.add(new MostUsedWordDto(
+                        script.getMuwRankTwo(),
+                        script.getMuwRankTwoFreq()
+                ));
+                mostUsedWordList.add(new MostUsedWordDto(
+                        script.getMuwRankThree(),
+                        script.getMuwRankThreeFreq()
+                ));
+                mostUsedWordList.add(new MostUsedWordDto(
+                        script.getMuwRankFour(),
+                        script.getMuwRankFourFreq()
+                ));
+                mostUsedWordList.add(new MostUsedWordDto(
+                        script.getMuwRankFive(),
+                        script.getMuwRankFiveFreq()
+                ));
+
+                analysisList.add(new AnalysisDto(
+                        mostUsedWordList,
+                        script.getWpm(),
+                        audioFile.getSessionOrder()
+                ));
+
+            }
         }
-        System.out.println("matchScript.size() = " + matchScript.size());
         Collections.sort(matchScript);
+
         return new ScriptDto(
                 user.getId(),
-                matchScript
+                matchScript,
+                analysisList
         );
     }
 

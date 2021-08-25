@@ -4,12 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter @Setter
 @AllArgsConstructor
-public class ScriptDto {
-    private Long requestUserId;
-    private List<SentenceDto> messages;
-    private List<AnalysisDto> analysisList;
+public class MostUsedWordDto {
+    private String word;
+    private Integer count;
 }

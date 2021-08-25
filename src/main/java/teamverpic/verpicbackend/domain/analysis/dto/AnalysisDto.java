@@ -2,14 +2,16 @@ package teamverpic.verpicbackend.domain.analysis.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
-public class ScriptDto {
-    private Long requestUserId;
-    private List<SentenceDto> messages;
-    private List<AnalysisDto> analysisList;
+@NoArgsConstructor
+public class AnalysisDto {
+    private List<MostUsedWordDto> mostUsedWordList;
+    private double wpm;
+    private int order;
 }
