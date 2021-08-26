@@ -57,7 +57,7 @@ dependencies {
 
 	implementation 'com.google.cloud:google-cloud-speech'
 	implementation 'com.google.cloud:google-cloud-storage'
-//	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+	implementation 'org.json:json:20190722'
 }
 
 test {

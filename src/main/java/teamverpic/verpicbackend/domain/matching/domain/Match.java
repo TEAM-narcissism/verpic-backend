@@ -4,15 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import teamverpic.verpicbackend.domain.feedback.Feedback;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,8 +25,9 @@ public class Match {
     @OneToMany(mappedBy = "match")
     private Set<MatchUser> participants = Collections.synchronizedSet(new HashSet<>());
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<AudioFile> audioFileList;
+    @Builder.Default
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AudioFile> audioFileList = new ArrayList<>();
 
     public void addParticipants(List<MatchUser> participants) {
         participants.forEach(participant -> {
