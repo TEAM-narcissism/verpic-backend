@@ -9,6 +9,7 @@ import teamverpic.verpicbackend.domain.matching.domain.Match;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
 import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
+import teamverpic.verpicbackend.domain.matching.dto.ParticipatedMatchDto;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
 import teamverpic.verpicbackend.domain.reservation.domain.Language;
 import teamverpic.verpicbackend.domain.reservation.domain.Level;
@@ -146,5 +147,13 @@ public class MatchService {
         }
 
         return new ParticipantCheckDto(check);
+    }
+
+    public List<ParticipatedMatchDto> findParticipatedMatches(Long userId) {
+        List<MatchUser> matchUsers = matchUserRepository.findByUserIdWithFetchJoin(userId);
+
+        return matchUsers.stream().map(
+                matchUser -> new ParticipatedMatchDto(matchUser)
+        ).collect(Collectors.toList());
     }
 }

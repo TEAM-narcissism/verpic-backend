@@ -23,6 +23,7 @@ public class MatchUser {
     private User user;
 
 
+    //@OneToOne(fetch = FetchType.LAZY)
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private StudyReservation reservation;
