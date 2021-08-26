@@ -67,7 +67,7 @@ public class MatchService {
 
             // 그룹에 자신과 매칭가능한 유저가 있는지 확인
             StudyReservation matcher = matchers.poll();
-            while (matcher.isSoldOut()) {
+            while (matcher != null && matcher.isSoldOut()) {
                 matcher = matchers.poll();
             }
 
