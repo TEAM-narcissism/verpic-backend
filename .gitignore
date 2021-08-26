@@ -14,7 +14,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-application-oauth.properties
+#application-oauth.properties
 google-cloud.properties
 verpic-1628699741057-7298f7a6fc47.json
 
