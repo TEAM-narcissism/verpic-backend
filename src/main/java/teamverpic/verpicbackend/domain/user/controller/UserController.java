@@ -48,7 +48,7 @@ public class UserController {
     private final Environment environment;
 
     @PostMapping("/oauth/google")
-    public ResponseEntity<HttpResponseDto> exchange(@RequestBody Map<String, String> token) throws GeneralSecurityException, IOException {
+    public ResponseEntity<HttpResponseDto> exchange(@RequestBody Map<String, String> token) throws GeneralSecurityException, IOException, ParseException {
         HttpResponseDto body = new HttpResponseDto();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -69,7 +69,9 @@ public class UserController {
             String familyName = (String)idToken.getPayload().get("family_name");
             String givenName = (String)idToken.getPayload().get("given_name");
 
-            UserJoinDto userJoinDto = new UserJoinDto(email, googleAccessToken, familyName, givenName);
+            System.out.println("email = " + email);
+
+            UserJoinDto userJoinDto = new UserJoinDto(email, googleAccessToken, givenName, familyName);
             jwtToken = userService.oauth_join(userJoinDto, passwordEncoder, jwtTokenProvider);
         }
         else {

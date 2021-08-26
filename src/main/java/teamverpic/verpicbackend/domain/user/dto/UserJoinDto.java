@@ -17,7 +17,7 @@ public class UserJoinDto {
     private String firstName;
     private String lastName;
 
-    private Date birthDate;
+    private String birthDate;
     private String firstLanguage;
     private String learnLanguage;
 
@@ -27,6 +27,7 @@ public class UserJoinDto {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+
     }
 
 

@@ -29,7 +29,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-
     public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
         Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
@@ -46,8 +45,11 @@ public class UserService {
                 .build()).getId();
     }
 
-    public String oauth_join(UserJoinDto userJoinDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public String oauth_join(UserJoinDto userJoinDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) throws ParseException {
+
         Optional<User> user = userRepository.findByEmail(userJoinDto.getEmail());
+
+
         if(user.isPresent()){
             return jwtTokenProvider.createToken(user.get().getUsername(), user.get().getRoles());
         } else {
@@ -83,9 +85,6 @@ public class UserService {
     }
 
 
-    public Optional<User> findUser(String email) {
-        return userRepository.findByEmail(email);
-    }
 
     public Page<UserSearchDto> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
