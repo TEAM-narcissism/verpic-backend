@@ -78,7 +78,11 @@ public class User implements UserDetails {
         return this;
     }
 
-    public void update(String firstLanguage, String learnLanguage) {
+    public void update(String firstName, String lastName, Date birthDate,
+                       String firstLanguage, String learnLanguage) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.birthDate=birthDate;
         this.firstLanguage = firstLanguage;
         this.learnLanguage = learnLanguage;
     }
