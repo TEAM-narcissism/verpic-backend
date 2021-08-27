@@ -65,39 +65,30 @@ public class AdminTopicController {
     @PostMapping("/addTopic")
     public String addTopic(@RequestParam Map<String, String> param,
                            @RequestParam("image") MultipartFile multipartFile,
+                           @RequestParam("expressionPronunciation") List<MultipartFile> multipartFiles,
                            Model model) throws ParseException, IOException {
-
+        System.out.println("here1");
         TopicDto newTopic = topicService.createTopic(param, multipartFile);
-        model.addAttribute("topicId", newTopic.getId());
-
-        return "administration/topics/addPreviewForm";
-    }
-
-    @PostMapping("/addTopic/addPreview")
-    public String addPreview(@RequestParam Map<String, String> param,
-                             @RequestParam("expressionPronunciation") List<MultipartFile> multipartFiles,
-                             Model model) throws IOException {
-        Long topicId = Long.valueOf(param.get("previewId"));
-        Long previewId = Long.valueOf(param.get("previewId"));
+        System.out.println("here2");
         PreviewSaveRequestDto previewDto=new PreviewSaveRequestDto(param.get("context"));
         String fileName[]=new String[10];
         String contentType[]=new String[10];
         byte[] data[]=new byte[10][];
         int count=0;
-
+        System.out.println("here3");
         for (MultipartFile file : multipartFiles){
             fileName[count]=StringUtils.cleanPath(file.getOriginalFilename());
             contentType[count]=file.getContentType();
             data[count++]=file.getBytes();
         }
-
+        System.out.println("here4");
         for(int i=0;i<10;i++){
             System.out.println("fileName["+i+"] = " + Arrays.toString(fileName[i].getBytes()));
         }
-
+        System.out.println("here5");
         DetailTopicSaveRequestDto detailTopicDto1=new DetailTopicSaveRequestDto(param.get("detailContext1"));
         DetailTopicSaveRequestDto detailTopicDto2=new DetailTopicSaveRequestDto(param.get("detailContext2"));
-
+        System.out.println("here6");
         ExpressionSaveRequestDto expressionDto1=new ExpressionSaveRequestDto(
                 param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"),
                 fileName[0], contentType[0], data[0]);
@@ -128,26 +119,26 @@ public class AdminTopicController {
         ExpressionSaveRequestDto expressionDto10=new ExpressionSaveRequestDto(
                 param.get("expressionWord10"), param.get("expressionMeaning10"), param.get("expressionExample10"),
                 fileName[9], contentType[9], data[9]);
-
-        previewService.save(topicId, previewDto);
-
-        detailTopicService.save(previewId, detailTopicDto1);
-        detailTopicService.save(previewId, detailTopicDto2);
-
-        expressionService.save(previewId, expressionDto1);
-        expressionService.save(previewId, expressionDto2);
-        expressionService.save(previewId, expressionDto3);
-        expressionService.save(previewId, expressionDto4);
-        expressionService.save(previewId, expressionDto5);
-        expressionService.save(previewId, expressionDto6);
-        expressionService.save(previewId, expressionDto7);
-        expressionService.save(previewId, expressionDto8);
-        expressionService.save(previewId, expressionDto9);
-        expressionService.save(previewId, expressionDto10);
-
+        System.out.println("here7");
+        previewService.save(newTopic.getId(), previewDto);
+        System.out.println("here8");
+        detailTopicService.save(newTopic.getId(), detailTopicDto1);
+        detailTopicService.save(newTopic.getId(), detailTopicDto2);
+        System.out.println("here9");
+        expressionService.save(newTopic.getId(), expressionDto1);
+        expressionService.save(newTopic.getId(), expressionDto2);
+        expressionService.save(newTopic.getId(), expressionDto3);
+        expressionService.save(newTopic.getId(), expressionDto4);
+        expressionService.save(newTopic.getId(), expressionDto5);
+        expressionService.save(newTopic.getId(), expressionDto6);
+        expressionService.save(newTopic.getId(), expressionDto7);
+        expressionService.save(newTopic.getId(), expressionDto8);
+        expressionService.save(newTopic.getId(), expressionDto9);
+        expressionService.save(newTopic.getId(), expressionDto10);
+        System.out.println("here10");
         List<TopicDto> allTopics = topicService.getAllTopics();
         model.addAttribute("topics", allTopics);
-
+        System.out.println("here11");
         return "redirect:/administration/topics";
     }
 

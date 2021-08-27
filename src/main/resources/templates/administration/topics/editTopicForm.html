@@ -17,35 +17,35 @@
     </div>
     <form action="topic.html" th:action enctype="multipart/form-data" method="post">
         <div>
-            <label for="topicId">topic ID</label>
+            <label for="topicId"><h4>topic ID</h4></label>
             <input type="text" id="topicId" name="topicId" class="form-control" value="1"
                    th:value="${topic.id}" readonly>
         </div>
         <div>
-            <label for="korTheme">korTheme</label>
+            <label for="korTheme"><h4>korTheme</h4></label>
             <input type="text" id="korTheme" name="korTheme" class="form-control" th:value="${topic.korTheme}" required>
         </div>
         <div>
-            <label for="engTheme">engTheme</label>
+            <label for="engTheme"><h4>engTheme</h4></label>
             <input type="text" id="engTheme" name="engTheme" class="form-control" th:value="${topic.engTheme}" required>
         </div>
         <div>
-            <label for="studyDate">Date</label>
+            <label for="studyDate"><h4>Study Date</h4></label>
             <input type="date" id="studyDate" name="studyDate" class="form-control"
                    th:value="${topic.studyDate}" th:min="${today}" required>
         </div>
         <div>
-            <label for="numOfParticipant">Number of participant</label>
+            <label for="numOfParticipant"><h4>Number of participant</h4></label>
             <input type="text" id="numOfParticipant" name="numOfParticipant"
                    class="form-control" value="0"
                    th:value="${topic.numOfParticipant}" readonly>
         </div>
         <div>
-            <label>Photos: </label>
+            <label><h4>Photos: </h4></label>
             <input type="file" id="image" name="image" accept="image/png, image/jpeg" required />
         </div>
         <div>
-            <label for="previewId">topic ID</label>
+            <label for="previewId"><h4>topic ID</h4></label>
             <input type="text" id="previewId" name="previewId" class="form-control" value="1"
                    th:value="${topic.id}" hidden>
         </div>

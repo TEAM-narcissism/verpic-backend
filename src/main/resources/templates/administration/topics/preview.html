@@ -5,9 +5,28 @@
     <link href="../css/bootstrap.min.css"
           th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <style>
-         .container {
-         max-width: 560px;
-         }
+        .container {
+        max-width: 560px;
+        }
+        table {
+        width: 100%;
+        border-top: 2px solid red;
+        border-collapse: collapse;
+        }
+        .backslash {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="0" x2="100%" y2="100%" stroke="gray" /></svg>');
+        }
+        th, td {
+        border-bottom: 1px solid #444444;
+        border-left: 1px solid #444444;
+        padding: 10px;
+        }
+        th:first-child, td:first-child {
+        border-left: none;
+        }
+        tr:nth-child(2n+1) {
+        border-bottom: 2px solid red;
+        }
      </style>
 </head>
 <body>
@@ -15,19 +34,22 @@
     <div class="py-5 text-center">
         <h2>Preview Specification</h2>
     </div>
+    <br>
     <div>
-        <label for="id">Preview ID</label>
+        <label for="id"><h4>Preview ID</h4></label>
         <input type="text" id="id" name="id" class="form-control"
                value="1" th:value="${previewId}" readonly>
     </div>
+    <br>
     <div>
-        <label for="context">Context</label>
+        <label for="context"><h4>Context</h4></label>
         <textarea id="context" name="context" class="form-control"
                rows="8" cols="20" th:text="${preview.context}" readonly>
         </textarea>
     </div>
+    <br>
     <div>
-        <label for="detailTopicList">Detail Topics</label>
+        <label for="detailTopicList"><h4>Detail Topics</h4></label>
         <table class="tb_col" id="detailTopicList" name="detailTopicList">
             <tr>
                 <th>Context</th>
@@ -39,25 +61,26 @@
                     </textarea>
                 </td>
                 <td>
-                    <textarea id="detailcontext" name="detailcontext" class="form-control"
+                    <textarea id="detailContext2" name="detailContext2" class="form-control"
                               th:text="${detailTopicList.get(1).context}" readonly>
                     </textarea>
                 </td>
             </tr>
         </table>
     </div>
+    <br>
     <div>
-        <label for="expressionList">Expression List</label>
+        <label for="expressionList"><h4>Expression List</h4></label>
         <table class="tb_col" id="expressionList" name="expressionList">
             <tr>
-                <th>Language</th>
+                <th class="backslash"></th>
                 <th>Word</th>
                 <th>Meaning</th>
                 <th>Example</th>
                 <th>Pronunciation</th>
             </tr>
             <tr>
-                <td>kor1</td>
+                <td>kor-word1</td>
                 <td>
                     <input type="text" id="expressionWord1" name="expressionWord1"
                            th:value="${expressionList.get(0).word}" readonly>
@@ -80,7 +103,7 @@
                 </td>
             </tr>
             <tr>
-                <td>eng1</td>
+                <td>eng-word1</td>
                 <td>
                     <input type="text" id="expressionWord2" name="expressionWord2"
                            th:value="${expressionList.get(1).word}" readonly>
@@ -103,7 +126,7 @@
                 </td>
             </tr>
             <tr>
-                <td>kor2</td>
+                <td>kor-word2</td>
                 <td>
                     <input type="text" id="expressionWord3" name="expressionWord3"
                            th:value="${expressionList.get(2).word}" readonly>
@@ -126,7 +149,7 @@
                 </td>
             </tr>
             <tr>
-                <td>eng2</td>
+                <td>eng-word2</td>
                 <td>
                     <input type="text" id="expressionWord4" name="expressionWord4"
                            th:value="${expressionList.get(3).word}" readonly>
@@ -149,7 +172,7 @@
                 </td>
             </tr>
             <tr>
-                <td>kor3</td>
+                <td>kor-word3</td>
                 <td>
                     <input type="text" id="expressionWord5" name="expressionWord5"
                            th:value="${expressionList.get(4).word}" readonly>
@@ -172,7 +195,7 @@
                 </td>
             </tr>
             <tr>
-                <td>eng3</td>
+                <td>eng-word3</td>
                 <td>
                     <input type="text" id="expressionWord6" name="expressionWord6"
                            th:value="${expressionList.get(5).word}" readonly>
@@ -195,7 +218,7 @@
                 </td>
             </tr>
             <tr>
-                <td>kor4</td>
+                <td>kor-word4</td>
                 <td>
                     <input type="text" id="expressionWord7" name="expressionWord7"
                            th:value="${expressionList.get(6).word}" readonly>
@@ -218,7 +241,7 @@
                 </td>
             </tr>
             <tr>
-                <td>eng4</td>
+                <td>eng-word4</td>
                 <td>
                     <input type="text" id="expressionWord8" name="expressionWord8"
                            th:value="${expressionList.get(7).word}" readonly>
@@ -241,7 +264,7 @@
                 </td>
             </tr>
             <tr>
-                <td>kor5</td>
+                <td>kor-word5</td>
                 <td>
                     <input type="text" id="expressionWord9" name="expressionWord9"
                            th:value="${expressionList.get(8).word}" readonly>
@@ -264,7 +287,7 @@
                 </td>
             </tr>
             <tr>
-                <td>eng5</td>
+                <td>eng-word5</td>
                 <td>
                     <input type="text" id="expressionWord10" name="expressionWord10"
                            th:value="${expressionList.get(9).word}" readonly>
