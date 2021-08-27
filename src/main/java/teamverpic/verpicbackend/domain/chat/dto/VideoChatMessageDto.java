@@ -14,6 +14,7 @@ public class VideoChatMessageDto {
 
     private Long matchId;
     private String senderName;
+    private Long matchUserId;
     private String message;
     private Date timeStamp;
 
@@ -21,7 +22,7 @@ public class VideoChatMessageDto {
 
         return VideoChatMessage.builder()
                 .matchId(this.matchId)
-                .senderName(this.senderName)
+                .matchUserId(this.matchUserId)
                 .message(this.message)
                 .timeStamp(this.timeStamp)
                 .build();

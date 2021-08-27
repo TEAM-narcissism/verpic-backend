@@ -1,6 +1,7 @@
 package teamverpic.verpicbackend.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.config.security.dto.SessionUser;
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.user.domain.User;
+import teamverpic.verpicbackend.domain.user.dto.UserJoinDto;
 import teamverpic.verpicbackend.domain.user.dto.UserResponseDto;
 import teamverpic.verpicbackend.domain.user.dto.UserSearchDto;
 import teamverpic.verpicbackend.domain.user.dto.UserUpdateRequestDto;
@@ -27,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long join(Map<String, String> user , PasswordEncoder passwordEncoder) throws ParseException, IllegalStateException{
-        Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(user.get("birthDate"));
+        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(user.get("birthDate"));
         System.out.println("birthDate = " + birthDate);
         validateDuplicateUser(user.get("email"));
         return userRepository.save(User.builder()
@@ -36,8 +39,32 @@ public class UserService {
                 .firstName(user.get("firstName"))
                 .lastName(user.get("lastName"))
                 .birthDate(birthDate)
+                .firstLanguage(user.get("firstLanguage"))
+                .learnLanguage(user.get("learnLanguage"))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getId();
+    }
+
+    public String oauth_join(UserJoinDto userJoinDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) throws ParseException {
+
+        Optional<User> user = userRepository.findByEmail(userJoinDto.getEmail());
+
+
+        if(user.isPresent()){
+            return jwtTokenProvider.createToken(user.get().getUsername(), user.get().getRoles());
+        } else {
+            User createdUser = User.builder()
+                    .email(userJoinDto.getEmail())
+                    .password(passwordEncoder.encode(userJoinDto.getPassword()))
+                    .firstName(userJoinDto.getFirstName())
+                    .lastName(userJoinDto.getLastName())
+                    .firstLanguage("KOR")
+                    .learnLanguage("ENG")
+                    .roles(Collections.singletonList("ROLE_USER")).build();
+
+            userRepository.save(createdUser);
+            return jwtTokenProvider.createToken(createdUser.getUsername(), createdUser.getRoles());
+        }
     }
 
     private void validateDuplicateUser(String email) throws IllegalStateException {
@@ -50,21 +77,14 @@ public class UserService {
     public String login(Map<String, String> user, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
         User member = userRepository.findByEmail(user.get("email"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
         return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
     }
 
-    public String OAuth2_login(SessionUser user, JwtTokenProvider jwtTokenProvider) throws IllegalArgumentException {
-        User member = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
-    }
 
-    public Optional<User> findUser(String email) {
-        return userRepository.findByEmail(email);
-    }
 
     public Page<UserSearchDto> searchUser(Pageable pageable, String searchString){
         List<User> result=new ArrayList<>();
@@ -106,7 +126,8 @@ public class UserService {
         User member = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
 
-        member.update(requestDto.getFirstLanguage(), requestDto.getLearnLanguage());
+        member.update(requestDto.getFirstName(), requestDto.getLastName(), requestDto.getBirthDate(),
+                requestDto.getFirstLanguage(), requestDto.getLearnLanguage());
 
         return id;
     }

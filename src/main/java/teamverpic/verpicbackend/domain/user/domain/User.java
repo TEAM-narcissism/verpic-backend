@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import teamverpic.verpicbackend.domain.analysis.domain.AudioFile;
 import teamverpic.verpicbackend.domain.preview.domain.UserAnswer;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.matching.domain.MatchUser;
@@ -46,27 +47,23 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    // 프로필 설정 시 추가 (detail_profile)
-//    private String nation;
-//    private String gender;
-//    private String availableLanguage;
-//    private String hobby;
-//    private String interest;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserAnswer> userAnswerList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<StudyReservation> studyReservationList;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AudioFile> audioFileList = new ArrayList<>();
 
     public void addUserAnswer(UserAnswer userAnswer) {
         userAnswer.setUser(this);
         this.userAnswerList.add(userAnswer);
     }
 
-    public void addStudyReservation(StudyReservation studyReservation) {
-        studyReservation.setUser(this);
-        this.studyReservationList.add(studyReservation);
+
+
+    public void addAudioFile(AudioFile audioFile) {
+        audioFile.setUser(this);
+        this.audioFileList.add(audioFile);
     }
 
     public String getRoleKey() {
@@ -81,7 +78,11 @@ public class User implements UserDetails {
         return this;
     }
 
-    public void update(String firstLanguage, String learnLanguage) {
+    public void update(String firstName, String lastName, Date birthDate,
+                       String firstLanguage, String learnLanguage) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.birthDate=birthDate;
         this.firstLanguage = firstLanguage;
         this.learnLanguage = learnLanguage;
     }
@@ -101,9 +102,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return this.roles.stream().map(
+                SimpleGrantedAuthority::new
+        ).collect(Collectors.toList());
+
     }
 
     public void setUserRelation(User requestedUser){
@@ -124,27 +126,31 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // User Identification ? : email
+        return email;
+    }
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
 }

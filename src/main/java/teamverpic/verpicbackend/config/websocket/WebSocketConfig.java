@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import teamverpic.verpicbackend.domain.chat.handler.ChatRoomSubscriptionInterceptor;
+import teamverpic.verpicbackend.domain.chat.handler.CustomHandshakeHandler;
 
 
 @EnableScheduling
@@ -27,6 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
                 .setAllowedOrigins("http://localhost:3000")
+                .setHandshakeHandler(new CustomHandshakeHandler())
                 .withSockJS();
 
     }

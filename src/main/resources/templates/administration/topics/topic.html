@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <style>
+         .container {
+         max-width: 560px;
+         }
+     </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Topic Specification</h2>
+    </div>
+    <div>
+        <label for="topicId"><h4>topic ID</h4></label>
+        <input type="text" id="topicId" name="topicId" class="form-control"
+               value="1" th:value="${topic.id}" readonly>
+    </div>
+    <div>
+        <label for="korTheme"><h4>korTheme</h4></label>
+        <input type="text" id="korTheme" name="korTheme" class="form-control"
+               value="themeA" th:value="${topic.korTheme}" readonly>
+    </div>
+    <div>
+        <label for="engTheme"><h4>engTheme</h4></label>
+        <input type="text" id="engTheme" name="engTheme" class="form-control"
+               value="themeB" th:value="${topic.engTheme}" readonly>
+    </div>
+    <div>
+        <label for="date"><h4>Study Date</h4></label>
+        <input type="text" id="date" name="date" class="form-control"
+               value="2021-08-19" th:value="${topic.studyDate}" readonly>
+    </div>
+    <div>
+        <label for="day"><h4>Study Day</h4></label>
+        <input type="text" id="day" name="day" class="form-control"
+               value="MON" th:value="${topic.studyDay}" readonly>
+    </div>
+    <div>
+        <label for="numOfParticipant"><h4>Number of participant</h4></label>
+        <input type="text" id="numOfParticipant" name="numOfParticipant" class="form-control"
+               value="0" th:value="${topic.numOfParticipant}" readonly>
+    </div>
+    <div>
+        <label for="photo"><h4>Photo</h4></label>
+        <img id="photo" name="photo" th:src="@{data:image/png;base64,{img}(img=${base64EncodedImage})}"
+             alt="photo"  height="400" width="300" />
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='editTopicForm.html'"
+                    th:onclick="|location.href='@{/administration/topics/{topicId}/edit(topicId=${topic.id})}'|" type="button">
+                topic 수정
+            </button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='preview.html'"
+                    th:onclick="|location.href='@{/administration/topics/preview/{previewId}(previewId=${topic.id})}'|" type="button">
+                preview 보기
+            </button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='topics.html'"
+                    th:onclick="|location.href='@{/administration/topics}'|"
+                    type="button">
+                목록으로
+            </button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

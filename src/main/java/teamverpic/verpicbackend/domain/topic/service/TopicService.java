@@ -2,94 +2,70 @@ package teamverpic.verpicbackend.domain.topic.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
-import teamverpic.verpicbackend.domain.preview.domain.Preview;
-import teamverpic.verpicbackend.domain.preview.domain.Preview;
-import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewResponseDto;
-import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
 import teamverpic.verpicbackend.domain.topic.domain.Day;
-//import teamverpic.verpicbackend.domain.Image;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
-//import teamverpic.verpicbackend.dto.ImageDto;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
-import teamverpic.verpicbackend.domain.topic.dto.TopicResponseDto;
-import teamverpic.verpicbackend.domain.topic.dto.TopicSaveRequestDto;
+
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class TopicService {
-
     private final TopicRepository topicRepository;
-    private final PreviewRepository previewRepository;
 
-    @Transactional
-    public Long save(TopicSaveRequestDto requestDto) {
-        return topicRepository.save(requestDto.toEntity()).getId();
-    }
+    public TopicDto createTopic(Map<String, String> topicMap,
+                                MultipartFile multipartFile) throws ParseException, IOException {
 
-    @Transactional
-    public TopicResponseDto findById(Long id) {
-        Topic entity = topicRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
-
-        return new TopicResponseDto(entity);
-    }
-
-    public TopicDto createTopic(Map<String, String> topic) throws ParseException {
-
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topicMap.get("studyDate"));
         Day today = getToday(date);
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-        Topic newtopic=Topic.builder().studyDay(today)
+        Topic topic=Topic.builder().studyDay(today)
                 .studyDate(date).numOfParticipant(0)
-                .theme(topic.get("theme"))
+                .korTheme(topicMap.get("korTheme"))
+                .engTheme(topicMap.get("engTheme"))
+                .photos(fileName)
+                .contentType(multipartFile.getContentType())
+                .data(multipartFile.getBytes())
                 .build();
 
-        Topic save = topicRepository.save(newtopic);
+        Topic save = topicRepository.save(topic);
 
         return new TopicDto(save);
     }
 
-    public TopicDto editTopic(Map<String, String> topic, Long id) throws ParseException {
+    public TopicDto editTopic(Map<String, String> topicMap, MultipartFile multipartFile,
+                              Long id) throws ParseException, IOException {
 
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topic.get("studyDate"));
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(topicMap.get("studyDate"));
         Day today = getToday(date);
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
-        Topic newtopic=topicRepository.getById(id);
-        Preview byId = previewRepository.getById(id);
-        newtopic.setPreview(byId);
-        newtopic.setId(id);
-        newtopic.setStudyDay(today);
-        newtopic.setStudyDate(date);
-        newtopic.setNumOfParticipant(Integer.valueOf(topic.get("numOfParticipant")));
-        newtopic.setTheme(topic.get("theme"));
+        Topic topic=topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Topic이 없습니다. id="+id));
 
-        Topic save = topicRepository.save(newtopic);
+        topic.update(date, today, topicMap.get("korTheme"), topicMap.get("engTheme"), fileName, multipartFile.getContentType(), multipartFile.getBytes());
 
+        Topic save = topicRepository.save(topic);
         return new TopicDto(save);
     }
 
-//    public Page<Topic> getTopics(Pageable pageable, Day day){
-//        List<Topic> result = topicRepository.findAllByStudyDay(day);
-//
-//
-//
-//        int count=result.size();
-//        return new PageImpl<Topic>(result, pageable, count);
-//    }
 
     public List<TopicDto> getAllTopics(){
-        List<TopicDto> topicDtos =new ArrayList<>();
-        topicRepository.findAll().forEach(topic-> topicDtos.add(new TopicDto(topic)));
-
-        return topicDtos;
+        return topicRepository.findAll().stream().map(
+                TopicDto::new
+        ).collect(Collectors.toList());
     }
 
     public TopicDto getTopicByTopicId(Long id){
@@ -98,11 +74,44 @@ public class TopicService {
         return new TopicDto(topic);
     }
 
-    public List<TopicDto> getTopicsByDay(Day day){
-        List<TopicDto> topicDtos =new ArrayList<>();
-        topicRepository.findAllByStudyDay(day).forEach(topic-> topicDtos.add(new TopicDto(topic)));
+    public List<TopicDto> getTopicsByReservationsLaterThanToday(List<StudyReservation> reservations) throws ParseException {
+        SimpleDateFormat topicDateFormat=new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date=new Date();
+        String today = topicDateFormat.format(date);
+        Date parsedToday = topicDateFormat.parse(today);
 
-        return topicDtos;
+        List<TopicDto> topics=new ArrayList<>();
+
+        for(StudyReservation reservation : reservations){
+            Date studyDate = reservation.getTopic().getStudyDate();
+            if(parsedToday.compareTo(studyDate)<=0){
+                topics.add(new TopicDto(reservation.getTopic()));
+            }
+        }
+
+        topics.sort(Comparator.comparing(TopicDto::getStudyDate));
+        return topics;
+    }
+
+    public List<TopicDto> getTopicsLaterThanToday() throws ParseException {
+        SimpleDateFormat topicDateFormat=new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date=new Date();
+        String today = topicDateFormat.format(date);
+        Date parsedToday = topicDateFormat.parse(today);
+
+        List<TopicDto> allTopicsLaterThanToday=new ArrayList<>();
+        List<Topic> allTopics = topicRepository.findAll();
+
+        for(Topic topic : allTopics){
+            Date parsedTopicDate = topicDateFormat.parse(String.valueOf(topic.getStudyDate()));
+            if(parsedToday.compareTo(parsedTopicDate)<=0){
+                System.out.println("parsedTopicDate = " + parsedTopicDate);
+                allTopicsLaterThanToday.add(new TopicDto(topic));
+            }
+        }
+        allTopicsLaterThanToday.sort(Comparator.comparing(TopicDto::getStudyDate));
+
+        return allTopicsLaterThanToday;
     }
 
     private Day getToday(Date date) {

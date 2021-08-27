@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface MatchRepository extends JpaRepository<Match, Long> {
     List<Match> findAll();
-    //Match findById();
+
+
+
+    //Match findByReservationId(Long reservationId);
 }

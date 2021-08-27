@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <style>
+ .container {
+ max-width: 560px;
+ }
+ </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Topic 수정 Form</h2>
+    </div>
+    <form action="topic.html" th:action enctype="multipart/form-data" method="post">
+        <div>
+            <label for="topicId"><h4>topic ID</h4></label>
+            <input type="text" id="topicId" name="topicId" class="form-control" value="1"
+                   th:value="${topic.id}" readonly>
+        </div>
+        <div>
+            <label for="korTheme"><h4>korTheme</h4></label>
+            <input type="text" id="korTheme" name="korTheme" class="form-control" th:value="${topic.korTheme}" required>
+        </div>
+        <div>
+            <label for="engTheme"><h4>engTheme</h4></label>
+            <input type="text" id="engTheme" name="engTheme" class="form-control" th:value="${topic.engTheme}" required>
+        </div>
+        <div>
+            <label for="studyDate"><h4>Study Date</h4></label>
+            <input type="date" id="studyDate" name="studyDate" class="form-control"
+                   th:value="${topic.studyDate}" th:min="${today}" required>
+        </div>
+        <div>
+            <label for="numOfParticipant"><h4>Number of participant</h4></label>
+            <input type="text" id="numOfParticipant" name="numOfParticipant"
+                   class="form-control" value="0"
+                   th:value="${topic.numOfParticipant}" readonly>
+        </div>
+        <div>
+            <label><h4>Photos: </h4></label>
+            <input type="file" id="image" name="image" accept="image/png, image/jpeg" required />
+        </div>
+        <div>
+            <label for="previewId"><h4>topic ID</h4></label>
+            <input type="text" id="previewId" name="previewId" class="form-control" value="1"
+                   th:value="${topic.id}" hidden>
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Submit
+                </button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='topic.html'"
+                        th:onclick="|location.href='@{/administration/topics/{topicId}(topicId=${topic.id})}'|"
+                        type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

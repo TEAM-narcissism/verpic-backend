@@ -30,7 +30,6 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
     private final Map<Long, Set<String>> roomId2SessionIDs;
     @Resource
     private final Map<String, Long> sessionId2RoomId;
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -41,9 +40,7 @@ public class ChatRoomSubscriptionInterceptor implements ChannelInterceptor {
         String token = accessor.getFirstNativeHeader("Authorization");
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            System.out.println("authentication.getName() = " + authentication.getName());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         }
         else {
             SecurityContextHolder.getContext().setAuthentication(null);

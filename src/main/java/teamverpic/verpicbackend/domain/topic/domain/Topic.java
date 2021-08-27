@@ -3,7 +3,6 @@ package teamverpic.verpicbackend.domain.topic.domain;
 import lombok.*;
 import teamverpic.verpicbackend.domain.preview.domain.Preview;
 import teamverpic.verpicbackend.domain.reservation.domain.StudyReservation;
-import teamverpic.verpicbackend.domain.topic.domain.Day;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,40 +24,59 @@ public class Topic {
     @Enumerated(EnumType.STRING)
     private Day studyDay;
 
-    private String theme;
+//    private String theme;
+    private String korTheme;
+    private String engTheme;
 
     private int numOfParticipant;
 
-//    @Embedded
-//    private Image image;
+    @Column(nullable = true, length = 64)
+    private String photos;
 
-    @Column(nullable = true)
-    private String origImgName;
+    private String contentType;
 
-    @Column(nullable = true)
-    private String imgName;
-
-    @Column(nullable = true)
-    private String imgPath;
+    @Lob
+    private byte[] data;
 
     @OneToOne
     @JoinColumn(name = "preview_id")
     private Preview preview;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic")
-    private List<StudyReservation> studyReservationList;
-
     @Builder
-    public Topic(Long id, Date studyDate, Day studyDay, String theme, int numOfParticipant) {
+    public Topic(Long id, Date studyDate, Day studyDay, String korTheme, String engTheme, int numOfParticipant,
+                 String photos, String contentType, byte[] data) {
         this.id = id;
         this.studyDate = studyDate;
         this.studyDay = studyDay;
-        this.theme = theme;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
+        this.numOfParticipant = numOfParticipant;
+        this.photos=photos;
+        this.contentType=contentType;
+        this.data=data;
+    }
+
+    @Builder
+    public Topic(Long id, Date studyDate, Day studyDay, String korTheme, String engTheme, int numOfParticipant) {
+        this.id = id;
+        this.studyDate = studyDate;
+        this.studyDay = studyDay;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
         this.numOfParticipant = numOfParticipant;
     }
 
-    public void addStudyReservation(StudyReservation studyReservation) {
-        studyReservation.setTopic(this);
-        this.studyReservationList.add(studyReservation);
+    public void update(Date studyDate, Day studyDay, String korTheme, String engTheme, String photos, String contentType, byte[] data) {
+
+        this.studyDate = studyDate;
+        this.studyDay = studyDay;
+//        this.theme = theme;
+        this.korTheme=korTheme;
+        this.engTheme=engTheme;
+        this.photos=photos;
+        this.contentType=contentType;
+        this.data=data;
     }
 }

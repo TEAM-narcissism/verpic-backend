@@ -36,16 +36,18 @@ public class ExpressionService {
     @Transactional
     public void edit(Long preview_id, List<ExpressionSaveRequestDto> requestDtos){
         List<Expression> expressionList = expressionRepository.findByPreviewId(preview_id);
-//        Preview preview=previewRepository.getById(preview_id);
+        Preview preview=previewRepository.getById(preview_id);
 
         int count=0;
         for(Expression expression : expressionList){
 
             expression.setWord(requestDtos.get(count).getWord());
             expression.setMeaning(requestDtos.get(count).getMeaning());
-            expression.setExample(requestDtos.get(count++).getExample());
-            expression.setPronounce("edit pronounce");
-//            expression.setPreview(preview);
+            expression.setExample(requestDtos.get(count).getExample());
+            expression.setAudios(requestDtos.get(count).getAudios());
+            expression.setContentType(requestDtos.get(count).getContentType());
+            expression.setPronounce(requestDtos.get(count++).getPronounce());
+            expression.setPreview(preview);
         }
 
         expressionList.forEach(expression ->{

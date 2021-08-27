@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 public class PreviewSetResponseDto {
 
-    private PreviewResponseDto previewResponseDto;
-    private List<DetailTopicResponseDto> detailTopicResponseDtoList;
-    private List<ExpressionResponseDto> expressionResponseDtoList;
+    private PreviewResponseDto preview;
+    private List<DetailTopicResponseDto> detailTopicList;
+    private List<ExpressionResponseDto> expressionList;
 
-    public PreviewSetResponseDto(PreviewResponseDto previewResponseDto, List<DetailTopicResponseDto> detailTopicResponseDtoList, List<ExpressionResponseDto> expressionResponseDtoList) {
-        this.previewResponseDto = previewResponseDto;
-        this.detailTopicResponseDtoList = detailTopicResponseDtoList;
-        this.expressionResponseDtoList = expressionResponseDtoList;
+    public PreviewSetResponseDto(PreviewResponseDto preview, List<DetailTopicResponseDto> detailTopicList, List<ExpressionResponseDto> expressionList) {
+        this.preview = preview;
+        this.detailTopicList = detailTopicList;
+        this.expressionList = expressionList;
     }
 }
