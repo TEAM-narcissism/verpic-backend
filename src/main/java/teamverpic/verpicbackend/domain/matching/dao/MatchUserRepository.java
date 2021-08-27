@@ -13,6 +13,7 @@ public interface MatchUserRepository extends JpaRepository<MatchUser, Long> {
     List<MatchUser> findByMatchId(Long matchId);
     List<MatchUser> findByUserEmail(String userEmail);
 
-    @Query("select m from matchUser m left join fetch m.match left join fetch m.reservation where m.user.id = :userId")
+    @Query("select m from matchUser m left join fetch m.match left join fetch " +
+            "m.reservation r left join fetch r.topic where m.user.id = :userId")
     List<MatchUser> findByUserIdWithFetchJoin(@Param("userId")Long userId);
 }
