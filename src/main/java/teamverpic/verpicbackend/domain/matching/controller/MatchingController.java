@@ -6,9 +6,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamverpic.verpicbackend.domain.matching.dto.MatchingResponseDto;
 import teamverpic.verpicbackend.domain.matching.dto.ParticipantCheckDto;
+import teamverpic.verpicbackend.domain.matching.dto.ParticipatedMatchDto;
 import teamverpic.verpicbackend.domain.matching.service.MatchService;
 import teamverpic.verpicbackend.domain.reservation.dao.StudyReservationRepository;
-
+import teamverpic.verpicbackend.domain.user.domain.User;
 
 
 import java.util.List;
@@ -46,4 +47,9 @@ public class MatchingController {
         return matchingService.isParticipant(matchId, userId);
     }
 
+    @GetMapping("/participated-matches")
+    public List<ParticipatedMatchDto> findParticipatedMatches(Authentication authentication) {
+        log.info(authentication.getName());
+        return matchingService.findParticipatedMatches(((User) authentication.getPrincipal()).getId());
+    }
 }
