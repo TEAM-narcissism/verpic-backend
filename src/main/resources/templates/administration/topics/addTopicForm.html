@@ -5,35 +5,246 @@
     <link href="../css/bootstrap.min.css"
           th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <style>
- .container {
- max-width: 560px;
- }
- </style>
+         .container {
+         max-width: 560px;
+         }
+          table {
+            width: 100%;
+            border-top: 2px solid red;
+            border-collapse: collapse;
+          }
+          .backslash {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="0" x2="100%" y2="100%" stroke="gray" /></svg>');
+          }
+          th, td {
+            border-bottom: 1px solid #444444;
+            border-left: 1px solid #444444;
+            padding: 10px;
+          }
+          th:first-child, td:first-child {
+            border-left: none;
+          }
+          tr:nth-child(2n+1) {
+            border-bottom: 2px solid red;
+          }
+    </style>
 </head>
 <body>
 <div class="container">
     <div class="py-5 text-center">
-        <h2>Topic Create Form</h2>
+        <h1>Topic Create Form</h1>
     </div>
-    <h4 class="mb-3">Topic 입력</h4>
+    <h3 class="mb-3">Topic & Preview 입력</h3>
     <form action="topic.html" th:action enctype="multipart/form-data" method="post">
         <div>
-            <label for="korTheme">Theme</label>
+            <label for="korTheme"><h4>Korean Theme</h4></label>
             <input type="text" id="korTheme" th:name="korTheme" class="form-control" placeholder="Enter korean version topic theme" required>
         </div>
+        <br>
         <div>
-            <label for="engTheme">Theme</label>
+            <label for="engTheme"><h4>English Theme</h4></label>
             <input type="text" id="engTheme" th:name="engTheme" class="form-control" placeholder="Enter english version topic theme" required>
         </div>
+        <br>
         <div>
-            <label for="studyDate">Date</label>
+            <label for="studyDate"><h4>Study Date</h4></label>
             <input type="date" id="studyDate" name="studyDate" class="form-control"
                    th:min="${today}" required>
         </div>
+        <br>
         <div>
-            <label>Photos: </label>
+            <label><h4>Photos: </h4></label>
             <input type="file" name="image" accept="image/png, image/jpeg" required />
         </div>
+        <br>
+        <div>
+            <label for="context"><h4>Context</h4></label>
+            <textarea id="context" name="context" class="form-control" placeholder="토픽에 대한 자세한 설명을 적어주세요." required></textarea>
+        </div>
+        <br>
+        <div>
+            <table class="tb_col" id="detailTopicList" name="detailTopicList">
+                <tr>
+                    <th><h4>Detail topics</h4></th>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="detailContext1" name="detailContext1" class="form-control"
+                                  placeholder="한국어로 된 상세토픽을 적으세요" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea id="detailContext2" name="detailContext2" class="form-control"
+                                  placeholder="Write detail topic by English" required></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div>
+            <label for="expressionList"><h4>Expression List</h4></label>
+            <table class="tb_col" id="expressionList" name="expressionList">
+                <tr>
+                    <th class="backslash"></th>
+                    <th>Word</th>
+                    <th>Meaning</th>
+                    <th>Example</th>
+                    <th>Pronunciation</th>
+                </tr>
+                <tr>
+                    <td>kor-word1</td>
+                    <td>
+                        <input type="text" id="expressionWord1" name="expressionWord1" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning1" name="expressionMeaning1" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample1" name="expressionExample1" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>eng-word1</td>
+                    <td>
+                        <input type="text" id="expressionWord2" name="expressionWord2" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning2" name="expressionMeaning2" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample2" name="expressionExample2" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>kor-word2</td>
+                    <td>
+                        <input type="text" id="expressionWord3" name="expressionWord3" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning3" name="expressionMeaning3" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample3" name="expressionExample3" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>eng-word2</td>
+                    <td>
+                        <input type="text" id="expressionWord4" name="expressionWord4" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning4" name="expressionMeaning4" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample4" name="expressionExample4" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>kor-word3</td>
+                    <td>
+                        <input type="text" id="expressionWord5" name="expressionWord5" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning5" name="expressionMeaning5" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample5" name="expressionExample5" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>eng-word3</td>
+                    <td>
+                        <input type="text" id="expressionWord6" name="expressionWord6" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning6" name="expressionMeaning6" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample6" name="expressionExample6" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>kor-word4</td>
+                    <td>
+                        <input type="text" id="expressionWord7" name="expressionWord7" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning7" name="expressionMeaning7" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample7" name="expressionExample7" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>eng-word4</td>
+                    <td>
+                        <input type="text" id="expressionWord8" name="expressionWord8" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning8" name="expressionMeaning8" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample8" name="expressionExample8" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>kor-word5</td>
+                    <td>
+                        <input type="text" id="expressionWord9" name="expressionWord9" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning9" name="expressionMeaning9" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample9" name="expressionExample9" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td>eng-word5</td>
+                    <td>
+                        <input type="text" id="expressionWord10" name="expressionWord10" required>
+                    </td>
+                    <td>
+                        <textarea id="expressionMeaning10" name="expressionMeaning10" required></textarea>
+                    </td>
+                    <td>
+                        <textarea id="expressionExample10" name="expressionExample10" required></textarea>
+                    </td>
+                    <td>
+                        <input type="file" name="expressionPronunciation" accept="audio/mpeg" required />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
         <hr class="my-4">
         <div class="row">
             <div class="col">

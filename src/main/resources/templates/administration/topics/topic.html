@@ -16,37 +16,37 @@
         <h2>Topic Specification</h2>
     </div>
     <div>
-        <label for="topicId">topic ID</label>
+        <label for="topicId"><h4>topic ID</h4></label>
         <input type="text" id="topicId" name="topicId" class="form-control"
                value="1" th:value="${topic.id}" readonly>
     </div>
     <div>
-        <label for="korTheme">korTheme</label>
+        <label for="korTheme"><h4>korTheme</h4></label>
         <input type="text" id="korTheme" name="korTheme" class="form-control"
                value="themeA" th:value="${topic.korTheme}" readonly>
     </div>
     <div>
-        <label for="engTheme">engTheme</label>
+        <label for="engTheme"><h4>engTheme</h4></label>
         <input type="text" id="engTheme" name="engTheme" class="form-control"
                value="themeB" th:value="${topic.engTheme}" readonly>
     </div>
     <div>
-        <label for="date">Date</label>
+        <label for="date"><h4>Study Date</h4></label>
         <input type="text" id="date" name="date" class="form-control"
                value="2021-08-19" th:value="${topic.studyDate}" readonly>
     </div>
     <div>
-        <label for="day">Day</label>
+        <label for="day"><h4>Study Day</h4></label>
         <input type="text" id="day" name="day" class="form-control"
                value="MON" th:value="${topic.studyDay}" readonly>
     </div>
     <div>
-        <label for="numOfParticipant">Number of participant</label>
+        <label for="numOfParticipant"><h4>Number of participant</h4></label>
         <input type="text" id="numOfParticipant" name="numOfParticipant" class="form-control"
                value="0" th:value="${topic.numOfParticipant}" readonly>
     </div>
     <div>
-        <label for="photo">Photo</label>
+        <label for="photo"><h4>Photo</h4></label>
         <img id="photo" name="photo" th:src="@{data:image/png;base64,{img}(img=${base64EncodedImage})}"
              alt="photo"  height="400" width="300" />
     </div>
