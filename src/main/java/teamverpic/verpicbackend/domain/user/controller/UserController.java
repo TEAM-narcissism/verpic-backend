@@ -40,7 +40,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @PropertySource("classpath:application-oauth.properties")
-@RequestMapping("/api")
 public class UserController {
 
     private final PasswordEncoder passwordEncoder;
