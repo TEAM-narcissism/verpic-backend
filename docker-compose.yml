@@ -19,7 +19,7 @@ services:
       - "./database/verpic_db/:/application"
     ports:
       - "3306:3306"
-    container_name: verpic_mysql
+    container_name: verpic-mysql
     networks:
       - backend-network
 
@@ -47,7 +47,7 @@ services:
     volumes:
       - "./database/mongodb/:/application"
     #command: mongod --smallfiles --logpath=/dev/null # --quiet
-    container_name: "mongo"
+    container_name: verpic-mongo
     restart: always
     ports:
       - "27017:27017"
