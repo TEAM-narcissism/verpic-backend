@@ -8,6 +8,7 @@ import teamverpic.verpicbackend.domain.preview.service.ExpressionService;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/api")
 public class ExpressionController {
 
     private final ExpressionService expressionService;

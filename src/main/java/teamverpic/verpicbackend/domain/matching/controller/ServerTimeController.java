@@ -3,6 +3,7 @@ package teamverpic.verpicbackend.domain.matching.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import teamverpic.verpicbackend.domain.matching.dao.MatchRepository;
 import teamverpic.verpicbackend.domain.matching.dao.MatchUserRepository;
@@ -16,6 +17,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/api")
 public class ServerTimeController {
 
     private final MatchRepository matchRepository;
