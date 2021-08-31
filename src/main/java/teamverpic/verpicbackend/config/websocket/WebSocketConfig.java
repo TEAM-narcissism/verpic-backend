@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOrigins("http://react:80")
+                .setAllowedOrigins("https://react:80")
                 .setHandshakeHandler(new CustomHandshakeHandler())
                 .withSockJS();
 
