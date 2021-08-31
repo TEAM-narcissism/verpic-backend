@@ -12,6 +12,7 @@ import teamverpic.verpicbackend.domain.user.service.NotificationService;
 // 실험용 컨트롤러 입니다.
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "/api")
 public class NotificationController {
     private final SimpMessageSendingOperations messagingTemplate;
 

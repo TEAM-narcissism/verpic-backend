@@ -10,6 +10,7 @@ import teamverpic.verpicbackend.domain.preview.service.UserAnswerService;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/api")
 public class UserAnswerController {
 
     private final UserAnswerService userAnswerService;

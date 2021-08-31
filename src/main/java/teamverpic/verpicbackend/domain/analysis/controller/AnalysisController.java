@@ -32,7 +32,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(value = "/analysis")
+@RequestMapping(value = "/api/analysis")
 public class AnalysisController {
 
     private final AnalysisService analysisService;

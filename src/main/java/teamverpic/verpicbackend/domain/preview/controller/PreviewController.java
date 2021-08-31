@@ -9,6 +9,7 @@ import teamverpic.verpicbackend.domain.preview.service.PreviewService;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/api")
 public class PreviewController {
 
     private final PreviewService previewService;

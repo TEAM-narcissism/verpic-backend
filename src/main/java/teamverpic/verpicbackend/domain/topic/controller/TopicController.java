@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Controller
+@RequestMapping("/api")
 public class TopicController {
 
     private final TopicService topicService;

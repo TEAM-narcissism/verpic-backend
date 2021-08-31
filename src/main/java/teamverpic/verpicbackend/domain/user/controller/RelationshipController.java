@@ -7,7 +7,7 @@ import teamverpic.verpicbackend.domain.user.dao.UserRepository;
 import teamverpic.verpicbackend.domain.user.service.RelationshipService;
 
 @RestController
-@RequestMapping(value="/relationship")
+@RequestMapping(value="/api/relationship")
 @RequiredArgsConstructor
 public class RelationshipController {
 
