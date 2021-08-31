@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import teamverpic.verpicbackend.domain.chat.dto.ChatMessageDto;
 import teamverpic.verpicbackend.domain.chat.service.ChatService;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "/api")
 public class ChatController {
 
     private final ChatService chatService;

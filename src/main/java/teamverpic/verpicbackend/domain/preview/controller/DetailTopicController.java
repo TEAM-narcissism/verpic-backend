@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/api")
 public class DetailTopicController {
 
     private final DetailTopicService detailTopicService;

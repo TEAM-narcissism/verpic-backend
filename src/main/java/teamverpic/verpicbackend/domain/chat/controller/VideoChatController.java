@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import teamverpic.verpicbackend.config.security.JwtTokenProvider;
 import teamverpic.verpicbackend.domain.chat.dto.VideoChatMessageDto;
 import teamverpic.verpicbackend.domain.chat.service.VideoChatService;
@@ -21,6 +22,7 @@ import java.security.Principal;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "/api")
 public class VideoChatController {
 
     private final VideoChatService videoChatService;

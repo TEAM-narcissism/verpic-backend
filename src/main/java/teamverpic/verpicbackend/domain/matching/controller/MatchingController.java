@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/matching")
+@RequestMapping(value = "/api/matching")
 public class MatchingController {
 
     private final MatchService matchingService;
