@@ -13,11 +13,13 @@ import teamverpic.verpicbackend.domain.preview.dto.preview.PreviewSaveRequestDto
 import teamverpic.verpicbackend.domain.preview.dao.PreviewRepository;
 import teamverpic.verpicbackend.domain.topic.dao.TopicRepository;
 import teamverpic.verpicbackend.domain.topic.domain.Topic;
+import teamverpic.verpicbackend.domain.topic.dto.TopicDto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -63,20 +65,20 @@ public class PreviewService {
         Preview preview = previewRepository.findById(preview_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Preview가 없습니다. id="+preview_id));
 
-        PreviewResponseDto part_preview = new PreviewResponseDto(preview);
+        PreviewResponseDto previewResponseDto = new PreviewResponseDto(preview);
 
-        List<DetailTopicResponseDto> part_detail_topic = new ArrayList<>();
-        for (DetailTopic dt : preview.getDetailTopicList()) {
-            DetailTopicResponseDto dtResponseDto = new DetailTopicResponseDto(dt);
-            part_detail_topic.add(dtResponseDto);
-        }
+        List<DetailTopicResponseDto> detailTopicResponseDtoList =
+                preview.getDetailTopicList().stream().map(
+                        DetailTopicResponseDto::new
+                ).collect(Collectors.toList());
 
-        List<ExpressionResponseDto> part_expression = new ArrayList<>();
-        for (Expression ex : preview.getExpressionList()) {
-            ExpressionResponseDto exResponseDto = new ExpressionResponseDto(ex);
-            part_expression.add(exResponseDto);
-        }
+        List<ExpressionResponseDto> expressionResponseDtoList =
+                preview.getExpressionList().stream().map(
+                        ExpressionResponseDto::new
+                ).collect(Collectors.toList());
 
-        return new PreviewSetResponseDto(part_preview, part_detail_topic, part_expression);
+        TopicDto topicDto = new TopicDto(preview.getTopic());
+
+        return new PreviewSetResponseDto(previewResponseDto, topicDto, detailTopicResponseDtoList, expressionResponseDtoList);
     }
 }

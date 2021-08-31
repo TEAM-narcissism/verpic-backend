@@ -21,7 +21,7 @@ public class ParticipatedMatchDto {
         this.matchId = matchUser.getMatch().getId();
         Topic topic = reservation.getTopic();
         this.korTheme = topic.getKorTheme();
-        this.engTheme = topic.getKorTheme();
+        this.engTheme = topic.getEngTheme();
         this.date = topic.getStudyDate().getTime();
     }
 }

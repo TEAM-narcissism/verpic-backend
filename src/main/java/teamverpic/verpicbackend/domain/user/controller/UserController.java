@@ -133,6 +133,7 @@ public class UserController {
     // 유저 프로필 조회
     @GetMapping("/users/{id}")
     public UserResponseDto profile (@PathVariable Long id) {
+        System.out.println("id = " + id);
         return userService.findById(id);
     }
 
