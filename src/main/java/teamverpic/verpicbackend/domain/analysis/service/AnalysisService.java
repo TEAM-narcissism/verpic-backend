@@ -267,14 +267,9 @@ public class AnalysisService {
 
     public String saveFile(MultipartFile multipartFile, String userName, String fileName) throws IOException {
 
-        File dir = new File("database/audiofile/");
+        File dir = new File("database/audiofile/" + userName + "/");
         if(!dir.exists())
             dir.mkdir();
-
-        File dirTo = new File("database/audiofile/" + userName + "/");
-        if(!dirTo.exists())
-            dirTo.mkdir();
-
         String fileDir = "database/audiofile/" + userName + "/" + fileName;
         File file = new File(fileDir);
         file.createNewFile();
