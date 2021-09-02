@@ -35,6 +35,6 @@ public class ServerTimeController {
         Long startTime = Long.valueOf(reservation.getStartTime());
 
         // 테스트하려면 리턴값 0으로 바꾸고 하세요!
-        return 0L;
+        return (studyDate.getTime() + (startTime) * 3600000l) - System.currentTimeMillis();
     }
 }
