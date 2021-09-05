@@ -324,7 +324,7 @@ public class AnalysisService {
                     RecognitionConfig.newBuilder()
                             .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                             .setLanguageCode(language)
-                            .setSampleRateHertz(44100)
+                            .setSampleRateHertz(48000)
                             .setAudioChannelCount(1)
                             .setEnableAutomaticPunctuation(true)
                             .setEnableWordTimeOffsets(true)
