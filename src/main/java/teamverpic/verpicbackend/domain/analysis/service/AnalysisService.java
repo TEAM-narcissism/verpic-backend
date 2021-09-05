@@ -318,7 +318,7 @@ public class AnalysisService {
             if(lang == Language.KOR)
                 language = "ko-KR";
             else
-                language = "en-EN";
+                language = "en-US";
             // Configure remote file request for FLA
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
