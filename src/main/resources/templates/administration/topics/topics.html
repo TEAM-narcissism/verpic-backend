@@ -39,7 +39,7 @@
                 <td th:text="${topic.studyDate}">date</td>
                 <td th:text="${topic.studyDay}">day</td>
                 <td th:text="${topic.numOfParticipant}">number of participant</td>
-                <td><button class="btn btn-primary" th:onclick="|javascript:startMatch('${topic.id}')|">매칭 실행</button></td>
+                <td><button class="btn btn-primary" th:onclick="|location.href='@{/administration/matching/${topic.id}}'|">매칭 실행</button></td>
             </tr>
             </tbody>
         </table>
@@ -47,9 +47,3 @@
 </div> <!-- /container -->
 </body>
 </html>
-
-<script type="text/javascript" th:inline="javascript">
-    function startMatch(topicId) {
-        fetch(window.location.origin + "/administration/matching/" + topicId, {method: 'post'});
-    }
-</script>
