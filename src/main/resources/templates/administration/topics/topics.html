@@ -29,6 +29,7 @@
                 <th>Study Date</th>
                 <th>Study Day</th>
                 <th>Number of Participant</th>
+                <th>Matching button</th>
             </tr>
             </thead>
             <tbody>
@@ -38,6 +39,7 @@
                 <td th:text="${topic.studyDate}">date</td>
                 <td th:text="${topic.studyDay}">day</td>
                 <td th:text="${topic.numOfParticipant}">number of participant</td>
+                <td><button class="btn btn-primary" th:onclick="|javascript:startMatch('${topic.id}')|">매칭 실행</button></td>
             </tr>
             </tbody>
         </table>
@@ -45,3 +47,9 @@
 </div> <!-- /container -->
 </body>
 </html>
+
+<script type="text/javascript" th:inline="javascript">
+    function startMatch(topicId) {
+        fetch(window.location.origin + "/administration/matching/" + topicId, {method: 'post'});
+    }
+</script>
