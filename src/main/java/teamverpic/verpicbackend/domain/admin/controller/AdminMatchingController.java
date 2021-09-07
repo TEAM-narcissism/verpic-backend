@@ -15,13 +15,12 @@ public class AdminMatchingController {
     private final MatchService matchService;
 
     @GetMapping("/{topicId}")
-    @ResponseBody
     public String startMatching(@PathVariable Long topicId) {
         int[] startTimes = {17, 18, 19};
         for (int startTime : startTimes) {
             matchService.match(studyReservationRepository.findAllByTopicIdAndStartTime(topicId, startTime));
         }
 
-        return "administration/topics/topics";
+        return "redirect:/administration/topics/";
     }
 }
