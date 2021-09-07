@@ -27,8 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOrigins("https://www.verpic.net")
-                .setAllowedOrigins("http://localhost:3000")
+                .setAllowedOrigins("http://localhost:3000", "https://www.verpic.net")
                 .setHandshakeHandler(new CustomHandshakeHandler())
                 .withSockJS();
 
