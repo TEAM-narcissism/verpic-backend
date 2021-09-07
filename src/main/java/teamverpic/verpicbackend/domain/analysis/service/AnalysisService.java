@@ -267,16 +267,18 @@ public class AnalysisService {
 
     public String saveFile(MultipartFile multipartFile, String userName, String fileName) throws IOException {
 
-        File dir = new File("database/audiofile/" + userName + "/");
+        String filePath = System.getProperty("user.dir")+ "database/audiofile/" + userName + "/";
+        System.out.println(System.getProperty("user.dir"));
+        File dir = new File(filePath);
         if(!dir.exists())
-            dir.mkdir();
-        String fileDir = "database/audiofile/" + userName + "/" + fileName;
-        File file = new File(fileDir);
-        file.createNewFile();
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-        return fileDir;
+            dir.mkdirs();
+
+        filePath= filePath + fileName;
+
+        File file = new File(filePath);
+        multipartFile.transferTo(file);
+        return filePath;
+
     }
 
     public String fileNameGen() {
@@ -316,13 +318,13 @@ public class AnalysisService {
             if(lang == Language.KOR)
                 language = "ko-KR";
             else
-                language = "en-EN";
+                language = "en-US";
             // Configure remote file request for FLA
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
                             .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
                             .setLanguageCode(language)
-                            .setSampleRateHertz(44100)
+                            .setSampleRateHertz(48000)
                             .setAudioChannelCount(1)
                             .setEnableAutomaticPunctuation(true)
                             .setEnableWordTimeOffsets(true)

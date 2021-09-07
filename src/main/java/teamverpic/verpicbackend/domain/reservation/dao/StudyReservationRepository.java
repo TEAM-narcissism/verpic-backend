@@ -13,4 +13,5 @@ public interface StudyReservationRepository extends JpaRepository<StudyReservati
     List<StudyReservation> findByUserId(Long userId);
     @Query("select r from StudyReservation r left join fetch r.topic where r.user.email = :userEmail")
     List<StudyReservation> findByUserEmail(@Param("userEmail")String userEmail);
+    List<StudyReservation> findAllByTopicIdAndStartTime(Long topicId, int startTime);
 }
