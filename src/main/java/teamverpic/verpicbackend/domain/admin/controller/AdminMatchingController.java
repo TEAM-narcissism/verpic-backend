@@ -14,7 +14,7 @@ public class AdminMatchingController {
     private final StudyReservationRepository studyReservationRepository;
     private final MatchService matchService;
 
-    @PostMapping("/{topicId}")
+    @GetMapping("/{topicId}")
     @ResponseBody
     public String startMatching(@PathVariable Long topicId) {
         int[] startTimes = {17, 18, 19};
@@ -22,6 +22,6 @@ public class AdminMatchingController {
             matchService.match(studyReservationRepository.findAllByTopicIdAndStartTime(topicId, startTime));
         }
 
-        return "매칭 성공";
+        return "administration/topics/topics";
     }
 }
