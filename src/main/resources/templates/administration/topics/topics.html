@@ -39,7 +39,9 @@
                 <td th:text="${topic.studyDate}">date</td>
                 <td th:text="${topic.studyDay}">day</td>
                 <td th:text="${topic.numOfParticipant}">number of participant</td>
-                <td><button class="btn btn-primary" th:onclick="location.href='@{|/administration/matching/${topic.id}|}'">매칭 실행</button></td>
+                <td><button class="btn btn-primary" th:onclick="|location.href='@{/administration/matching/{topicId}(topicId=${topic.id})}'|">매칭 실행</button></td>
+<!--                th:onclick="location.href='@{|/administration/matching/${topic.id}|}'"-->
+
             </tr>
             </tbody>
         </table>
