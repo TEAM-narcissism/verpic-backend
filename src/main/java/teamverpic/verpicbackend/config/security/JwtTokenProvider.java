@@ -24,8 +24,8 @@ public class JwtTokenProvider {
 
     private String secretKey = "verpic";
 
-    // Token Valid Time : 30 min
-    private long tokenValidTime = 30 * 60 * 1000L;
+    // Token Valid Time : 60 min
+    private long tokenValidTime = 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 
