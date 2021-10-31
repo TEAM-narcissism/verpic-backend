@@ -165,7 +165,7 @@ public class AnalysisService {
             language = "en";
         else
             language = "ko";
-        URL url = new URL("http://localhost:8000/api/mostused");
+        URL url = new URL("http://13.125.140.116:8000/api/mostused");
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
