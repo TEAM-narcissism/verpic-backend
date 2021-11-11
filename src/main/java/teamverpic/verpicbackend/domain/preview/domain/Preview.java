@@ -19,7 +19,7 @@ public class Preview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String context;
 
     @OneToOne
