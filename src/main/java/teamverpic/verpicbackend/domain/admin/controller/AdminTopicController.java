@@ -89,56 +89,26 @@ public class AdminTopicController {
         DetailTopicSaveRequestDto detailTopicDto1=new DetailTopicSaveRequestDto(param.get("detailContext1"));
         DetailTopicSaveRequestDto detailTopicDto2=new DetailTopicSaveRequestDto(param.get("detailContext2"));
         System.out.println("here6");
-        ExpressionSaveRequestDto expressionDto1=new ExpressionSaveRequestDto(
-                param.get("expressionWord1"), param.get("expressionMeaning1"), param.get("expressionExample1"),
-                fileName[0], contentType[0], data[0]);
-        ExpressionSaveRequestDto expressionDto2=new ExpressionSaveRequestDto(
-                param.get("expressionWord2"), param.get("expressionMeaning2"), param.get("expressionExample2"),
-                fileName[1], contentType[1], data[1]);
-        ExpressionSaveRequestDto expressionDto3=new ExpressionSaveRequestDto(
-                param.get("expressionWord3"), param.get("expressionMeaning3"), param.get("expressionExample3"),
-                fileName[2], contentType[2], data[2]);
-        ExpressionSaveRequestDto expressionDto4=new ExpressionSaveRequestDto(
-                param.get("expressionWord4"), param.get("expressionMeaning4"), param.get("expressionExample4"),
-                fileName[3], contentType[3], data[3]);
-        ExpressionSaveRequestDto expressionDto5=new ExpressionSaveRequestDto(
-                param.get("expressionWord5"), param.get("expressionMeaning5"), param.get("expressionExample5"),
-                fileName[4], contentType[4], data[4]);
-        ExpressionSaveRequestDto expressionDto6=new ExpressionSaveRequestDto(
-                param.get("expressionWord6"), param.get("expressionMeaning6"), param.get("expressionExample6"),
-                fileName[5], contentType[5], data[5]);
-        ExpressionSaveRequestDto expressionDto7=new ExpressionSaveRequestDto(
-                param.get("expressionWord7"), param.get("expressionMeaning7"), param.get("expressionExample7"),
-                fileName[6], contentType[6], data[6]);
-        ExpressionSaveRequestDto expressionDto8=new ExpressionSaveRequestDto(
-                param.get("expressionWord8"), param.get("expressionMeaning8"), param.get("expressionExample8"),
-                fileName[7], contentType[7], data[7]);
-        ExpressionSaveRequestDto expressionDto9=new ExpressionSaveRequestDto(
-                param.get("expressionWord9"), param.get("expressionMeaning9"), param.get("expressionExample9"),
-                fileName[8], contentType[8], data[8]);
-        ExpressionSaveRequestDto expressionDto10=new ExpressionSaveRequestDto(
-                param.get("expressionWord10"), param.get("expressionMeaning10"), param.get("expressionExample10"),
-                fileName[9], contentType[9], data[9]);
-        System.out.println("here7");
+
         previewService.save(newTopic.getId(), previewDto);
-        System.out.println("here8");
         detailTopicService.save(newTopic.getId(), detailTopicDto1);
         detailTopicService.save(newTopic.getId(), detailTopicDto2);
-        System.out.println("here9");
-        expressionService.save(newTopic.getId(), expressionDto1);
-        expressionService.save(newTopic.getId(), expressionDto2);
-        expressionService.save(newTopic.getId(), expressionDto3);
-        expressionService.save(newTopic.getId(), expressionDto4);
-        expressionService.save(newTopic.getId(), expressionDto5);
-        expressionService.save(newTopic.getId(), expressionDto6);
-        expressionService.save(newTopic.getId(), expressionDto7);
-        expressionService.save(newTopic.getId(), expressionDto8);
-        expressionService.save(newTopic.getId(), expressionDto9);
-        expressionService.save(newTopic.getId(), expressionDto10);
-        System.out.println("here10");
+
+        for (int i=0; i<10; i++){
+            final String word_i = "expressionWord" + (i + 1);
+            final String meaning_i = "expressionMeaning" + (i + 1);
+            final String example_i = "expressionExample" + (i + 1);
+
+            if (param.get(word_i) != null) {
+                ExpressionSaveRequestDto expressionDto=new ExpressionSaveRequestDto(
+                        param.get(word_i), param.get(meaning_i), param.get(example_i),
+                        fileName[i], contentType[i], data[i]);
+                expressionService.save(newTopic.getId(), expressionDto);
+            }
+        }
+
         List<TopicDto> allTopics = topicService.getAllTopics();
         model.addAttribute("topics", allTopics);
-        System.out.println("here11");
         return "redirect:/administration/topics";
     }
 
